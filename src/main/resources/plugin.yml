@@ -1,0 +1,40 @@
+author: ${project.authors}
+main: ${project.main}
+version: ${version}
+name: ${project.name}
+description: ${project.description}
+depend: ${project.depends}
+
+commands:
+  MyZ:
+    description: MyZ command interface.
+
+permissions:
+  MyZ.*:
+    description: All MyZ commands.
+    default: op
+    children:
+      MyZ.manager.*: true
+  MyZ.manager.*:
+    description: All MyZ management commands.
+    default: false
+    children:
+      MyZ.manager.spawns: true
+      MyZ.manager.config: true
+      MyZ.manager.engineer: true
+      MyZ.manager.chests: true
+  MyZ.manager.spawns:
+    description: Manage spawnpoints.
+    default: false
+  MyZ.manager.config:
+    description: Manage the config.
+    default: false
+  MyZ.manager.engineer:
+    description: Manage engineering recipes.
+    default: false
+  MyZ.manager.chests:
+    description: Manage chests.
+    default: false
+  MyZ.play:
+    description: Play MyZ.
+    default: true

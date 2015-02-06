@@ -216,7 +216,7 @@ public class TemperatureManager {
 					case HYPOTHERMIA_3:
 					case HYPOTHERMIA_2:
 						if (effectList.contains(TemperatureEffect.FROSTBITE)) {
-							if (playerFor.getItemInHand() != null) {
+							if (playerFor.getItemInHand() != null && playerFor.getItemInHand().getType() != Material.AIR) {
 								playerFor.getWorld().dropItemNaturally(playerFor.getLocation(), playerFor.getItemInHand().clone());
 								playerFor.setItemInHand(null);
 							}

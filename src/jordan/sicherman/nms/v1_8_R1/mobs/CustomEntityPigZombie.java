@@ -7,6 +7,7 @@ import jordan.sicherman.MyZ;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalHurtByTarget;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalLookAtPlayer;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalMeleeAttack;
+import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalMoveToLocation;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalNearestAttackableTarget;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalRandomLookaround;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalRandomStroll;
@@ -75,6 +76,7 @@ public class CustomEntityPigZombie extends EntityPigZombie implements SmartEntit
 				new CustomPathfinderGoalMeleeAttack(this, EntityHuman.class, ConfigEntries.PIGMAN_SPEED_TARGET.<Double> getValue()
 						* (isBaby() ? 0.5D : 1.0D), false));
 		goalSelector.a(5, new PathfinderGoalMoveTowardsRestriction(this, 1.0D));
+		goalSelector.a(4, new CustomPathfinderGoalMoveToLocation(this, 1.2D));
 		goalSelector.a(7, new CustomPathfinderGoalRandomStroll(this, 1.0D));
 		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
 		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityGuard.class, 8.0F));

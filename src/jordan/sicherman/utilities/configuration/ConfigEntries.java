@@ -107,10 +107,11 @@ public enum ConfigEntries {
 			EntryType.DOUBLE, CFiles.EXTRAS, 3.2), TEMPERATURE_RUNNING("temperature.modify.sprinting", EntryType.DOUBLE, CFiles.EXTRAS, 0.9), TEMPERATURE_NIGHT(
 			"temperature.modify.nighttime", EntryType.DOUBLE, CFiles.EXTRAS, -1.2), THIRST_DECAY_THIRST(
 			"thirst.decay.modifier.per_dehydrated_level", EntryType.INTEGER, CFiles.EXTRAS, -4), DAMAGE_HEATSTROKE(
-			"heatstroke.damage_per_level", EntryType.DOUBLE, CFiles.EXTRAS, 1.0), DAMAGE_HYPOTHERMIA("hypothermia.damage_per_level",
-			EntryType.DOUBLE, CFiles.EXTRAS, 1.0), TEMPERATURE_DAMAGE_DELAY("temperature.execute_after_delay.damage", EntryType.INTEGER,
-			CFiles.EXTRAS, 40), TEMPERATURE_FROSTBITE_DELAY("temperature.execute_after_delay.frostbite", EntryType.INTEGER, CFiles.EXTRAS,
-			62), TEMPERATURE_POTIONS_DELAY("temperature.execute_after_delay.potion_effects", EntryType.INTEGER, CFiles.EXTRAS, 33), TEMPERATURE_SWEAT_DELAY(
+			"temperature.heatstroke.damage_per_level", EntryType.DOUBLE, CFiles.EXTRAS, 1.0), DAMAGE_HYPOTHERMIA(
+			"temperature.hypothermia.damage_per_level", EntryType.DOUBLE, CFiles.EXTRAS, 1.0), TEMPERATURE_DAMAGE_DELAY(
+			"temperature.execute_after_delay.damage", EntryType.INTEGER, CFiles.EXTRAS, 40), TEMPERATURE_FROSTBITE_DELAY(
+			"temperature.execute_after_delay.frostbite", EntryType.INTEGER, CFiles.EXTRAS, 62), TEMPERATURE_POTIONS_DELAY(
+			"temperature.execute_after_delay.potion_effects", EntryType.INTEGER, CFiles.EXTRAS, 33), TEMPERATURE_SWEAT_DELAY(
 			"temperature.execute_after_delay.sweat", EntryType.INTEGER, CFiles.EXTRAS, 3), PIGMAN_PACK_SPAWN("pigman.spawn.chance",
 			EntryType.INTEGER, CFiles.MOBS, 3), PIGMAN_PACK_MIN("pigman.spawn.pack.minimum", EntryType.INTEGER, CFiles.MOBS, 1), PIGMAN_PACK_MAX(
 			"pigman.spawn.pack.maximum", EntryType.INTEGER, CFiles.MOBS, 2), ZOMBIE_PACK_SPAWN("zombie.spawn.chance", EntryType.INTEGER,

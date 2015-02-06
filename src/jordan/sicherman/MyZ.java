@@ -86,6 +86,8 @@ public class MyZ extends JavaPlugin {
 	// Visibility
 	// Temperature
 
+	// TODO check autoupdater
+
 	// TODO Recipes that can be unlocked per-player to craft new items
 
 	// TODO Friend system, disabling PVP towards friends that can be added via

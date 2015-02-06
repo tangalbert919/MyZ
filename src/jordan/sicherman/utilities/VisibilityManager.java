@@ -109,12 +109,11 @@ public class VisibilityManager {
 	}
 
 	public enum VisibilityCause {
-		ACTIVATE_REDSTONE(ConfigEntries.VISIBILITY_ACTIVATE_REDSTONE.<Integer> getValue() / 18f, 20L * 2), SHOOT_ARROW(
-				ConfigEntries.VISIBILITY_SHOOTING.<Integer> getValue() / 18f, 20L * 5), TAKE_DAMAGE(ConfigEntries.VISIBILITY_TAKE_DAMAGE
-				.<Integer> getValue() / 18f, 20L * 2), EXPLOSION(ConfigEntries.VISIBILITY_EXPLOSION.<Integer> getValue() / 18f, 20L * 10), ARROW_LANDED(
-				ConfigEntries.VISIBILITY_ARROW_LANDED.<Integer> getValue() / 18f, 20L * 4), SNOWBALL_LANDED(
-				ConfigEntries.VISIBILITY_SNOWBALL.<Integer> getValue() / 18f, 20L * 8), CHAT(ConfigEntries.VISIBILITY_CHAT
-				.<Integer> getValue() / 18f, 20L * 9);
+		ACTIVATE_REDSTONE(ConfigEntries.VISIBILITY_ACTIVATE_REDSTONE.<Integer> getValue() / 18f, 40L), SHOOT_ARROW(
+				ConfigEntries.VISIBILITY_SHOOTING.<Integer> getValue() / 18f, 100L), TAKE_DAMAGE(ConfigEntries.VISIBILITY_TAKE_DAMAGE
+				.<Integer> getValue() / 18f, 40L), EXPLOSION(ConfigEntries.VISIBILITY_EXPLOSION.<Integer> getValue() / 18f, 200L), ARROW_LANDED(
+				ConfigEntries.VISIBILITY_ARROW_LANDED.<Integer> getValue() / 18f, 80L), SNOWBALL_LANDED(ConfigEntries.VISIBILITY_SNOWBALL
+				.<Integer> getValue() / 18f, 160L), CHAT(ConfigEntries.VISIBILITY_CHAT.<Integer> getValue() / 18f, 180L);
 
 		private final float toFill;
 		private final long fillFor;
@@ -134,7 +133,8 @@ public class VisibilityManager {
 	}
 
 	public void overloadXPBarVisibility(final Player playerFor, VisibilityCause cause) {
-		if (!MyZ.isPremium() || playerFor.getWorld().isThundering()) { return; }
+		// TODO return if thunder at location.
+		if (!MyZ.isPremium()) { return; }
 
 		playerFor.setMetadata("MyZ.overload_visibility", new FixedMetadataValue(MyZ.instance, cause.toFill()));
 
@@ -169,9 +169,10 @@ public class VisibilityManager {
 	}
 
 	public void overloadXPBarVisibility(Location locationFor, VisibilityCause cause) {
-		if (!MyZ.isPremium() || locationFor.getWorld().isThundering()) { return; }
+		// TODO return if thunder at location.
+		if (!MyZ.isPremium()) { return; }
 
-		float range = cause.toFill;
+		float range = cause.toFill * 16.0f;
 
 		for (Entity entity : getNearbyEntities(locationFor, range)) {
 			if (entity instanceof LivingEntity && !(entity instanceof Player)) {

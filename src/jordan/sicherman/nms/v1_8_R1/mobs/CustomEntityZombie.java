@@ -9,6 +9,7 @@ import jordan.sicherman.items.ItemUtilities;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalHurtByTarget;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalLookAtPlayer;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalMeleeAttack;
+import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalMoveToLocation;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalNearestAttackableTarget;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalRandomLookaround;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalRandomStroll;
@@ -108,6 +109,7 @@ public class CustomEntityZombie extends EntityZombie implements SmartEntity {
 		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
 		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityGuard.class, 8.0F));
 		goalSelector.a(8, new CustomPathfinderGoalRandomLookaround(this));
+		goalSelector.a(4, new CustomPathfinderGoalMoveToLocation(this, 1.2D));
 		goalSelector.a(4, new CustomPathfinderGoalMeleeAttack(this, CustomEntityGuard.class, crawler ? isBaby() ? 0.25D : 0.5D
 				: ConfigEntries.ZOMBIE_SPEED_TARGET.<Double> getValue() * (isBaby() ? 0.5D : 1.0D), true));
 		targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { EntityHuman.class }));

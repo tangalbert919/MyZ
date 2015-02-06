@@ -71,7 +71,7 @@ public class Visibility implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.MONITOR)
 	private void onProjectileLand(ProjectileHitEvent e) {
 		if (!Utilities.inWorld(e.getEntity())) { return; }
 

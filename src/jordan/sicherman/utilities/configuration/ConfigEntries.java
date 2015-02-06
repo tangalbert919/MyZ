@@ -120,7 +120,7 @@ public enum ConfigEntries {
 			CFiles.MOBS, 1), GIANT_PACK_MIN("giant.spawn.pack.minimum", EntryType.INTEGER, CFiles.MOBS, 1), GIANT_REINFORCEMENT_MIN(
 			"giant.ability.reinforcement.minimum", EntryType.INTEGER, CFiles.MOBS, 1), GIANT_REINFORCEMENT_MAX(
 			"giant.ability.reinforcement.maximum", EntryType.INTEGER, CFiles.MOBS, 6), GIANT_REINFORCEMENT_CHANCE(
-			"giant.reinforcement.chance", EntryType.INTEGER, CFiles.MOBS, 30), GIANT_PACK_MAX("giant.spawn.pack.maximum",
+			"giant.ability.reinforcement.chance", EntryType.INTEGER, CFiles.MOBS, 30), GIANT_PACK_MAX("giant.spawn.pack.maximum",
 			EntryType.INTEGER, CFiles.MOBS, 1), GIANT_INCLUDES("giant.spawn.biome.includes", EntryType.LIST, CFiles.MOBS,
 			new ArrayList<String>(Arrays.asList("Mesa Plateau"))), ZOMBIE_EXCLUDES("zombie.spawn.biome.excludes", EntryType.LIST,
 			CFiles.MOBS, new ArrayList<String>(Arrays.asList("Mesa Plateau"))), PIGMAN_EXCLUDES("pigman.spawn.biome.excludes",

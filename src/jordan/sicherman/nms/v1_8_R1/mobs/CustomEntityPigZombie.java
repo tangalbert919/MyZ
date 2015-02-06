@@ -72,15 +72,16 @@ public class CustomEntityPigZombie extends EntityPigZombie implements SmartEntit
 
 		goalSelector.a(0, new PathfinderGoalFloat(this));
 		goalSelector.a(2,
-				new CustomPathfinderGoalMeleeAttack(this, EntityHuman.class, ConfigEntries.PIGMAN_SPEED_TARGET.<Double> getValue(), false));
+				new CustomPathfinderGoalMeleeAttack(this, EntityHuman.class, ConfigEntries.PIGMAN_SPEED_TARGET.<Double> getValue()
+						* (isBaby() ? 0.5D : 1.0D), false));
 		goalSelector.a(5, new PathfinderGoalMoveTowardsRestriction(this, 1.0D));
 		goalSelector.a(7, new CustomPathfinderGoalRandomStroll(this, 1.0D));
 		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
 		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityGuard.class, 8.0F));
 		goalSelector.a(8, new CustomPathfinderGoalRandomLookaround(this));
 		goalSelector.a(4,
-				new CustomPathfinderGoalMeleeAttack(this, CustomEntityGuard.class, ConfigEntries.PIGMAN_SPEED_TARGET.<Double> getValue(),
-						true));
+				new CustomPathfinderGoalMeleeAttack(this, CustomEntityGuard.class, ConfigEntries.PIGMAN_SPEED_TARGET.<Double> getValue()
+						* (isBaby() ? 0.5D : 1.0D), true));
 		targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { EntityHuman.class }));
 		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, EntityHuman.class, true));
 		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGuard.class, false));

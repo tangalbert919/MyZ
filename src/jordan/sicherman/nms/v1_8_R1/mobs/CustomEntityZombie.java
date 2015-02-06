@@ -101,17 +101,19 @@ public class CustomEntityZombie extends EntityZombie implements SmartEntity {
 		}
 
 		goalSelector.a(0, new PathfinderGoalFloat(this));
-		goalSelector.a(
-				2,
-				new CustomPathfinderGoalMeleeAttack(this, EntityHuman.class, crawler ? 1.0 : ConfigEntries.ZOMBIE_SPEED_TARGET
-						.<Double> getValue(), false));
+		goalSelector.a(2,
+				new CustomPathfinderGoalMeleeAttack(this, EntityHuman.class, crawler ? isBaby() ? 0.25D : 0.5D
+						: ConfigEntries.ZOMBIE_SPEED_TARGET.<Double> getValue() * (isBaby() ? 0.5D : 1.0D), false));
 		goalSelector.a(5, new PathfinderGoalMoveTowardsRestriction(this, 1.0D));
 		goalSelector.a(7, new CustomPathfinderGoalRandomStroll(this, 1.0D));
 		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
 		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityGuard.class, 8.0F));
 		goalSelector.a(8, new CustomPathfinderGoalRandomLookaround(this));
-		goalSelector.a(4, new CustomPathfinderGoalMeleeAttack(this, CustomEntityGuard.class, crawler ? 1.0
-				: ConfigEntries.ZOMBIE_SPEED_TARGET.<Double> getValue(), true));
+		goalSelector.a(
+				4,
+				new CustomPathfinderGoalMeleeAttack(this, CustomEntityGuard.class,
+						crawler ? isBaby() ? 0.25D : 0.5D : ConfigEntries.ZOMBIE_SPEED_TARGET
+								.<Double> getValue() * (isBaby() ? 0.5D : 1.0D), true));
 		targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { EntityHuman.class }));
 		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, EntityHuman.class, true));
 		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGuard.class, false));

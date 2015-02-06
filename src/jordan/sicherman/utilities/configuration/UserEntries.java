@@ -4,20 +4,14 @@
 package jordan.sicherman.utilities.configuration;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import jordan.sicherman.items.EquipmentState;
-import jordan.sicherman.items.ItemTag;
-import jordan.sicherman.items.ItemUtilities;
 import jordan.sicherman.nms.utilities.EntryType;
 import jordan.sicherman.player.User;
 import jordan.sicherman.player.User.UFiles;
 
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Jordan
@@ -37,13 +31,9 @@ public enum UserEntries {
 			"immunity", EntryType.INTEGER, UFiles.SKILLS, 0), SKIN("toughness", EntryType.INTEGER, UFiles.SKILLS, 0), UNINFECTS(
 			"heals.self.infection", EntryType.INTEGER, UFiles.STATISTICS, 0), SELF_HEALS("heals.self.bleeding", EntryType.INTEGER,
 			UFiles.STATISTICS, 0), OTHER_HEALS("heals.other", EntryType.INTEGER, UFiles.STATISTICS, 0), KIT_HELMET("equipment.helmet",
-			EntryType.ITEMSTACK, UFiles.KIT, null), KIT_CHESTPLATE("equipment.chestplate", EntryType.ITEMSTACK, UFiles.KIT,
-			EquipmentState.BROKEN.applyTo(ItemUtilities.getInstance().getTagItem(ItemTag.STARTER_CHESTPLATE, 1))), KIT_LEGGINGS(
+			EntryType.ITEMSTACK, UFiles.KIT, null), KIT_CHESTPLATE("equipment.chestplate", EntryType.ITEMSTACK, UFiles.KIT, null), KIT_LEGGINGS(
 			"equipment.leggings", EntryType.ITEMSTACK, UFiles.KIT, null), KIT_BOOTS("equipment.boots", EntryType.ITEMSTACK, UFiles.KIT,
-			null), KIT_INVENTORY("equipment.inventory", EntryType.LIST, UFiles.KIT, Arrays.asList(EquipmentState.DEVASTATED
-			.applyTo(ItemUtilities.getInstance().getTagItem(ItemTag.STARTER_SWORD, 1)),
-			ItemUtilities.getInstance().getTagItem(ItemTag.THERMOMETER, 1), ItemUtilities.getInstance().getTagItem(ItemTag.BANDAGE, 1),
-			new ItemStack(Material.POTION), ItemUtilities.getInstance().getTagItem(ItemTag.RADIO, 1))), ZOMBIE_TIMES("deathstate.zombie",
+			null), KIT_INVENTORY("equipment.inventory", EntryType.LIST, UFiles.KIT, null), ZOMBIE_TIMES("deathstate.zombie",
 			EntryType.INTEGER, UFiles.STATISTICS, 0), GHOST_TIMES("deathstate.ghost", EntryType.INTEGER, UFiles.STATISTICS, 0), CURRENT_ZOMBIE_KILLS(
 			"tracked.kills.zombie", EntryType.INTEGER, UFiles.TRACKED, 0), CURRENT_PLAYER_KILLS("tracked.kills.player", EntryType.INTEGER,
 			UFiles.TRACKED, 0), CURRENT_PIGMAN_KILLS("tracked.kills.pigman", EntryType.INTEGER, UFiles.TRACKED, 0), CURRENT_GIANT_KILLS(

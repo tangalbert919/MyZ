@@ -45,6 +45,8 @@ public class VisibilityManager {
 
 	@SuppressWarnings("deprecation")
 	public void computeXPBarVisibility(Player playerFor) {
+		if (!MyZ.isPremium()) { return; }
+
 		float value = ConfigEntries.VISIBILITY_BASE.<Integer> getValue() / 18f;
 
 		if (playerFor.isSneaking()) {
@@ -132,7 +134,7 @@ public class VisibilityManager {
 	}
 
 	public void overloadXPBarVisibility(final Player playerFor, VisibilityCause cause) {
-		if (playerFor.getWorld().isThundering()) { return; }
+		if (!MyZ.isPremium() || playerFor.getWorld().isThundering()) { return; }
 
 		playerFor.setMetadata("MyZ.overload_visibility", new FixedMetadataValue(MyZ.instance, cause.toFill()));
 
@@ -167,7 +169,7 @@ public class VisibilityManager {
 	}
 
 	public void overloadXPBarVisibility(Location locationFor, VisibilityCause cause) {
-		if (locationFor.getWorld().isThundering()) { return; }
+		if (!MyZ.isPremium() || locationFor.getWorld().isThundering()) { return; }
 
 		float range = cause.toFill;
 

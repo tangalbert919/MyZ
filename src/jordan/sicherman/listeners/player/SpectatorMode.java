@@ -62,12 +62,14 @@ public class SpectatorMode implements Listener {
 		}
 
 		if (e.getInventory().getType() == InventoryType.CHEST && e.getInventory().getHolder() instanceof Chest) {
-			MyZ.instance.getServer().getScheduler().runTaskLater(MyZ.instance, new Runnable() {
-				@Override
-				public void run() {
-					ChestType.despawn(((Chest) e.getInventory().getHolder()).getBlock());
-				}
-			}, 20L);
+			if (e.getInventory().getContents().length == 0) {
+				MyZ.instance.getServer().getScheduler().runTaskLater(MyZ.instance, new Runnable() {
+					@Override
+					public void run() {
+						ChestType.despawn(((Chest) e.getInventory().getHolder()).getBlock());
+					}
+				}, 20L);
+			}
 		} else if ("Create Lootset".equals(e.getInventory().getName())) {
 			e.getPlayer().setMetadata(ManagerType.CHESTS.getID(), new FixedMetadataValue(MyZ.instance, null));
 			((Player) e.getPlayer()).sendMessage(LocaleMessage.CHEST_MANAGER_COMPLETE.toString((Player) e.getPlayer()));

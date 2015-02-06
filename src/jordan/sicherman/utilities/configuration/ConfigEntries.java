@@ -7,12 +7,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
+import jordan.sicherman.items.EquipmentState;
 import jordan.sicherman.items.ItemTag;
 import jordan.sicherman.items.ItemUtilities;
 import jordan.sicherman.nms.utilities.EntryType;
 import jordan.sicherman.utilities.configuration.Configuration.CFiles;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Jordan
@@ -78,14 +81,13 @@ public enum ConfigEntries {
 			"use_healing.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), ALLOW_REVIVALS("reviving.enabled", EntryType.BOOLEAN,
 			CFiles.ADDONS, true), USE_VISIBILITY("visibility.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), USE_BLEEDING(
 			"bleeding.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), USE_POISON("infection.enabled", EntryType.BOOLEAN, CFiles.ADDONS,
-			true), TIP("MyZ_tips.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), USE_TEMP("temperature.enabled", EntryType.BOOLEAN,
-			CFiles.ADDONS, true), TASK_SPEED("operation_tick", EntryType.INTEGER, CFiles.CONFIG, 1), DEFAULT_TEMPERATURE(
-			"temperature.default", EntryType.DOUBLE, CFiles.EXTRAS, 37.0), TEMPERATURE_ICY("temperature.biome.frozen", EntryType.DOUBLE,
-			CFiles.EXTRAS, 31.0), TEMPERATURE_COLD("temperature.biome.cold", EntryType.DOUBLE, CFiles.EXTRAS, 35.5), TEMPERATURE_MEDIUM(
-			"temperature.biome.medium", EntryType.DOUBLE, CFiles.EXTRAS, 37.0), TEMPERATURE_WARM("temperature.biome.warm",
-			EntryType.DOUBLE, CFiles.EXTRAS, 39.9), TEMPERATURE_OCEAN("temperature.biome.ocean", EntryType.DOUBLE, CFiles.EXTRAS, 30.5), THIRSTY_THRESHOLD(
-			"temperature.modify.thirst.threshold", EntryType.DOUBLE, CFiles.EXTRAS, 3), HEATSTROKE_3_THRESHOLD(
-			"temperature.threshold.heatstroke.3", EntryType.DOUBLE, CFiles.EXTRAS, 42.7), HEATSTROKE_2_THRESHOLD(
+			true), USE_TEMP("temperature.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), TASK_SPEED("operation_tick", EntryType.INTEGER,
+			CFiles.CONFIG, 1), DEFAULT_TEMPERATURE("temperature.default", EntryType.DOUBLE, CFiles.EXTRAS, 37.0), TEMPERATURE_ICY(
+			"temperature.biome.frozen", EntryType.DOUBLE, CFiles.EXTRAS, 31.0), TEMPERATURE_COLD("temperature.biome.cold",
+			EntryType.DOUBLE, CFiles.EXTRAS, 35.5), TEMPERATURE_MEDIUM("temperature.biome.medium", EntryType.DOUBLE, CFiles.EXTRAS, 37.0), TEMPERATURE_WARM(
+			"temperature.biome.warm", EntryType.DOUBLE, CFiles.EXTRAS, 39.9), TEMPERATURE_OCEAN("temperature.biome.ocean",
+			EntryType.DOUBLE, CFiles.EXTRAS, 30.5), THIRSTY_THRESHOLD("temperature.modify.thirst.threshold", EntryType.DOUBLE,
+			CFiles.EXTRAS, 3), HEATSTROKE_3_THRESHOLD("temperature.threshold.heatstroke.3", EntryType.DOUBLE, CFiles.EXTRAS, 42.7), HEATSTROKE_2_THRESHOLD(
 			"temperature.threshold.heatstroke.2", EntryType.DOUBLE, CFiles.EXTRAS, 40.6), HEATSTROKE_1_THRESHOLD(
 			"temperature.threshold.heatstroke.1", EntryType.DOUBLE, CFiles.EXTRAS, 39.2), SWEATING_THRESHOLD(
 			"temperature.threshold.sweating", EntryType.DOUBLE, CFiles.EXTRAS, 38.2), SHIVERING_THRESHOLD(
@@ -125,7 +127,7 @@ public enum ConfigEntries {
 			EntryType.LIST, CFiles.MOBS, new ArrayList<String>(Arrays.asList("Mesa Plateau"))), GUARD_EXCLUDES(
 			"guard.spawn.biome.excludes", EntryType.LIST, CFiles.MOBS, new ArrayList<String>()), GENERAL_EXCLUDES(
 			"general.spawn.biome.excludes", EntryType.LIST, CFiles.MOBS, new ArrayList<String>(Arrays.asList("Sky", "Ocean", "Deep Ocean"))), GUARD_NAME(
-			"guard.name", EntryType.STRING, CFiles.MOBS, "City Guard"), ZOMBIE_HEALTH("zombie.attribute.health", EntryType.DOUBLE,
+			"guard.name", EntryType.STRING, CFiles.MOBS, "MrTeePee"), ZOMBIE_HEALTH("zombie.attribute.health", EntryType.DOUBLE,
 			CFiles.MOBS, 20.0), ZOMBIE_SPEED("zombie.attribute.speed.no_target", EntryType.DOUBLE, CFiles.MOBS, 0.23), ZOMBIE_SPEED_TARGET(
 			"zombie.attribute.speed.target_multiplier", EntryType.DOUBLE, CFiles.MOBS, 1.5), ZOMBIE_KNOCKBACK_RESIST(
 			"zombie.attribute.knockback_resistance", EntryType.DOUBLE, CFiles.MOBS, 0.0), ZOMBIE_DAMAGE("zombie.attribute.damage",
@@ -173,10 +175,10 @@ public enum ConfigEntries {
 			"zombie.subtype.crawler.chance", EntryType.INTEGER, CFiles.MOBS, 20), WARM_WATER_TEMPERATURE("temperature.modify.warm_water",
 			EntryType.DOUBLE, CFiles.EXTRAS, 0.5), COLD_WATER_TEMPERATURE("temperature.modify.cold_water", EntryType.DOUBLE, CFiles.EXTRAS,
 			-0.9), GIANT_SLOWNESS_RADIUS("giant.ability.stomp.slowness.radius", EntryType.INTEGER, CFiles.MOBS, 10), GIANT_EXPLODE_MAGNITUDE(
-			"giant.ability.stomp.magnitude", EntryType.DOUBLE, CFiles.MOBS, 1.5), DEBUG("debug", EntryType.BOOLEAN, CFiles.CONFIG, false), CHESTS(
-			"use_chests", EntryType.BOOLEAN, CFiles.ADDONS, true), CHEST_TYPES("types", EntryType.CONFIGURATION_SECTION, CFiles.CHESTS,
-			null), CHEST_LOCATIONS("locations", EntryType.CONFIGURATION_SECTION, CFiles.CHESTS, null), CHEST_RESPAWN_TIME(
-			"chest.respawn_time", EntryType.INTEGER, CFiles.EXTRAS, 300);
+			"giant.ability.stomp.magnitude", EntryType.DOUBLE, CFiles.MOBS, 1.5), CHESTS("chests.enabled", EntryType.BOOLEAN,
+			CFiles.ADDONS, true), CHEST_TYPES("types", EntryType.CONFIGURATION_SECTION, CFiles.CHESTS, null), CHEST_LOCATIONS("locations",
+			EntryType.CONFIGURATION_SECTION, CFiles.CHESTS, null), CHEST_RESPAWN_TIME("chest.respawn_time", EntryType.INTEGER,
+			CFiles.EXTRAS, 300), RANKS("ranks", EntryType.CONFIGURATION_SECTION, CFiles.RANKS, null);
 
 	private final String key;
 	private final EntryType type;
@@ -299,6 +301,28 @@ public enum ConfigEntries {
 			section.set("requirements.deathstate.zombie", 0);
 			section.set("requirements.deathstate.ghost", 0);
 			section.set("requirements.friends", 0);
+		} else if (this == RANKS) {
+			section.set("0.chat_prefix", "");
+			section.set("0.equipment.boots", null);
+			section.set("0.equipment.helmet", null);
+			section.set("0.equipment.leggings", null);
+			section.set("0.equipment.chestplate",
+					EquipmentState.BROKEN.applyTo(ItemUtilities.getInstance().getTagItem(ItemTag.STARTER_CHESTPLATE, 1)));
+			section.set("0.equipment.inventory", Arrays.asList(EquipmentState.DEVASTATED.applyTo(ItemUtilities.getInstance().getTagItem(
+					ItemTag.STARTER_SWORD, 1)), ItemUtilities.getInstance().getTagItem(ItemTag.THERMOMETER, 1), ItemUtilities.getInstance()
+					.getTagItem(ItemTag.BANDAGE, 1), new ItemStack(Material.POTION),
+					ItemUtilities.getInstance().getTagItem(ItemTag.RADIO, 1)));
+
+			section.set("100.chat_prefix", "");
+			section.set("100.equipment.boots", null);
+			section.set("100.equipment.helmet", null);
+			section.set("100.equipment.leggings", null);
+			section.set("100.equipment.chestplate",
+					EquipmentState.BROKEN.applyTo(ItemUtilities.getInstance().getTagItem(ItemTag.STARTER_CHESTPLATE, 1)));
+			section.set("100.equipment.inventory", Arrays.asList(EquipmentState.DEVASTATED.applyTo(ItemUtilities.getInstance().getTagItem(
+					ItemTag.STARTER_SWORD, 1)), ItemUtilities.getInstance().getTagItem(ItemTag.THERMOMETER, 1), ItemUtilities.getInstance()
+					.getTagItem(ItemTag.BANDAGE, 1), new ItemStack(Material.POTION),
+					ItemUtilities.getInstance().getTagItem(ItemTag.RADIO, 1)));
 		}
 		return section;
 	}

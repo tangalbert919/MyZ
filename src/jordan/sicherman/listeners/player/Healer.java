@@ -32,7 +32,7 @@ public class Healer implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	private void oneHealSelf(PlayerInteractEvent e) {
-		if (!Utilities.inWorld(e.getPlayer())) { return; }
+		if (!MyZ.isPremium() || !Utilities.inWorld(e.getPlayer())) { return; }
 
 		if (!ConfigEntries.USE_BANDAGES.<Boolean> getValue()) { return; }
 
@@ -55,7 +55,7 @@ public class Healer implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	private void oneHealOther(EntityDamageByEntityEvent e) {
-		if (!Utilities.inWorld(e.getEntity())) { return; }
+		if (!MyZ.isPremium() || !Utilities.inWorld(e.getEntity())) { return; }
 
 		if (!ConfigEntries.USE_HEALING.<Boolean> getValue() || !(e.getDamager() instanceof Player) || !(e.getEntity() instanceof Player)) { return; }
 

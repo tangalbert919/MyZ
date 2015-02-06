@@ -159,7 +159,6 @@ public class CompatibilityManager {
 			a.invoke(tileChest, name);
 			inventoryField.setAccessible(false);
 		} catch (Exception exc) {
-			MyZ.debug("Renaming chests cannot be supported on servers running " + NMS.version + " :(");
 		}
 	}
 

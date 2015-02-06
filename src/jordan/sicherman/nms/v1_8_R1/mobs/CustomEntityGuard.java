@@ -14,6 +14,8 @@ import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalNearest
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalRandomLookaround;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalRandomStroll;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
+import me.libraryaddict.disguise.DisguiseAPI;
+import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
 import net.minecraft.server.v1_8_R1.AttributeModifier;
 import net.minecraft.server.v1_8_R1.Block;
 import net.minecraft.server.v1_8_R1.BlockPosition;
@@ -34,6 +36,7 @@ import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_8_R1.StepSound;
 import net.minecraft.server.v1_8_R1.World;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
@@ -94,9 +97,8 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
 
 		type = GuardType.values()[bb().nextInt(GuardType.values().length)];
 
-		// Until LibsDisguises can be updated to fix this issue.
-		/*DisguiseAPI.disguiseToAll(getBukkitEntity(),
-				new PlayerDisguise(ChatColor.translateAlternateColorCodes('&', ConfigEntries.GUARD_NAME.<String> getValue())));*/
+		DisguiseAPI.disguiseToAll(getBukkitEntity(),
+				new PlayerDisguise(ChatColor.translateAlternateColorCodes('&', ConfigEntries.GUARD_NAME.<String> getValue())));
 
 		try {
 			CommonMobUtilities.bField.set(goalSelector, new UnsafeList<PathfinderGoalSelector>());

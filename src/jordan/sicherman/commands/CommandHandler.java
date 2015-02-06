@@ -23,7 +23,10 @@ public enum CommandHandler {
 			"userdata" }, CommandPermission.CONFIG_MANAGER, "Reload userdata files", "reload userdata", new ReloadUserdata(), true), TRANSCRIBE(
 			new String[] { "transcribe" }, CommandPermission.CONFIG_MANAGER, "Flush locale YAMLs to a MyZ-readable format", "transcribe",
 			new Transcribe(), true), MANAGE_CHESTS(new String[] { "manage", "chests" }, CommandPermission.CHEST_MANAGER, "Manage chests",
-			"manage chests", new ChestManager(), ConfigEntries.CHESTS.<Boolean> getValue());
+			"manage chests", new ChestManager(), ConfigEntries.CHESTS.<Boolean> getValue()), MANAGE_CHAT_PREFIX(new String[] { "manage",
+			"chat", "prefix" }, CommandPermission.CHAT_MANAGER, "Manage chat prefixes", "manage chat prefix", new ChatPrefixManager(),
+			ConfigEntries.CHAT_FORMATTING.<Boolean> getValue()), MANAGE_SPAWN_KIT(new String[] { "manage", "spawn", "kit" },
+			CommandPermission.SPAWN_KIT_MANAGER, "Manage spawn kits", "manage spawn kit", new SpawnKitManager(), true);
 
 	private final String[] args;
 	private final CommandPermission perm;
@@ -94,7 +97,8 @@ public enum CommandHandler {
 
 	public static enum CommandPermission {
 		SPAWN_MANAGER("MyZ.manager.spawns"), CONFIG_MANAGER("MyZ.manager.config"), PLAY("MyZ.play"), ENGINEER_MANAGER(
-				"MyZ.manager.engineer"), CHEST_MANAGER("MyZ.manager.chests");
+				"MyZ.manager.engineer"), CHEST_MANAGER("MyZ.manager.chests"), SPAWN_KIT_MANAGER("MyZ.manager.spawn_kits"), CHAT_MANAGER(
+				"MyZ.manager.chat");
 
 		private final String node;
 

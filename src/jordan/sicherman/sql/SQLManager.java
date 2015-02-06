@@ -176,7 +176,6 @@ public class SQLManager {
 
 		if (!isIn(player)) { return; }
 
-		MyZ.debug("Caching " + values.length + " values for " + player.getName() + " asynchronously.");
 		MyZ.instance.getServer().getScheduler().runTaskLaterAsynchronously(MyZ.instance, new Runnable() {
 			@Override
 			public void run() {
@@ -286,8 +285,6 @@ public class SQLManager {
 		} else {
 			gotten = (T) cachedValues.get(pk).get(field);
 		}
-
-		// MyZ.debug("Retrieved a value for " + field + " from MySQL.");
 
 		return gotten;
 	}

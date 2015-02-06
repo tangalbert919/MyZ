@@ -41,7 +41,7 @@ public class LocaleEnglish {
 			return "&8To %s: %s";
 		case PRIVATE_CHAT_FROM:
 			return "&8From %s: %s";
-		case CANNOT_PRIVATE:
+		case NO_USER:
 			return "&4Unable to find specified user.";
 		case INCOMPATIBLE:
 			return "MyZ is incompatible with this server version.";
@@ -273,6 +273,16 @@ public class LocaleEnglish {
 			return "&4Unable to parse format. &ePlease enter a minimum and maximum amount for this item, followed by a probability.\n&9ie. 1, 5, 50 &e(Between 1 and 5, 50% spawn chance)";
 		case CHEST_MANAGER:
 			return "&eYou are now managing chests.\n&9o&f Click a chest to assign it a lootset\n&9o&f Left click air to create a lootset\n&9o&f Right click air to remove a lootset\n&9o&f Drop wand to end";
+		case CHAT_PREFIX_MANAGER_0:
+			return "&eEnter a chat prefix (ie. [VIP]), using ampersands (&) for chat formatting.";
+		case CHAT_PREFIX_MANAGER_1:
+			return "&eEnter a rank number (0-100), or a player name to apply this prefix to.";
+		case CHAT_PREFIX_MANAGER_2:
+			return "&aThe chat prefix has been created.";
+		case MANAGING_SPAWN_KIT:
+			return "&eYou are now managing spawn kits.\n&9o&f Enter a rank number (0-100) or a player name to save your current inventory and gear contents to.";
+		case MANAGING_SPAWN_KIT_CREATED:
+			return "&aThe spawn kit has been created.";
 		case CHEST_MANAGER_COMPLETE:
 			return "&eThe lootset has been completed.";
 		case CHEST_MANAGER_REMOVED:

@@ -19,6 +19,7 @@ import jordan.sicherman.utilities.TemperatureManager.TemperatureEffect;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
 import jordan.sicherman.utilities.configuration.UserEntries;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
@@ -26,6 +27,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author Jordan
@@ -249,10 +251,8 @@ public class Utilities {
 
 	public static String getPrefixFor(Player from) {
 		String custom = DataWrapper.<String> get(from, UserEntries.PREFIX);
-		if (custom == null || custom.isEmpty()) {
-			// TODO return for rank.
-		}
-		return custom;
+		if (custom == null || custom.isEmpty()) { return ChatColor.translateAlternateColorCodes('&', getRank(from).getChatPrefix()); }
+		return ChatColor.translateAlternateColorCodes('&', custom);
 	}
 
 	public static List<Location> getSpawns() {
@@ -352,42 +352,57 @@ public class Utilities {
 		player.teleport(spawns.get(random.nextInt(spawns.size())));
 	}
 
-	public static synchronized void faceCompass(Player playerFor, boolean unspecific, BlockFace direction) {
+	public static MyZRank getRank(Player playerFor) {
+		if (playerFor.hasPermission("MyZ.rank.100")) { return MyZRank.forInt(100); }
+
+		for (int i = 1; i <= 101; i++) {
+			if (!playerFor.hasPermission("MyZ.rank." + i)) { return MyZRank.forInt(i - 1); }
+		}
+		return MyZRank.forInt(0);
+	}
+
+	public static void faceCompass(final Player playerFor, boolean unspecific, final BlockFace direction) {
 		if (unspecific) {
 			playerFor.setCompassTarget(playerFor.getWorld().getSpawnLocation());
 			return;
 		}
 
-		Location at = playerFor.getLocation();
-		BlockFace facing = getFacing(at);
-		switch (direction) {
-		case NORTH:
-			playerFor.setCompassTarget(at.getBlock().getRelative(facing, 1000).getLocation());
-			break;
-		case SOUTH:
-			playerFor.setCompassTarget(at.getBlock().getRelative(facing.getOppositeFace(), 1000).getLocation());
-			break;
-		case EAST:
-			playerFor.setCompassTarget(at.getBlock().getRelative(getRightShifts(facing, 2), 1000).getLocation());
-			break;
-		case WEST:
-			playerFor.setCompassTarget(at.getBlock().getRelative(getRightShifts(facing, 6), 1000).getLocation());
-			break;
-		case NORTH_EAST:
-			playerFor.setCompassTarget(at.getBlock().getRelative(getRightShifts(facing, 1), 1000).getLocation());
-			break;
-		case SOUTH_EAST:
-			playerFor.setCompassTarget(at.getBlock().getRelative(getRightShifts(facing, 3), 1000).getLocation());
-			break;
-		case SOUTH_WEST:
-			playerFor.setCompassTarget(at.getBlock().getRelative(getRightShifts(facing, 5), 1000).getLocation());
-			break;
-		case NORTH_WEST:
-			playerFor.setCompassTarget(at.getBlock().getRelative(getRightShifts(facing, 7), 1000).getLocation());
-			break;
-		default:
-			throw new IllegalArgumentException(direction + " must be a subcardinal direction!");
-		}
+		final Location at = playerFor.getLocation();
+		final BlockFace facing = getFacing(at);
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				switch (direction) {
+				case NORTH:
+					playerFor.setCompassTarget(at.getBlock().getRelative(facing, 1000).getLocation());
+					break;
+				case SOUTH:
+					playerFor.setCompassTarget(at.getBlock().getRelative(facing.getOppositeFace(), 1000).getLocation());
+					break;
+				case EAST:
+					playerFor.setCompassTarget(at.getBlock().getRelative(getRightShifts(facing, 2), 1000).getLocation());
+					break;
+				case WEST:
+					playerFor.setCompassTarget(at.getBlock().getRelative(getRightShifts(facing, 6), 1000).getLocation());
+					break;
+				case NORTH_EAST:
+					playerFor.setCompassTarget(at.getBlock().getRelative(getRightShifts(facing, 1), 1000).getLocation());
+					break;
+				case SOUTH_EAST:
+					playerFor.setCompassTarget(at.getBlock().getRelative(getRightShifts(facing, 3), 1000).getLocation());
+					break;
+				case SOUTH_WEST:
+					playerFor.setCompassTarget(at.getBlock().getRelative(getRightShifts(facing, 5), 1000).getLocation());
+					break;
+				case NORTH_WEST:
+					playerFor.setCompassTarget(at.getBlock().getRelative(getRightShifts(facing, 7), 1000).getLocation());
+					break;
+				default:
+					break;
+				}
+			}
+		}.runTaskLater(MyZ.instance, 0L);
 	}
 
 	private static BlockFace getRightShifts(BlockFace from, int shifts) {

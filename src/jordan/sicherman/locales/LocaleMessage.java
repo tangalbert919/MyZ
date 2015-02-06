@@ -20,7 +20,7 @@ public enum LocaleMessage {
 			"sql.disconnect.success", 0), SQL_NO_CONNECT("sql.connect.fail", 0), SQL_CONNECTING("sql.connect.connecting", 0), SQL_NO_DISCONNECT(
 			"sql.disconnect.fail", 0), SQL_FAIL("sql.execute.fail", 0), MURKY_WATER("item.murky_water", 0), INFECTED("event.infected", 0), RADIO_DISPLAY(
 			"item.radio.displayname", 0), RADIO_LORE("item.radio.lore", 0), RADIO_CHAT("chat.radio", 1), PRIVATE_CHAT_FROM(
-			"chat.private.from", 0), PRIVATE_CHAT_TO("chat.private.to", 0), CANNOT_PRIVATE("chat.private.error", 0), DID_POKE(
+			"chat.private.from", 0), PRIVATE_CHAT_TO("chat.private.to", 0), NO_USER("chat.private.error", 0), DID_POKE(
 			"chat.private.did_poke", 1), POKED("chat.private.poked", 1), LOCAL_CHAT("chat.local.format", 0), INCOMPATIBLE(
 			"error.incompatible", 0), REVIVER("revive.finished_revive", 1), REVIVED("revive.was_revived", 1), REVIVER_STARTED(
 			"revive.reviver_started", 1), REVIVED_STARTED("revive.revived_started", 1), REVIVER_CANCELLED("revive.reviver_cancelled", 1), REVIVED_CANCELLED(
@@ -65,7 +65,9 @@ public enum LocaleMessage {
 			"statement.nothing", 0), CREATE_CHEST_INSTRUCTIONS("event.chest.create", 0), ADD_ITEM_INSTRUCTIONS("event.chest.add_item", 0), ADD_ITEM_PARSE_ERROR(
 			"event.chest.add_item_error", 0), CHEST_MANAGER("command.manager.chest.begin", 0), CHEST_MANAGER_COMPLETE(
 			"command.manager.chest.lootset_created", 0), CHEST_MANAGER_REMOVED("command.manager.chest.lootset_removed", 0), CHEST_MANAGER_REMOVE(
-			"command.manager.chest.lootset_remove", 0);
+			"command.manager.chest.lootset_remove", 0), CHAT_PREFIX_MANAGER_0("command.manager.chat_prefix.start", 0), CHAT_PREFIX_MANAGER_1(
+			"command.manager.chat_prefix.continue", 0), CHAT_PREFIX_MANAGER_2("command.manager.chat_prefix.finish", 0), MANAGING_SPAWN_KIT(
+			"command.manager.spawn_kit", 0), MANAGING_SPAWN_KIT_CREATED("command.manager.spawn_kit_created", 0);
 
 	private final String key;
 	private final int variables;

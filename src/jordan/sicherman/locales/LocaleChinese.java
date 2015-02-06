@@ -15,7 +15,7 @@ public class LocaleChinese {
 			return "%s: %s";
 		case DID_POKE:
 			return "&8ä½ æ­£åœ¨è”ç³» $0.";
-		case CANNOT_PRIVATE:
+		case NO_USER:
 			return "&4æ‰¾ä¸åˆ°æŒ‡å®šç”¨æˆ·.";
 		case PRIVATE_CHAT_FROM:
 			return "&8æ¥è‡ª&7 %s &8çš„æ¶ˆæ¯: %s";
@@ -261,6 +261,34 @@ public class LocaleChinese {
 			return "&4å¦";
 		case YES:
 			return "&aæ˜¯";
+		case ADD_ITEM_INSTRUCTIONS:
+			break;
+		case ADD_ITEM_PARSE_ERROR:
+			break;
+		case CHAT_PREFIX_MANAGER_0:
+			break;
+		case CHAT_PREFIX_MANAGER_1:
+			break;
+		case CHAT_PREFIX_MANAGER_2:
+			break;
+		case CHEST_MANAGER:
+			break;
+		case CHEST_MANAGER_COMPLETE:
+			break;
+		case CHEST_MANAGER_REMOVE:
+			break;
+		case CHEST_MANAGER_REMOVED:
+			break;
+		case CHEST_SET:
+			break;
+		case CREATE_CHEST_INSTRUCTIONS:
+			break;
+		case MANAGING_SPAWN_KIT:
+			break;
+		case NOTHING:
+			break;
+		case MANAGING_SPAWN_KIT_CREATED:
+			break;
 		}
 		return message.getKey();
 	}

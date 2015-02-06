@@ -72,11 +72,11 @@ public class Death implements Listener {
 			player.removePotionEffect(effect.getType());
 		}
 
-		if (ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() || ConfigEntries.BECOME_GHOST.<Boolean> getValue()) {
+		if (MyZ.isPremium() && (ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() || ConfigEntries.BECOME_GHOST.<Boolean> getValue())) {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, (int) ghostTime, 2));
 		}
 
-		if (ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() && DataWrapper.<Boolean> get(player, UserEntries.POISONED)) {
+		if (MyZ.isPremium() && ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() && DataWrapper.<Boolean> get(player, UserEntries.POISONED)) {
 			actualTime /= 2L;
 			MyZ.zombieFactory.setZombie(player, true);
 			player.sendMessage(LocaleMessage.BECAME_ZOMBIE.filter(actualTime / 20L).toString(player));
@@ -86,7 +86,7 @@ public class Death implements Listener {
 
 		final long ghostFor = actualTime;
 
-		if (ConfigEntries.BECOME_GHOST.<Boolean> getValue()) {
+		if (MyZ.isPremium() && ConfigEntries.BECOME_GHOST.<Boolean> getValue()) {
 			new BukkitRunnable() {
 				@Override
 				public void run() {

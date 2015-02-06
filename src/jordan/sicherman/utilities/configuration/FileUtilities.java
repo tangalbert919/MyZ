@@ -11,6 +11,7 @@ import jordan.sicherman.player.User;
 import jordan.sicherman.player.User.UFiles;
 import jordan.sicherman.sql.SQLManager;
 import jordan.sicherman.utilities.ChestType;
+import jordan.sicherman.utilities.MyZRank;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -103,6 +104,7 @@ public class FileUtilities {
 				ChestType.load();
 				MyZ.sql.disconnect();
 				MyZ.instance.registerSQL();
+				MyZRank.load();
 			}
 		});
 	}

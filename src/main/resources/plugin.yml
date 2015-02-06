@@ -23,6 +23,8 @@ permissions:
       MyZ.manager.config: true
       MyZ.manager.engineer: true
       MyZ.manager.chests: true
+      MyZ.manager.chat: true
+      MyZ.manager.spawn_kit: true
   MyZ.manager.spawns:
     description: Manage spawnpoints.
     default: false
@@ -35,6 +37,18 @@ permissions:
   MyZ.manager.chests:
     description: Manage chests.
     default: false
+  MyZ.manager.chat:
+    description: Manage chat elements.
+    default: false
+  MyZ.manager.spawn_kit:
+    description: Manage MyZ spawn kits.
+    default: false
+  MyZ.rank.0:
+    description: The default MyZ rank.
+    default: not-op
+  MyZ.rank.100:
+    description: The maximum MyZ rank.
+    default: op
   MyZ.play:
     description: Play MyZ.
     default: true

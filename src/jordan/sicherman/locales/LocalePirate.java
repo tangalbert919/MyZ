@@ -41,7 +41,7 @@ public class LocalePirate {
 			return "&8To %s: %s";
 		case PRIVATE_CHAT_FROM:
 			return "&8Crewmate %s: %s";
-		case CANNOT_PRIVATE:
+		case NO_USER:
 			return "&4Unable to speak to shipmate.";
 		case INCOMPATIBLE:
 			return "MyZ cannot set sail on this server version.";
@@ -279,6 +279,16 @@ public class LocalePirate {
 			return "&eThe lootset has been removed.";
 		case CHEST_MANAGER_REMOVE:
 			return "&ePlease enter the name of the lootset 'yer removin'. Options include:";
+		case CHAT_PREFIX_MANAGER_0:
+			return "&eEnter a chat prefix (ie. [PIRATE]), using ampersands (&) fer chat formatting.";
+		case CHAT_PREFIX_MANAGER_1:
+			return "&eEnter a rank number (0-100), or a crewmate's name to apply this prefix to.";
+		case CHAT_PREFIX_MANAGER_2:
+			return "&aThe chat prefix has been created.";
+		case MANAGING_SPAWN_KIT:
+			return "&eYer now managing spawn kits.\n&9o&f Enter a rank number (0-100) or a crewmate's name to save yer current inventory and gear contents to.";
+		case MANAGING_SPAWN_KIT_CREATED:
+			return "&aThe spawn kit has been created.";
 		}
 		return message.getKey();
 	}

@@ -38,6 +38,7 @@ import jordan.sicherman.sql.SQLManager;
 import jordan.sicherman.utilities.AchievementManager;
 import jordan.sicherman.utilities.ChestType;
 import jordan.sicherman.utilities.GhostFactory;
+import jordan.sicherman.utilities.MyZRank;
 import jordan.sicherman.utilities.ReviveManager;
 import jordan.sicherman.utilities.StartingKitManager;
 import jordan.sicherman.utilities.TemperatureManager;
@@ -74,7 +75,16 @@ public class MyZ extends JavaPlugin {
 
 	private static Enchantment pseudoEnchant = new PseudoEnchant(69);
 
-	// TODO Rank manager (to create prefix and start kit)
+	// TODO Premium version allows for:
+	// MySQL
+	// Removes tips
+	// Disables auto-updater (wouldn't work)
+	// Enderpearl grenades
+	// Chat features
+	// Undead and Ghostbourne
+	// Healing
+	// Visibility
+	// Temperature
 
 	// TODO Recipes that can be unlocked per-player to craft new items
 
@@ -84,6 +94,10 @@ public class MyZ extends JavaPlugin {
 	// TODO Guild system
 
 	// TODO See todo notes at Death, SpectatorMode, Utilities
+
+	public static boolean isPremium() {
+		return true;
+	}
 
 	@Override
 	public void onEnable() {
@@ -105,9 +119,9 @@ public class MyZ extends JavaPlugin {
 		new StartingKitManager();
 		new TemperatureManager();
 		myzapi = new MyZAPI();
+		MyZRank.load();
 
-		if (ConfigEntries.UPDATE.<Boolean> getValue()) {
-			debug("Beginning updater");
+		if (!isPremium() && ConfigEntries.UPDATE.<Boolean> getValue()) {
 			new Updater(this, 55557, getFile(), UpdateType.DEFAULT, false);
 		}
 
@@ -160,7 +174,6 @@ public class MyZ extends JavaPlugin {
 		getServer().addRecipe(new FurnaceRecipe(ItemUtilities.getInstance().getTagItem(ItemTag.WARM_WATER, 1), Material.POTION));
 
 		try {
-			debug("Beginning Metrics analysis.");
 			MetricsLite metrics = new MetricsLite(this);
 			metrics.start();
 		} catch (Exception exc) {
@@ -195,13 +208,9 @@ public class MyZ extends JavaPlugin {
 		Bukkit.getConsoleSender().sendMessage(message);
 	}
 
-	public static void debug(String message) {
-		if (ConfigEntries.DEBUG.<Boolean> getValue()) {
-			Bukkit.getConsoleSender().sendMessage(message);
-		}
-	}
-
 	public void registerSQL() {
+		if (!isPremium()) { return; }
+
 		sql = new SQLManager(ConfigEntries.SQL_HOST.<String> getValue(), ConfigEntries.SQL_PORT.<Integer> getValue(),
 				ConfigEntries.SQL_DATABASE.<String> getValue(), ConfigEntries.SQL_USERNAME.<String> getValue(),
 				ConfigEntries.SQL_PASSWORD.<String> getValue());
@@ -230,15 +239,15 @@ public class MyZ extends JavaPlugin {
 	private static final Random random = new Random();
 
 	public static void giveMyZTip(final CommandSender sender) {
-		if (ConfigEntries.TIP.<Boolean> getValue()) {
-			instance.getServer().getScheduler().runTaskLaterAsynchronously(instance, new Runnable() {
-				@Override
-				public void run() {
-					String msg = Tip.forInt(random.nextInt(Tip.values().length)).toString();
-					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
-				}
-			}, 20L * 5);
-		}
+		if (isPremium()) { return; }
+
+		instance.getServer().getScheduler().runTaskLaterAsynchronously(instance, new Runnable() {
+			@Override
+			public void run() {
+				String msg = Tip.forInt(random.nextInt(Tip.values().length)).toString();
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+			}
+		}, 20L * 5);
 	}
 
 	private static enum Tip {

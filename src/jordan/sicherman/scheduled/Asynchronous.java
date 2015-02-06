@@ -133,6 +133,7 @@ public class Asynchronous extends BukkitRunnable {
 
 	private void checkChests() {
 		MyZ.instance.getServer().getScheduler().runTaskAsynchronously(MyZ.instance, new Runnable() {
+			@Override
 			public void run() {
 				ConfigurationSection chests = ConfigEntries.CHEST_LOCATIONS.<ConfigurationSection> getValue();
 

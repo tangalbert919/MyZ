@@ -3,6 +3,7 @@
  */
 package jordan.sicherman.listeners.player;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,15 +12,20 @@ import jordan.sicherman.items.ItemTag;
 import jordan.sicherman.items.ItemUtilities;
 import jordan.sicherman.locales.LocaleMessage;
 import jordan.sicherman.utilities.ChestType;
+import jordan.sicherman.utilities.DataWrapper;
 import jordan.sicherman.utilities.ManagerManager;
 import jordan.sicherman.utilities.ManagerManager.ManagerType;
+import jordan.sicherman.utilities.MyZRank;
+import jordan.sicherman.utilities.StartingKitManager.EquipmentPiece;
 import jordan.sicherman.utilities.Utilities;
 import jordan.sicherman.utilities.VisibilityManager;
 import jordan.sicherman.utilities.VisibilityManager.VisibilityCause;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
+import jordan.sicherman.utilities.configuration.UserEntries;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,6 +39,7 @@ import org.bukkit.metadata.FixedMetadataValue;
  */
 public class Chat implements Listener {
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	private void onChat(AsyncPlayerChatEvent e) {
 		if (!Utilities.inWorld(e.getPlayer())) { return; }
@@ -73,9 +80,68 @@ public class Chat implements Listener {
 				}
 				return;
 			}
+		} else if (ManagerManager.isManager(from, ManagerType.CHAT_PREFIX)) {
+			e.setCancelled(true);
+
+			String meta = from.getMetadata(ManagerType.CHAT_PREFIX.getID()).get(0).asString();
+			if (meta == null || meta.isEmpty()) {
+				from.setMetadata(ManagerType.CHAT_PREFIX.getID(), new FixedMetadataValue(MyZ.instance, e.getMessage()));
+				from.sendMessage(LocaleMessage.CHAT_PREFIX_MANAGER_1.toString(from));
+			} else {
+				try {
+					MyZRank.forInt(Integer.parseInt(e.getMessage())).setPrefix(meta);
+				} catch (Exception exc) {
+					OfflinePlayer player = Bukkit.getOfflinePlayer(e.getMessage());
+					if (player == null) {
+						from.sendMessage(LocaleMessage.NO_USER.toString(from));
+						return;
+					}
+					DataWrapper.set(player, UserEntries.PREFIX, meta);
+				}
+				from.sendMessage(LocaleMessage.CHAT_PREFIX_MANAGER_2.toString(from));
+				ManagerManager.setManager(from, false, ManagerType.CHAT_PREFIX);
+			}
+
+			return;
+		} else if (ManagerManager.isManager(from, ManagerType.SPAWN_KIT)) {
+			e.setCancelled(true);
+
+			try {
+				MyZRank rank = MyZRank.forInt(Integer.parseInt(e.getMessage()));
+				rank.setEquipment(EquipmentPiece.BOOTS, from.getEquipment().getBoots() != null ? from.getEquipment().getBoots().clone()
+						: null);
+				rank.setEquipment(EquipmentPiece.LEGGINGS, from.getEquipment().getLeggings() != null ? from.getEquipment().getLeggings()
+						.clone() : null);
+				rank.setEquipment(EquipmentPiece.CHESTPLATE, from.getEquipment().getChestplate() != null ? from.getEquipment()
+						.getChestplate().clone() : null);
+				rank.setEquipment(EquipmentPiece.HELMET, from.getEquipment().getHelmet() != null ? from.getEquipment().getHelmet().clone()
+						: null);
+				rank.setInventory(Arrays.asList(from.getInventory().getContents() != null ? from.getInventory().getContents().clone()
+						: null));
+			} catch (Exception exc) {
+				OfflinePlayer player = Bukkit.getOfflinePlayer(e.getMessage());
+				if (player == null) {
+					from.sendMessage(LocaleMessage.NO_USER.toString(from));
+					return;
+				}
+				DataWrapper.set(player, UserEntries.KIT_BOOTS, from.getEquipment().getBoots() != null ? from.getEquipment().getBoots()
+						.clone() : null);
+				DataWrapper.set(player, UserEntries.KIT_LEGGINGS, from.getEquipment().getLeggings() != null ? from.getEquipment()
+						.getLeggings().clone() : null);
+				DataWrapper.set(player, UserEntries.KIT_CHESTPLATE, from.getEquipment().getChestplate() != null ? from.getEquipment()
+						.getChestplate().clone() : null);
+				DataWrapper.set(player, UserEntries.KIT_HELMET, from.getEquipment().getHelmet() != null ? from.getEquipment().getHelmet()
+						.clone() : null);
+				DataWrapper.set(player, UserEntries.KIT_INVENTORY,
+						Arrays.asList(from.getInventory().getContents() != null ? from.getInventory().getContents().clone() : null));
+			}
+			from.sendMessage(LocaleMessage.MANAGING_SPAWN_KIT_CREATED.toString(from));
+			ManagerManager.setManager(from, false, ManagerType.SPAWN_KIT);
 		}
 
 		VisibilityManager.getInstance().overloadXPBarVisibility(from, VisibilityCause.CHAT);
+
+		if (!MyZ.isPremium()) { return; }
 
 		if (MyZ.ghostFactory.isGhost(from) || MyZ.zombieFactory.isZombie(from)) {
 			e.getRecipients().clear();
@@ -88,7 +154,6 @@ public class Chat implements Listener {
 		}
 
 		if (ConfigEntries.PRIVATE_CHAT.<Boolean> getValue() && e.getMessage().startsWith("@")) {
-			@SuppressWarnings("deprecation")
 			Player to = Bukkit.getPlayer(e.getMessage().split(" ")[0].substring(1));
 			boolean poke = !e.getMessage().contains(" ");
 			e.setCancelled(true);
@@ -105,7 +170,7 @@ public class Chat implements Listener {
 					to.sendMessage(LocaleMessage.POKED.filter(Utilities.getPrefixFor(from) + from.getName()).toString(to));
 				}
 			} else {
-				from.sendMessage(LocaleMessage.CANNOT_PRIVATE.toString(from));
+				from.sendMessage(LocaleMessage.NO_USER.toString(from));
 			}
 		} else if (ConfigEntries.RADIO_CHAT.<Boolean> getValue()
 				&& ItemUtilities.getInstance().hasTag(e.getPlayer().getItemInHand(), ItemTag.RADIO)) {
@@ -188,7 +253,8 @@ public class Chat implements Listener {
 
 	private static enum SwearFragments {
 		fuck("fuck", "duck"), shit("shit", "shot"), nigger("nigger", "number"), bitch("bitch", "fetch"), dick("dick", "duck"), sex("sex",
-				"sox");
+				"sox"), cunt("cunt", "cent"), penis("penis", "paris"), vagina("vagina", "regina"), asshole("asshole", "anthole"), faggot(
+				"faggot", "finger");
 
 		private final String swear, replacement;
 

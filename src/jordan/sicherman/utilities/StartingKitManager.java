@@ -38,9 +38,11 @@ public class StartingKitManager {
 		return instance;
 	}
 
-	public void addToKit(Player player, ItemStack item) {
+	public void addToKit(Player player, ItemStack... item) {
 		List<ItemStack> contents = new ArrayList<ItemStack>(DataWrapper.<List<ItemStack>> get(player, UserEntries.KIT_INVENTORY));
-		contents.add(item);
+		for (ItemStack i : item) {
+			contents.add(i);
+		}
 		DataWrapper.set(player, UserEntries.KIT_INVENTORY, contents);
 	}
 
@@ -49,10 +51,33 @@ public class StartingKitManager {
 	}
 
 	public ItemStack getEquipment(Player playerFor, EquipmentPiece piece) {
-		return DataWrapper.<ItemStack> get(playerFor, piece.entry);
+		ItemStack item = DataWrapper.<ItemStack> get(playerFor, piece.entry);
+
+		if (item == null) {
+			MyZRank rank = Utilities.getRank(playerFor);
+			if (rank != null) {
+				item = rank.getEquipment(piece);
+			}
+		}
+
+		return item;
 	}
 
 	public ItemStack[] getInventory(Player playerFor) {
-		return DataWrapper.<List<ItemStack>> get(playerFor, UserEntries.KIT_INVENTORY).toArray(new ItemStack[0]);
+		List<ItemStack> custom = DataWrapper.<List<ItemStack>> get(playerFor, UserEntries.KIT_INVENTORY);
+		List<ItemStack> inventory = new ArrayList<ItemStack>();
+		if (custom != null && !custom.isEmpty()) {
+			for (ItemStack i : custom) {
+				inventory.add(i.clone());
+			}
+		}
+		MyZRank rank = Utilities.getRank(playerFor);
+		if (rank != null) {
+			for (ItemStack i : rank.getInventory()) {
+				inventory.add(i.clone());
+			}
+		}
+
+		return inventory.toArray(new ItemStack[0]);
 	}
 }

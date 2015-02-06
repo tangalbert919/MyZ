@@ -59,7 +59,7 @@ public class Extras implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	private void onGrenadeLand(PlayerTeleportEvent e) {
-		if (!Utilities.inWorld(e.getPlayer())) { return; }
+		if (!Utilities.inWorld(e.getPlayer()) || !MyZ.isPremium()) { return; }
 
 		if (ConfigEntries.EXPLOSIVE_PEARLS.<Boolean> getValue() && e.getCause() == TeleportCause.ENDER_PEARL) {
 			e.setCancelled(true);

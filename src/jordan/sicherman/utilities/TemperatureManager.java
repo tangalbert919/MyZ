@@ -6,6 +6,7 @@ package jordan.sicherman.utilities;
 import java.util.Arrays;
 import java.util.List;
 
+import jordan.sicherman.MyZ;
 import jordan.sicherman.items.EquipmentState;
 import jordan.sicherman.particles.ParticleEffect;
 import jordan.sicherman.utilities.TemperatureManager.TemperatureState.Goldilocks;
@@ -79,6 +80,8 @@ public class TemperatureManager {
 	}
 
 	public void computeTemperature(Player playerFor, TemperatureEffect... effectsToApply) {
+		if (!MyZ.isPremium()) { return; }
+
 		double temperature = DataWrapper.get(playerFor, UserEntries.TEMPERATURE);
 
 		World world = playerFor.getWorld();
@@ -122,6 +125,8 @@ public class TemperatureManager {
 	}
 
 	public void doTemperatureEffects(Player playerFor, TemperatureEffect... effects) {
+		if (!MyZ.isPremium()) { return; }
+
 		List<TemperatureEffect> effectList = Arrays.<TemperatureEffect> asList(effects);
 		if (effectList.contains(TemperatureEffect.RELEASE_THERMOMETER)) {
 			Utilities.faceCompass(playerFor, true, null);

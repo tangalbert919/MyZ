@@ -79,7 +79,6 @@ public class ChestType {
 	public static ChestType getType(Block block) {
 		ConfigurationSection section = ConfigEntries.CHEST_LOCATIONS.<ConfigurationSection> getValue();
 		for (String key : section.getKeys(false)) {
-			MyZ.debug("Measuring to a SerializableLocation(" + key + ")");
 			if (block.getLocation().distanceSquared(SerializableLocation.deserialize(key)) == 0) { return ChestType.fromString(section
 					.getString(key + ".type")); }
 		}
@@ -119,12 +118,8 @@ public class ChestType {
 					public void run() {
 						Material matl = Material.valueOf(section.getString(key + ".material"));
 						if (block.getType() == matl) {
-							if (((Chest) block.getState()).getBlockInventory().getContents().length != 0) {
-								MyZ.debug("Attempted to respawn a not-empty chest.");
-								return;
-							}
+							if (((Chest) block.getState()).getBlockInventory().getContents().length != 0) { return; }
 						} else {
-							MyZ.debug("Populating a chest");
 							block.setType(matl);
 						}
 
@@ -194,23 +189,14 @@ public class ChestType {
 	}
 
 	public static ChestType nextType(ChestType type) {
-		MyZ.debug("Currently " + (type != null ? type.getName() : ""));
-
 		if (values().length == 0) { return null; }
 
-		if (type == null) {
-			MyZ.debug("Becoming " + values()[0].getName());
-			return chestTypes.get(0);
-		}
+		if (type == null) { return chestTypes.get(0); }
 
 		for (int i = 0; i <= values().length - 2; i++) {
-			if (type.equals(values()[i])) {
-				MyZ.debug("Becoming " + values()[i + 1].getName());
-				return values()[i + 1];
-			}
+			if (type.equals(values()[i])) { return values()[i + 1]; }
 		}
 
-		MyZ.debug("Becoming empty");
 		return null;
 	}
 

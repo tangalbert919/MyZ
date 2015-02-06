@@ -3,6 +3,10 @@
  */
 package jordan.sicherman.scheduled;
 
+import jordan.sicherman.player.User;
+import jordan.sicherman.player.User.UFiles;
+import jordan.sicherman.utilities.configuration.FileUtilities;
+
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -18,9 +22,15 @@ public class Synchronous extends BukkitRunnable {
 
 	@Override
 	public void cancel() {
-
+		System.out.println("Performing final save.");
+		report();
 	}
 
 	private void report() {
+		for (User user : User.cache.values()) {
+			for (UFiles file : UFiles.values()) {
+				FileUtilities.save(user, file);
+			}
+		}
 	}
 }

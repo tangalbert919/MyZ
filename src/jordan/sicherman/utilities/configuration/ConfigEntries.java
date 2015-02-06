@@ -180,7 +180,8 @@ public enum ConfigEntries {
 			"giant.ability.stomp.magnitude", EntryType.DOUBLE, CFiles.MOBS, 1.5), CHESTS("chests.enabled", EntryType.BOOLEAN,
 			CFiles.ADDONS, true), CHEST_TYPES("types", EntryType.CONFIGURATION_SECTION, CFiles.CHESTS, null), CHEST_LOCATIONS("locations",
 			EntryType.CONFIGURATION_SECTION, CFiles.CHESTS, null), CHEST_RESPAWN_TIME("chest.respawn_time", EntryType.INTEGER,
-			CFiles.EXTRAS, 300), RANKS("ranks", EntryType.CONFIGURATION_SECTION, CFiles.RANKS, null);
+			CFiles.EXTRAS, 300), RANKS("ranks", EntryType.CONFIGURATION_SECTION, CFiles.RANKS, null), SAVE_SPEED("save_delay",
+			EntryType.INTEGER, CFiles.CONFIG, 1200);
 
 	private final String key;
 	private final EntryType type;

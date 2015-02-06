@@ -73,6 +73,7 @@ public class Utilities {
 
 	public static void doLogout(Player player) {
 		player.setNoDamageTicks(0);
+
 		if (SpectatorMode.isSpectator(player)) {
 			Death.realDeath(player);
 		}

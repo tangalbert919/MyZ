@@ -47,7 +47,7 @@ public class DataWrapper {
 	}
 
 	public static void set(OfflinePlayer playerFor, UserEntries entry, Object value) {
-		set(playerFor, entry, value, true, true);
+		set(playerFor, entry, value, true, false);
 	}
 
 	/**

@@ -77,7 +77,7 @@ public class User {
 
 	private final UserFile files;
 	private final String storedPrimaryKey;
-	private static Map<String, User> cache = new HashMap<String, User>();
+	public static Map<String, User> cache = new HashMap<String, User>();
 
 	public static User forPlayer(OfflinePlayer playerFor) {
 		User u = cache.get(SQLManager.primaryKeyFor(playerFor));
@@ -90,6 +90,11 @@ public class User {
 	}
 
 	public static void freePlayer(OfflinePlayer playerFor) {
+		User user = forPlayer(playerFor);
+		for (UFiles file : UFiles.values()) {
+			FileUtilities.save(user, file);
+		}
+
 		cache.remove(SQLManager.primaryKeyFor(playerFor));
 	}
 

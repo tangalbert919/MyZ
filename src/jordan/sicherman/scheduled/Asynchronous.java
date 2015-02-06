@@ -17,6 +17,7 @@ import jordan.sicherman.utilities.configuration.ConfigEntries;
 import jordan.sicherman.utilities.configuration.UserEntries;
 
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -29,6 +30,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class Asynchronous extends BukkitRunnable {
 
 	private final boolean visibility, thirst, bleed, infect, temperature;
+	private static int ticks = 0;
 
 	public Asynchronous() {
 		visibility = ConfigEntries.USE_VISIBILITY.<Boolean> getValue();
@@ -41,7 +43,12 @@ public class Asynchronous extends BukkitRunnable {
 	@Override
 	public void run() {
 		report();
-		checkChests();
+		ticks++;
+		// Reduce some more consumption :)
+		if (ticks >= 20) {
+			checkChests();
+			ticks = 0;
+		}
 	}
 
 	@Override
@@ -138,7 +145,8 @@ public class Asynchronous extends BukkitRunnable {
 				ConfigurationSection chests = ConfigEntries.CHEST_LOCATIONS.<ConfigurationSection> getValue();
 
 				for (String key : chests.getKeys(false)) {
-					ChestType.respawn(SerializableLocation.deserialize(key).getBlock(), false);
+					Location location = SerializableLocation.deserialize(key);
+					ChestType.respawn(location.getWorld().getBlockAt(location), false);
 				}
 			}
 		});

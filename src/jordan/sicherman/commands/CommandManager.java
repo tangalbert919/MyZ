@@ -48,7 +48,13 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			try {
 				String key = h.getArgs()[args.length - 1];
 				if (!result.contains(key)) {
-					result.add(key);
+					if (args.length - 1 > 0) {
+						if (args[args.length - 2].equalsIgnoreCase(h.getArgs()[args.length - 2])) {
+							result.add(key);
+						}
+					} else {
+						result.add(key);
+					}
 				}
 			} catch (Exception exc) {
 			}

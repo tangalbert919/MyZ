@@ -22,7 +22,6 @@ public class Synchronous extends BukkitRunnable {
 
 	@Override
 	public void cancel() {
-		System.out.println("Performing final save.");
 		report();
 	}
 

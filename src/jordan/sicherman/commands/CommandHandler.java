@@ -26,7 +26,10 @@ public enum CommandHandler {
 			"manage chests", new ChestManager(), ConfigEntries.CHESTS.<Boolean> getValue()), MANAGE_CHAT_PREFIX(new String[] { "manage",
 			"chat", "prefix" }, CommandPermission.CHAT_MANAGER, "Manage chat prefixes", "manage chat prefix", new ChatPrefixManager(),
 			ConfigEntries.CHAT_FORMATTING.<Boolean> getValue()), MANAGE_SPAWN_KIT(new String[] { "manage", "spawn", "kit" },
-			CommandPermission.SPAWN_KIT_MANAGER, "Manage spawn kits", "manage spawn kit", new SpawnKitManager(), true);
+			CommandPermission.SPAWN_KIT_MANAGER, "Manage spawn kits", "manage spawn kit", new SpawnKitManager(), true), RESPAWN_CHESTS(
+			new String[] { "respawn", "chests" }, CommandPermission.CHEST_MANAGER, "Respawn MyZ chests", "respawn chests",
+			new RespawnChests(), ConfigEntries.CHESTS.<Boolean> getValue()), VERSION(new String[] { "version" }, CommandPermission.OP,
+			"Check the version of MyZ on your server", "version", new Version(), true);
 
 	private final String[] args;
 	private final CommandPermission perm;
@@ -98,7 +101,7 @@ public enum CommandHandler {
 	public static enum CommandPermission {
 		SPAWN_MANAGER("MyZ.manager.spawns"), CONFIG_MANAGER("MyZ.manager.config"), PLAY("MyZ.play"), ENGINEER_MANAGER(
 				"MyZ.manager.engineer"), CHEST_MANAGER("MyZ.manager.chests"), SPAWN_KIT_MANAGER("MyZ.manager.spawn_kits"), CHAT_MANAGER(
-				"MyZ.manager.chat");
+				"MyZ.manager.chat"), OP("MyZ.*");
 
 		private final String node;
 

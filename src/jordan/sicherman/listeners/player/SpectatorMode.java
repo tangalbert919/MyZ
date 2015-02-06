@@ -62,7 +62,7 @@ public class SpectatorMode implements Listener {
 		}
 
 		if (e.getInventory().getType() == InventoryType.CHEST && e.getInventory().getHolder() instanceof Chest) {
-			if (e.getInventory().getContents().length == 0) {
+			if (ChestType.isEmpty(e.getInventory().getContents())) {
 				MyZ.instance.getServer().getScheduler().runTaskLater(MyZ.instance, new Runnable() {
 					@Override
 					public void run() {

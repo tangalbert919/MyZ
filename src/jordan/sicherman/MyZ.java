@@ -129,7 +129,7 @@ public class MyZ extends JavaPlugin {
 		myzapi = new MyZAPI();
 		MyZRank.load();
 
-		if (!isPremium() && ConfigEntries.UPDATE.<Boolean> getValue()) {
+		if (/*!isPremium() && */ConfigEntries.UPDATE.<Boolean> getValue()) {
 			new Updater(this, 55557, getFile(), UpdateType.DEFAULT, false);
 		}
 
@@ -246,7 +246,7 @@ public class MyZ extends JavaPlugin {
 	private static final Random random = new Random();
 
 	public static void giveMyZTip(final CommandSender sender) {
-		if (isPremium()) { return; }
+		// if (isPremium()) { return; }
 
 		instance.getServer().getScheduler().runTaskLaterAsynchronously(instance, new Runnable() {
 			@Override

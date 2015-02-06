@@ -18,6 +18,7 @@ import jordan.sicherman.utilities.configuration.ConfigEntries;
 import jordan.sicherman.utilities.configuration.Configuration.CFiles;
 import jordan.sicherman.utilities.configuration.FileUtilities;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -56,6 +57,15 @@ public class ChestType {
 			this.min = min;
 			this.max = max;
 			this.prob = prob;
+		}
+	}
+
+	public static void respawnAll() {
+		ConfigurationSection section = ConfigEntries.CHEST_LOCATIONS.<ConfigurationSection> getValue();
+
+		for (String key : section.getKeys(false)) {
+			Location loc = SerializableLocation.deserialize(key);
+			respawn(loc.getBlock(), true);
 		}
 	}
 
@@ -109,7 +119,7 @@ public class ChestType {
 		final String key = SerializableLocation.fromLocation(block.getLocation()).serialize().replaceAll("\\.0", "");
 		if (section.contains(key)) {
 			long respawn = section.getLong(key + ".respawn_time");
-			if (respawn < 0) { return; }
+			if (respawn < 0 && !force) { return; }
 			if (force || System.currentTimeMillis() >= respawn) {
 				section.set(key + ".respawn_time", -1);
 
@@ -118,7 +128,7 @@ public class ChestType {
 					public void run() {
 						Material matl = Material.valueOf(section.getString(key + ".material"));
 						if (block.getType() == matl) {
-							if (((Chest) block.getState()).getBlockInventory().getContents().length != 0) { return; }
+							if (!isEmpty(((Chest) block.getState()).getBlockInventory().getContents())) { return; }
 						} else {
 							block.setType(matl);
 						}
@@ -172,10 +182,16 @@ public class ChestType {
 		if (section != null) {
 			for (String cKey : section.getKeys(false)) {
 				ItemStack item = section.getConfigurationSection(cKey).getItemStack("item").clone();
+				ConfigurationSection subsection = section.getConfigurationSection(cKey);
+				if (subsection.isSet("probablity")) {
+					subsection.set("probability", subsection.get("probablity"));
+					subsection.set("probablity", null);
+					FileUtilities.save(ConfigEntries.CHEST_TYPES.getFile());
+				}
 
-				contents.put(new ItemProperties(section.getConfigurationSection(cKey).getInt("amount_minimum"), section
-						.getConfigurationSection(cKey).getInt("amount_maximum"), section.getConfigurationSection(cKey)
-						.getInt("probability")), item);
+				contents.put(
+						new ItemProperties(subsection.getInt("amount_minimum"), subsection.getInt("amount_maximum"), subsection
+								.getInt("probability")), item);
 			}
 		}
 	}
@@ -218,7 +234,7 @@ public class ChestType {
 			if (section == null) {
 				section = ConfigEntries.CHEST_TYPES.<ConfigurationSection> getValue().createSection(key);
 			}
-			section.set(uuid + ".probablity", prob);
+			section.set(uuid + ".probability", prob);
 			section.set(uuid + ".amount_minimum", min);
 			section.set(uuid + ".amount_maximum", max);
 			section.set(uuid + ".item", recent);
@@ -240,5 +256,12 @@ public class ChestType {
 
 		ConfigEntries.CHEST_TYPES.<ConfigurationSection> getValue().set(key, null);
 		FileUtilities.save(CFiles.CHESTS);
+	}
+
+	public static boolean isEmpty(ItemStack[] contents) {
+		for (ItemStack item : contents) {
+			if (item != null && item.getType() != Material.AIR) { return false; }
+		}
+		return true;
 	}
 }

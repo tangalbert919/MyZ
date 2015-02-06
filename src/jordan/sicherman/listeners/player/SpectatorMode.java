@@ -178,7 +178,7 @@ public class SpectatorMode implements Listener {
 				e.setCancelled(true);
 
 				if (player.isSneaking()) {
-					DataWrapper.set(ConfigEntries.HOME_SPAWN, SerializableLocation.fromLocation(player.getLocation()), true);
+					DataWrapper.set(ConfigEntries.HOME_SPAWN, SerializableLocation.fromLocation(player.getLocation()).serialize(), true);
 					player.sendMessage(LocaleMessage.HOME_SET.toString(player));
 					return;
 				}

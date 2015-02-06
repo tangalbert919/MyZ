@@ -92,36 +92,36 @@ public class Death implements Listener {
 				public void run() {
 					if (MyZ.zombieFactory.isZombie(player)) {
 						MyZ.zombieFactory.setZombie(player, false);
-						if (ReviveManager.getInstance().isVulnerable(player)) {
-							realDeath(player);
-							return;
+					}
+					if (ReviveManager.getInstance().isVulnerable(player)) {
+						realDeath(player);
+						return;
+					}
+
+					player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, (int) ghostFor, 15));
+					MyZ.ghostFactory.setGhost(player, true);
+					player.sendMessage(LocaleMessage.BECAME_GHOST.filter(ghostFor / 20L).toString(player));
+					DataWrapper.set(player, UserEntries.GHOST_TIMES, DataWrapper.<Integer> get(player, UserEntries.GHOST_TIMES) + 1);
+
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							if (MyZ.ghostFactory.isGhost(player)) {
+								MyZ.ghostFactory.setGhost(player, false);
+								realDeath(player);
+							}
 						}
 
-						player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, (int) ghostFor, 15));
-						MyZ.ghostFactory.setGhost(player, true);
-						player.sendMessage(LocaleMessage.BECAME_GHOST.filter(ghostFor / 20L).toString(player));
-						DataWrapper.set(player, UserEntries.GHOST_TIMES, DataWrapper.<Integer> get(player, UserEntries.GHOST_TIMES) + 1);
-
-						new BukkitRunnable() {
-							@Override
-							public void run() {
-								if (MyZ.ghostFactory.isGhost(player)) {
-									MyZ.ghostFactory.setGhost(player, false);
-									realDeath(player);
-								}
+						@Override
+						public void cancel() {
+							player.removePotionEffect(PotionEffectType.WITHER);
+							if (MyZ.ghostFactory.isGhost(player)) {
+								MyZ.ghostFactory.setGhost(player, false);
+								ReviveManager.getInstance().reportException(player);
+								realDeath(player);
 							}
-
-							@Override
-							public void cancel() {
-								player.removePotionEffect(PotionEffectType.WITHER);
-								if (MyZ.ghostFactory.isGhost(player)) {
-									MyZ.ghostFactory.setGhost(player, false);
-									ReviveManager.getInstance().reportException(player);
-									realDeath(player);
-								}
-							}
-						}.runTaskLater(MyZ.instance, ghostFor);
-					}
+						}
+					}.runTaskLater(MyZ.instance, ghostFor);
 				}
 
 				@Override

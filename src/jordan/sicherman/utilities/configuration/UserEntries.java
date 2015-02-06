@@ -53,7 +53,7 @@ public enum UserEntries {
 		return result.substring(0, result.length() - 2);
 	}
 
-	private static boolean isMySQLKey(UserEntries key) {
+	public static boolean isMySQLKey(UserEntries key) {
 		return key != KIT_INVENTORY && key.type != EntryType.ITEMSTACK && key.type != EntryType.CONFIGURATION_SECTION;
 	}
 
@@ -80,6 +80,8 @@ public enum UserEntries {
 	}
 
 	public static List<String> toList(String list) {
+		if (list == null) { return null; }
+
 		String[] pieces = list.split(":");
 		List<String> result = new ArrayList<String>();
 

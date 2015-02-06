@@ -95,12 +95,13 @@ public enum ConfigEntries {
 			"temperature.threshold.hypothermia.1", EntryType.DOUBLE, CFiles.EXTRAS, 34.8), HYPOTHERMIA_2_THRESHOLD(
 			"temperature.threshold.hypothermia.2", EntryType.DOUBLE, CFiles.EXTRAS, 33.4), HYPOTHERMIA_3_THRESHOLD(
 			"temperature.threshold.hypothermia.3", EntryType.DOUBLE, CFiles.EXTRAS, 32.3), TEMPERATURE_THIRSTY(
-			"temperature.modify.thirst.thirsty", EntryType.DOUBLE, CFiles.EXTRAS, 1.2), TEMPERATURE_RAIN("temperature.modify.downfall",
-			EntryType.DOUBLE, CFiles.EXTRAS, -1.8), TEMPERATURE_FIRE("temperature.modify.player.on_fire", EntryType.DOUBLE, CFiles.EXTRAS,
-			15.0), TEMPERATURE_LEATHER_ARMOUR("temperature.modify.armour_per_piece.leather", EntryType.DOUBLE, CFiles.EXTRAS, 0.3), TEMPERATURE_CHAIN_ARMOUR(
-			"temperature.modify.armour_per_piece.chainmail", EntryType.DOUBLE, CFiles.EXTRAS, 0.11), TEMPERATURE_IRON_ARMOUR(
-			"temperature.modify.armour_per_piece.iron", EntryType.DOUBLE, CFiles.EXTRAS, 0.15), TEMPERATURE_GOLD_ARMOUR(
-			"temperature.modify.armour_per_piece.gold", EntryType.DOUBLE, CFiles.EXTRAS, 0.21), TEMPERATURE_DIAMOND_ARMOUR(
+			"temperature.modify.thirst.thirsty", EntryType.DOUBLE, CFiles.EXTRAS, 0.5), TEMPERATURE_WATER(
+			"temperature.modify.water.in_non_ocean_water", EntryType.DOUBLE, CFiles.EXTRAS, -2.2), TEMPERATURE_RAIN(
+			"temperature.modify.downfall", EntryType.DOUBLE, CFiles.EXTRAS, -1.6), TEMPERATURE_FIRE("temperature.modify.player.on_fire",
+			EntryType.DOUBLE, CFiles.EXTRAS, 15.0), TEMPERATURE_LEATHER_ARMOUR("temperature.modify.armour_per_piece.leather",
+			EntryType.DOUBLE, CFiles.EXTRAS, 0.3), TEMPERATURE_CHAIN_ARMOUR("temperature.modify.armour_per_piece.chainmail",
+			EntryType.DOUBLE, CFiles.EXTRAS, 0.11), TEMPERATURE_IRON_ARMOUR("temperature.modify.armour_per_piece.iron", EntryType.DOUBLE,
+			CFiles.EXTRAS, 0.15), TEMPERATURE_GOLD_ARMOUR("temperature.modify.armour_per_piece.gold", EntryType.DOUBLE, CFiles.EXTRAS, 0.21), TEMPERATURE_DIAMOND_ARMOUR(
 			"temperature.modify.armour_per_piece.diamond", EntryType.DOUBLE, CFiles.EXTRAS, 0.27), TEMPERATURE_INFECTED(
 			"temperature.modify.infected", EntryType.DOUBLE, CFiles.EXTRAS, 2.1), TEMPERATURE_NEAR_FIRE("temperature.modify.infected",
 			EntryType.DOUBLE, CFiles.EXTRAS, 3.2), TEMPERATURE_RUNNING("temperature.modify.sprinting", EntryType.DOUBLE, CFiles.EXTRAS, 0.9), TEMPERATURE_NIGHT(
@@ -317,12 +318,8 @@ public enum ConfigEntries {
 			section.set("100.equipment.boots", null);
 			section.set("100.equipment.helmet", null);
 			section.set("100.equipment.leggings", null);
-			section.set("100.equipment.chestplate",
-					EquipmentState.BROKEN.applyTo(ItemUtilities.getInstance().getTagItem(ItemTag.STARTER_CHESTPLATE, 1)));
-			section.set("100.equipment.inventory", Arrays.asList(EquipmentState.DEVASTATED.applyTo(ItemUtilities.getInstance().getTagItem(
-					ItemTag.STARTER_SWORD, 1)), ItemUtilities.getInstance().getTagItem(ItemTag.THERMOMETER, 1), ItemUtilities.getInstance()
-					.getTagItem(ItemTag.BANDAGE, 1), new ItemStack(Material.POTION),
-					ItemUtilities.getInstance().getTagItem(ItemTag.RADIO, 1)));
+			section.set("100.equipment.chestplate", null);
+			section.set("100.equipment.inventory", new ArrayList<ItemStack>());
 		}
 		return section;
 	}

@@ -68,13 +68,17 @@ public class StartingKitManager {
 		List<ItemStack> inventory = new ArrayList<ItemStack>();
 		if (custom != null && !custom.isEmpty()) {
 			for (ItemStack i : custom) {
-				inventory.add(i.clone());
+				if (i != null) {
+					inventory.add(i.clone());
+				}
 			}
 		}
 		MyZRank rank = Utilities.getRank(playerFor);
 		if (rank != null) {
 			for (ItemStack i : rank.getInventory()) {
-				inventory.add(i.clone());
+				if (i != null) {
+					inventory.add(i.clone());
+				}
 			}
 		}
 

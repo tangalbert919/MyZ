@@ -37,18 +37,6 @@ public class CustomEntitySelectorNearestAttackableTarget implements Predicate<En
 
 			double range = ((Player) entity.getBukkitEntity()).getExp() * 32;
 
-			/*double range = pathfinder.f();
-			if (paramEntityLiving.isSneaking()) {
-				range *= 0.800000011920929D;
-			}
-			if (paramEntityLiving.isInvisible()) {
-				float f = ((EntityHuman) paramEntityLiving).bX();
-				if (f < 0.1F) {
-					f = 0.1F;
-				}
-				range *= 0.7F * f;
-			}*/
-
 			if (entity.g(pathfinder.getE()) > range) { return false; }
 		}
 		return pathfinder.a(entity, false);

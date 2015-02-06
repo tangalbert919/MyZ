@@ -125,17 +125,24 @@ public class Utilities {
 		doPoisonDamage(playerFor, false);
 	}
 
-	private static void doPoisonDamage(Player playerFor, boolean initial) {
-		if (playerFor.getHealth() > 0.6 * playerFor.getMaxHealth()) {
-			playerFor.setHealth(playerFor.getMaxHealth() * 0.6);
-			playerFor.damage(0);
-		}
+	private static void doPoisonDamage(final Player playerFor, final boolean initial) {
+		final double damage = ConfigEntries.INFECTION_DAMAGE.<Double> getValue();
 
-		double damage = ConfigEntries.INFECTION_DAMAGE.<Double> getValue();
-		if (!initial && playerFor.getHealth() > damage) {
-			playerFor.damage(damage);
-		}
-		playerFor.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * 10, 3));
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (playerFor.getHealth() > 0.6 * playerFor.getMaxHealth()) {
+					playerFor.setHealth(playerFor.getMaxHealth() * 0.6);
+					playerFor.damage(0);
+				}
+
+				if (!initial && playerFor.getHealth() > damage) {
+					playerFor.damage(damage);
+				}
+
+				playerFor.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * 10, 3));
+			}
+		}.runTaskLater(MyZ.instance, 0L);
 	}
 
 	public static void setBleeding(Player playerFor, boolean bleeding, boolean force) {
@@ -168,13 +175,18 @@ public class Utilities {
 		}
 	}
 
-	public static void doBleedingDamage(Player playerFor) {
-		double damage = ConfigEntries.BLEED_DAMAGE.<Double> getValue();
-		if (playerFor.getHealth() > damage) {
-			playerFor.damage(damage);
-		}
-		playerFor.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 10, 3));
-		ParticleEffect.REDSTONE.display(0.25f, 0.25f, 0.25f, 0f, 50, playerFor.getEyeLocation().subtract(0, 0.5, 0), 10.0);
+	public static void doBleedingDamage(final Player playerFor) {
+		final double damage = ConfigEntries.BLEED_DAMAGE.<Double> getValue();
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (playerFor.getHealth() > damage) {
+					playerFor.damage(damage);
+				}
+				playerFor.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 10, 3));
+				ParticleEffect.REDSTONE.display(0.25f, 0.25f, 0.25f, 0f, 50, playerFor.getEyeLocation().subtract(0, 0.5, 0), 10.0);
+			}
+		}.runTaskLater(MyZ.instance, 0L);
 	}
 
 	public static List<Player> getPlayersInRange(Location location, int radius) {

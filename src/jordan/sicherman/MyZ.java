@@ -93,6 +93,12 @@ public class MyZ extends JavaPlugin {
 
 	// TODO Guild system
 
+	// TODO Skill points (Z Points) that can be allocated to a given skill.
+	// TODO More skills
+
+	// TODO Care packages falling from sky at random time intervals at marked
+	// locations.
+
 	// TODO See todo notes at Death, SpectatorMode, Utilities
 
 	public static boolean isPremium() {

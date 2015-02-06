@@ -65,7 +65,7 @@ public class Updater {
 	// User-agent when querying Curse
 	private static final String USER_AGENT = "Updater (by Gravity)";
 	// If the version number contains one of these, don't update.
-	private static final String[] NO_UPDATE_TAG = { "-DEV", "-PRE", "-SNAPSHOT", "-ALPHA" };
+	private static final String[] NO_UPDATE_TAG = { "-DEV", "-SNAPSHOT" };
 	// Used for downloading files
 	private static final int BYTE_SIZE = 1024;
 	// Config key for api key

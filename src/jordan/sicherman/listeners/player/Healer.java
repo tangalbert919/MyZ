@@ -30,7 +30,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class Healer implements Listener {
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOWEST)
 	private void oneHealSelf(PlayerInteractEvent e) {
 		if (!MyZ.isPremium() || !Utilities.inWorld(e.getPlayer())) { return; }
 

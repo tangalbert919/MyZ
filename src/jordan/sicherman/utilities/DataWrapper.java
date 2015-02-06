@@ -24,9 +24,9 @@ public class DataWrapper {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T get(OfflinePlayer playerFor, UserEntries entry) {
-		if (MyZ.sql.isConnected()) { return (T) (entry.getType() != EntryType.LIST ? MyZ.sql.get(playerFor,
-				entry.getKey().replaceAll("\\.", "_")) : UserEntries.toList(MyZ.sql.<String> get(playerFor,
-				entry.getKey().replaceAll("\\.", "_")))); }
+		if (MyZ.sql.isConnected() && UserEntries.isMySQLKey(entry)) { return (T) (entry.getType() != EntryType.LIST ? MyZ.sql.get(
+				playerFor, entry.getKey().replaceAll("\\.", "_")) : UserEntries.toList(MyZ.sql.<String> get(playerFor, entry.getKey()
+				.replaceAll("\\.", "_")))); }
 
 		switch (entry.getType()) {
 		case BOOLEAN:

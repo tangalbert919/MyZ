@@ -31,7 +31,7 @@ public class TakeDamage implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	private void onMob(EntityDamageByEntityEvent e) {
-		if (!Utilities.inWorld(e.getEntity())) { return; }
+		if (!Utilities.inWorld(e.getEntity()) || e.getDamage() == 0.0D) { return; }
 
 		if (e.getEntity() instanceof Player) {
 			Utilities.setBleeding((Player) e.getEntity(), true, false);

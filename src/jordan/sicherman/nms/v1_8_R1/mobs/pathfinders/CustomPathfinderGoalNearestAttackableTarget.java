@@ -40,11 +40,11 @@ public class CustomPathfinderGoalNearestAttackableTarget extends PathfinderGoalT
 		this(entitycreature, targetClass, 10, flag, flag1, (Predicate<EntityLiving>) null);
 	}
 
-	public CustomPathfinderGoalNearestAttackableTarget(EntityCreature entitycreature, Class<? extends EntityLiving> targetClass, int i,
-			boolean flag, boolean flag1, Predicate<EntityLiving> predicate) {
+	public CustomPathfinderGoalNearestAttackableTarget(EntityCreature entitycreature, Class<? extends EntityLiving> targetClass,
+			int chanceToCancel, boolean flag, boolean flag1, Predicate<EntityLiving> predicate) {
 		super(entitycreature, flag, flag1);
 		classToTarget = targetClass;
-		chanceToNot = i;
+		chanceToNot = chanceToCancel;
 		distanceComparator = new DistanceComparator(entitycreature);
 		a(1);
 		entitySelector = new CustomEntitySelectorNearestAttackableTarget(this, predicate);

@@ -20,29 +20,29 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class CustomPathfinderGoalMeleeAttack extends PathfinderGoal {
 
-	World world;
-	protected EntityCreature creature;
-	int attackDelay;
-	double speed;
+	final World world;
+	protected final EntityCreature creature;
+	private int attackDelay;
+	private final double speed;
 	boolean bypassVision;
-	PathEntity path;
-	Class<? extends EntityLiving> targetClass;
+	private PathEntity path;
+	private Class<? extends EntityLiving> targetClass;
 	private int delay;
 	private double targetX;
 	private double targetY;
 	private double targetZ;
 
-	public CustomPathfinderGoalMeleeAttack(EntityCreature creature, Class<? extends EntityLiving> paramClass, double paramDouble,
-			boolean paramBoolean) {
-		this(creature, paramDouble, paramBoolean);
-		targetClass = paramClass;
+	public CustomPathfinderGoalMeleeAttack(EntityCreature creature, Class<? extends EntityLiving> targetClass, double speed,
+			boolean bypassVision) {
+		this(creature, speed, bypassVision);
+		this.targetClass = targetClass;
 	}
 
-	public CustomPathfinderGoalMeleeAttack(EntityCreature creature, double paramDouble, boolean paramBoolean) {
+	public CustomPathfinderGoalMeleeAttack(EntityCreature creature, double speed, boolean bypassVision) {
 		this.creature = creature;
 		world = creature.world;
-		speed = paramDouble;
-		bypassVision = paramBoolean;
+		this.speed = speed;
+		this.bypassVision = bypassVision;
 		a(3);
 	}
 

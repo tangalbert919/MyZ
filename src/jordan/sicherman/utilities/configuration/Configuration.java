@@ -7,7 +7,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * @author Jordan
- * @param <T>
  * 
  */
 public class Configuration {

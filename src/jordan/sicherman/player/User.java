@@ -89,6 +89,16 @@ public class User {
 		return user;
 	}
 
+	public static User forPrimaryKey(String key) {
+		User u = cache.get(key);
+		if (u != null) { return u; }
+
+		User user = new User(new UserFile(FileUtilities.load(key, UFiles.values())), key);
+
+		cache.put(key, user);
+		return user;
+	}
+
 	public static void freePlayer(OfflinePlayer playerFor) {
 		User user = forPlayer(playerFor);
 		for (UFiles file : UFiles.values()) {

@@ -86,8 +86,6 @@ public class MyZ extends JavaPlugin {
 	// Visibility
 	// Temperature
 
-	// TODO check autoupdater
-
 	// TODO Recipes that can be unlocked per-player to craft new items
 
 	// TODO Friend system, disabling PVP towards friends that can be added via
@@ -175,8 +173,8 @@ public class MyZ extends JavaPlugin {
 		pm.registerEvents(new Healer(), this);
 		pm.registerEvents(new TakeDamage(), this);
 
-		new Asynchronous().runTaskTimerAsynchronously(instance, ConfigEntries.TASK_SPEED.<Integer> getValue() * 1L, 0L);
-		new Synchronous().runTaskTimer(instance, ConfigEntries.SAVE_SPEED.<Integer> getValue() * 1L, 0L);
+		new Asynchronous().runTaskTimerAsynchronously(instance, 0L, ConfigEntries.TASK_SPEED.<Integer> getValue() * 1L);
+		new Synchronous().runTaskTimer(instance, 0L, ConfigEntries.SAVE_SPEED.<Integer> getValue() * 1L);
 
 		getServer().addRecipe(new FurnaceRecipe(ItemUtilities.getInstance().getTagItem(ItemTag.WARM_WATER, 1), Material.POTION));
 
@@ -191,6 +189,8 @@ public class MyZ extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		Synchronous.report();
+
 		getServer().getScheduler().cancelTasks(this);
 
 		if (ghostFactory != null) {
@@ -212,7 +212,7 @@ public class MyZ extends JavaPlugin {
 	}
 
 	public static void log(String message) {
-		Bukkit.getConsoleSender().sendMessage(message);
+		Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "[MyZ 4]" + ChatColor.RESET + message);
 	}
 
 	public void registerSQL() {

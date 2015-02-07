@@ -1,5 +1,6 @@
 package jordan.sicherman.sql;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,12 +13,18 @@ import java.util.UUID;
 
 import jordan.sicherman.MyZ;
 import jordan.sicherman.locales.LocaleMessage;
+import jordan.sicherman.player.User;
+import jordan.sicherman.player.User.UFiles;
+import jordan.sicherman.utilities.DataWrapper;
+import jordan.sicherman.utilities.configuration.ConfigEntries;
 import jordan.sicherman.utilities.configuration.UserEntries;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author Jordan
@@ -139,18 +146,29 @@ public class SQLManager {
 			return;
 		}
 
-		if (!isIn(playerFor)) {
-			try {
-				executeQuery("INSERT INTO playerdata (username) VALUES ('" + primaryKeyFor(playerFor) + "')");
-			} catch (Exception e) {
-				MyZ.log(ChatColor.RED + LocaleMessage.SQL_FAIL.toString() + ": " + e.getMessage());
-			}
-		}
+		add(primaryKeyFor(playerFor));
 
 		load(playerFor);
 	}
 
-	public boolean isIn(OfflinePlayer player) {
+	private void add(String key) {
+		if (isPseudo()) { return; }
+
+		if (!isConnected()) {
+			MyZ.log(ChatColor.RED + LocaleMessage.SQL_MODIFICATION.toString());
+			return;
+		}
+
+		if (!isIn(key)) {
+			try {
+				executeQuery("INSERT INTO playerdata (username) VALUES ('" + key + "')");
+			} catch (Exception e) {
+				MyZ.log(ChatColor.RED + LocaleMessage.SQL_FAIL.toString() + ": " + e.getMessage());
+			}
+		}
+	}
+
+	public boolean isIn(String key) {
 		if (isPseudo()) { return true; }
 
 		if (!isConnected()) {
@@ -159,7 +177,7 @@ public class SQLManager {
 		}
 
 		try {
-			return query("SELECT * FROM playerdata WHERE username = '" + primaryKeyFor(player) + "' LIMIT 1").next();
+			return query("SELECT * FROM playerdata WHERE username = '" + key + "' LIMIT 1").next();
 		} catch (Exception e) {
 			MyZ.log(ChatColor.RED + LocaleMessage.SQL_FAIL.toString() + ": " + e.getMessage());
 			return false;
@@ -174,7 +192,7 @@ public class SQLManager {
 			return;
 		}
 
-		if (!isIn(player)) { return; }
+		if (!isIn(primaryKeyFor(player))) { return; }
 
 		MyZ.instance.getServer().getScheduler().runTaskLaterAsynchronously(MyZ.instance, new Runnable() {
 			@Override
@@ -221,7 +239,11 @@ public class SQLManager {
 		return connected;
 	}
 
-	public void set(final OfflinePlayer playerFor, final String field, final Object value, boolean aSync) {
+	public void set(OfflinePlayer playerFor, String field, Object value, boolean aSync) {
+		set(primaryKeyFor(playerFor), field, value, aSync);
+	}
+
+	private void set(final String key, final String field, final Object value, final boolean aSync) {
 		if (isPseudo()) { return; }
 
 		if (!isConnected()) {
@@ -233,28 +255,26 @@ public class SQLManager {
 			MyZ.instance.getServer().getScheduler().runTaskLaterAsynchronously(MyZ.instance, new Runnable() {
 				@Override
 				public void run() {
-					set(playerFor, field, value, false);
+					set(key, field, value, false);
 				}
 			}, 0L);
 			return;
 		}
 
-		String pk = primaryKeyFor(playerFor);
-
 		try {
 			executeQuery("UPDATE playerdata SET " + field + " = " + (value instanceof String ? "'" + value + "'" : value)
-					+ " WHERE username = '" + pk + "' LIMIT 1");
-			if (!cachedValues.containsKey(pk)) {
-				cachedValues.put(pk, new HashMap<String, Object>());
+					+ " WHERE username = '" + key + "' LIMIT 1");
+			if (!cachedValues.containsKey(key)) {
+				cachedValues.put(key, new HashMap<String, Object>());
 			}
-			cachedValues.get(pk).put(field, value);
+			cachedValues.get(key).put(field, value);
 		} catch (Exception e) {
 			MyZ.log(ChatColor.RED + LocaleMessage.SQL_FAIL.toString() + ": " + e.getMessage());
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T get(OfflinePlayer playerFor, String field) {
+	private <T> T get(String key, String field) {
 		if (isPseudo()) { return null; }
 
 		if (!isConnected()) {
@@ -263,38 +283,41 @@ public class SQLManager {
 		}
 
 		T gotten = null;
-		String pk = primaryKeyFor(playerFor);
 
-		if (!cachedValues.containsKey(pk) || !cachedValues.get(pk).containsKey(field)) {
-			if (!cachedValues.containsKey(pk)) {
-				cachedValues.put(pk, new HashMap<String, Object>());
+		if (!cachedValues.containsKey(key) || !cachedValues.get(key).containsKey(field)) {
+			if (!cachedValues.containsKey(key)) {
+				cachedValues.put(key, new HashMap<String, Object>());
 			}
 
 			try {
-				ResultSet rs = query("SELECT * FROM playerdata WHERE username = '" + pk + "' LIMIT 1");
+				ResultSet rs = query("SELECT * FROM playerdata WHERE username = '" + key + "' LIMIT 1");
 				Object retrieved = null;
 				if (rs.next()) {
 					retrieved = rs.getObject(field);
 				}
 				gotten = (T) retrieved;
 
-				cachedValues.get(pk).put(field, retrieved);
+				cachedValues.get(key).put(field, retrieved);
 			} catch (Exception e) {
 				MyZ.log(ChatColor.RED + LocaleMessage.SQL_FAIL.toString() + ": " + e.getMessage());
 			}
 		} else {
-			gotten = (T) cachedValues.get(pk).get(field);
+			gotten = (T) cachedValues.get(key).get(field);
 		}
 
 		return gotten;
+	}
+
+	public <T> T get(OfflinePlayer playerFor, String field) {
+		return get(primaryKeyFor(playerFor), field);
 	}
 
 	public static String primaryKeyFor(OfflinePlayer playerFor) {
 		return playerFor.getUniqueId().toString();
 	}
 
-	public static Player fromPrimaryKey(String playerKey) {
-		return Bukkit.getPlayer(UUID.fromString(playerKey));
+	public static OfflinePlayer fromPrimaryKey(String playerKey) {
+		return Bukkit.getOfflinePlayer(UUID.fromString(playerKey));
 	}
 
 	public boolean isPseudo() {
@@ -313,6 +336,53 @@ public class SQLManager {
 			executeQuery("CREATE TABLE IF NOT EXISTS playerdata (" + UserEntries.convertToMySQLQuery() + ")");
 		} catch (Exception e) {
 			MyZ.log(ChatColor.RED + LocaleMessage.SQL_FAIL.toString() + ": " + e.getMessage());
+		}
+
+		String behaviour = ConfigEntries.SQL_BEHAVIOUR.<String> getValue();
+		if ("MySQL->Userdata".equalsIgnoreCase(behaviour)) {
+			MyZ.log(ChatColor.RED + "Pushing data from MySQL to Userdata. Expect lag.");
+			List<String> keys = getKeys();
+			int i = 0;
+			MyZ.log(ChatColor.RED + "" + i + "/" + keys.size() + " completed.");
+			for (String key : keys) {
+				User user = User.forPrimaryKey(key);
+				for (String subkey : values) {
+					DataWrapper.set(user, subkey.replaceAll("_", "\\.").replaceAll("in\\.game", "in_game"), get(key, subkey));
+				}
+				i++;
+				if (i <= keys.size()) {
+					MyZ.log(ChatColor.RED + "" + i + "/" + keys.size() + " completed.");
+				}
+			}
+		} else if ("Userdata->MySQL".equalsIgnoreCase(behaviour)) {
+			MyZ.log(ChatColor.RED + "Pushing data from Userdata to MySQL. Expect high load.");
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					File userdata = new File(MyZ.instance.getDataFolder().getAbsolutePath() + File.separator + "userdata");
+					String[] keys = userdata.list();
+					int i = 0;
+					MyZ.log(ChatColor.RED + "" + i + "/" + keys.length + " completed.");
+					for (String uuid : keys) {
+						add(uuid);
+						File unique = new File(userdata.getAbsolutePath() + File.separator + uuid);
+						for (String file : new String[] { UFiles.STATISTICS.getFileID(), UFiles.TRACKED.getFileID(),
+								UFiles.SKILLS.getFileID() }) {
+							FileConfiguration yaml = YamlConfiguration.loadConfiguration(new File(unique.getAbsolutePath() + File.separator
+									+ file));
+							for (UserEntries entry : UserEntries.values()) {
+								if (entry.getFile().getFileID().equals(file) && UserEntries.isMySQLKey(entry)) {
+									set(uuid, entry.getKey().replaceAll("\\.", "_"), yaml.get(entry.getKey()), true);
+								}
+							}
+						}
+						i++;
+						if (i <= keys.length) {
+							MyZ.log(ChatColor.RED + "" + i + "/" + keys.length + " completed.");
+						}
+					}
+				}
+			}.runTaskLaterAsynchronously(MyZ.instance, 0L);
 		}
 	}
 }

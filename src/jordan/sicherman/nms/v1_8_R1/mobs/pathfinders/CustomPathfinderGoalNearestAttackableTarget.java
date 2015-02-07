@@ -25,7 +25,6 @@ import com.google.common.base.Predicates;
 public class CustomPathfinderGoalNearestAttackableTarget extends PathfinderGoalTarget {
 
 	protected final Class<? extends EntityLiving> classToTarget;
-	private final int chanceToNot;
 	protected final DistanceComparator distanceComparator;
 	protected Predicate<EntityLiving> entitySelector;
 	protected EntityLiving target;
@@ -44,7 +43,6 @@ public class CustomPathfinderGoalNearestAttackableTarget extends PathfinderGoalT
 			int chanceToCancel, boolean flag, boolean flag1, Predicate<EntityLiving> predicate) {
 		super(entitycreature, flag, flag1);
 		classToTarget = targetClass;
-		chanceToNot = chanceToCancel;
 		distanceComparator = new DistanceComparator(entitycreature);
 		a(1);
 		entitySelector = new CustomEntitySelectorNearestAttackableTarget(this, predicate);
@@ -53,10 +51,6 @@ public class CustomPathfinderGoalNearestAttackableTarget extends PathfinderGoalT
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public boolean a() {
-		if (chanceToNot > 0 && e.bb().nextInt(chanceToNot) != 0) {
-			// return false;
-		}
-
 		double range = f();
 		List list = e.world
 				.a(classToTarget, e.getBoundingBox().grow(range, 4.0D, range), Predicates.and(entitySelector, IEntitySelector.d));

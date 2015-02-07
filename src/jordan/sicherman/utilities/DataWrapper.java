@@ -24,10 +24,6 @@ public class DataWrapper {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T get(OfflinePlayer playerFor, UserEntries entry) {
-		if (MyZ.sql.isConnected() && UserEntries.isMySQLKey(entry)) { return (T) (entry.getType() != EntryType.LIST ? MyZ.sql.get(
-				playerFor, entry.getKey().replaceAll("\\.", "_")) : UserEntries.toList(MyZ.sql.<String> get(playerFor, entry.getKey()
-				.replaceAll("\\.", "_")))); }
-
 		switch (entry.getType()) {
 		case BOOLEAN:
 			return (T) (Boolean) User.forPlayer(playerFor).getFile(entry.getFile()).getBoolean(entry.getKey());
@@ -56,17 +52,12 @@ public class DataWrapper {
 	 *            options[1] = save -----------------------------------------
 	 *            Any less will result in an exception ----------------------
 	 */
-	public static void set(final OfflinePlayer playerFor, final UserEntries entry, final Object value, final boolean... options) {
+	public static void set(OfflinePlayer playerFor, UserEntries entry, Object value, boolean... options) {
 		if (MyZ.sql.isConnected()) {
 			MyZ.sql.set(playerFor, entry.getKey(), entry.getType() == EntryType.LIST ? UserEntries.toStringList(value) : value, options[0]);
 		}
 
-		MyZ.instance.getServer().getScheduler().runTask(MyZ.instance, new Runnable() {
-			@Override
-			public void run() {
-				FileUtilities.set(entry.getKey(), value, User.forPlayer(playerFor), entry.getFile(), options[1]);
-			}
-		});
+		doSet(User.forPlayer(playerFor), entry, value, options);
 
 		switch (entry) {
 		case DEATHS:
@@ -89,6 +80,19 @@ public class DataWrapper {
 			break;
 
 		}
+	}
+
+	public static void set(User user, String entry, Object value) {
+		doSet(user, UserEntries.fromString(entry), value, true, false);
+	}
+
+	private static void doSet(final User userFor, final UserEntries entry, final Object value, final boolean... options) {
+		MyZ.instance.getServer().getScheduler().runTask(MyZ.instance, new Runnable() {
+			@Override
+			public void run() {
+				FileUtilities.set(entry.getKey(), value, userFor, entry.getFile(), options[1]);
+			}
+		});
 	}
 
 	public static void set(ConfigEntries entry, Object value, boolean save) {

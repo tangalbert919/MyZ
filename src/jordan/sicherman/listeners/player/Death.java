@@ -107,7 +107,6 @@ public class Death implements Listener {
 						@Override
 						public void run() {
 							if (MyZ.ghostFactory.isGhost(player)) {
-								MyZ.ghostFactory.setGhost(player, false);
 								realDeath(player);
 							}
 						}
@@ -116,7 +115,6 @@ public class Death implements Listener {
 						public void cancel() {
 							player.removePotionEffect(PotionEffectType.WITHER);
 							if (MyZ.ghostFactory.isGhost(player)) {
-								MyZ.ghostFactory.setGhost(player, false);
 								ReviveManager.getInstance().reportException(player);
 								realDeath(player);
 							}

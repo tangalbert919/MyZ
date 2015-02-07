@@ -40,6 +40,13 @@ public enum UserEntries {
 			"tracked.kills.giant", EntryType.INTEGER, UFiles.TRACKED, 0), TEMPERATURE("temperature", EntryType.DOUBLE, UFiles.TRACKED,
 			ConfigEntries.DEFAULT_TEMPERATURE.<Double> getValue());
 
+	public static UserEntries fromString(String entry) {
+		for (UserEntries uEntry : values()) {
+			if (uEntry.key.equals(entry)) { return uEntry; }
+		}
+		return null;
+	}
+
 	public static String convertToMySQLQuery() {
 		StringBuilder result = new StringBuilder("username VARCHAR(36) PRIMARY KEY, ");
 		for (UserEntries key : values()) {

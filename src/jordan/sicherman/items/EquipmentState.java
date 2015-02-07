@@ -48,9 +48,11 @@ public enum EquipmentState {
 	private final List<String> loreModifier;
 	private final int sP, gP, bP, rP, effectiveness;
 
-	public boolean isCompatibleWith(ItemStack item) {
+	public boolean isCompatibleWith(Material material) {
+		if (material == null) { return false; }
 		if (this == NORMAL) { return true; }
-		if (isBow(item)) {
+
+		if (isBow(material)) {
 			switch (this) {
 			case BROKEN:
 			case CRACKED:
@@ -62,7 +64,7 @@ public enum EquipmentState {
 			default:
 				return false;
 			}
-		} else if (isRod(item)) {
+		} else if (isRod(material)) {
 			switch (this) {
 			case GRAPPLE_WEAK:
 			case LIGHTWEIGHT:
@@ -70,7 +72,7 @@ public enum EquipmentState {
 			default:
 				return false;
 			}
-		} else if (isSword(item)) {
+		} else if (isSword(material)) {
 			switch (this) {
 			case SHATTERED:
 			case DEVASTATED:
@@ -83,7 +85,7 @@ public enum EquipmentState {
 			default:
 				return false;
 			}
-		} else if (isArmor(item)) {
+		} else if (isArmor(material)) {
 			switch (this) {
 			case DEVASTATED:
 			case BROKEN:
@@ -97,6 +99,10 @@ public enum EquipmentState {
 			}
 		}
 		return false;
+	}
+
+	public boolean isCompatibleWith(ItemStack item) {
+		return isCompatibleWith(item.getType());
 	}
 
 	private EquipmentState(int sP, int gP, int bP, int rP, LocaleMessage loreModifier, ConfigEntries entry) {
@@ -127,10 +133,10 @@ public enum EquipmentState {
 	}
 
 	public int getPosition(ItemStack itemOn) {
-		boolean s = isSword(itemOn);
-		boolean b = isBow(itemOn);
-		boolean r = isRod(itemOn);
-		boolean a = isArmor(itemOn);
+		boolean s = isSword(itemOn.getType());
+		boolean b = isBow(itemOn.getType());
+		boolean r = isRod(itemOn.getType());
+		boolean a = isArmor(itemOn.getType());
 		return s ? sP : b ? bP : r ? rP : a ? gP : -1;
 	}
 
@@ -157,10 +163,10 @@ public enum EquipmentState {
 	}
 
 	public static EquipmentState getNext(ItemStack item) {
-		boolean s = isSword(item);
-		boolean b = isBow(item);
-		boolean r = isRod(item);
-		boolean a = isArmor(item);
+		boolean s = isSword(item.getType());
+		boolean b = isBow(item.getType());
+		boolean r = isRod(item.getType());
+		boolean a = isArmor(item.getType());
 		if (!s && !b && !r && !a) { return null; }
 
 		EquipmentState current = getState(item);
@@ -177,10 +183,10 @@ public enum EquipmentState {
 	}
 
 	public static EquipmentState getPrevious(ItemStack item) {
-		boolean s = isSword(item);
-		boolean b = isBow(item);
-		boolean r = isRod(item);
-		boolean a = isArmor(item);
+		boolean s = isSword(item.getType());
+		boolean b = isBow(item.getType());
+		boolean r = isRod(item.getType());
+		boolean a = isArmor(item.getType());
 		if (!s && !b && !r && !a) { return null; }
 
 		EquipmentState current = getState(item);
@@ -195,8 +201,8 @@ public enum EquipmentState {
 		return null;
 	}
 
-	private static boolean isSword(ItemStack item) {
-		switch (item.getType()) {
+	private static boolean isSword(Material item) {
+		switch (item) {
 		case WOOD_SWORD:
 		case STONE_SWORD:
 		case GOLD_SWORD:
@@ -208,8 +214,8 @@ public enum EquipmentState {
 		}
 	}
 
-	public static boolean isArmor(ItemStack item) {
-		switch (item.getType()) {
+	public static boolean isArmor(Material item) {
+		switch (item) {
 		case LEATHER_HELMET:
 		case LEATHER_CHESTPLATE:
 		case LEATHER_LEGGINGS:
@@ -236,12 +242,12 @@ public enum EquipmentState {
 		}
 	}
 
-	private static boolean isBow(ItemStack item) {
-		return item.getType() == Material.BOW;
+	private static boolean isBow(Material item) {
+		return item == Material.BOW;
 	}
 
-	private static boolean isRod(ItemStack item) {
-		return item.getType() == Material.FISHING_ROD;
+	private static boolean isRod(Material item) {
+		return item == Material.FISHING_ROD;
 	}
 
 	public ItemStack applyTo(ItemStack item) {
@@ -318,5 +324,12 @@ public enum EquipmentState {
 			if (match) { return state; }
 		}
 		return NORMAL;
+	}
+
+	public static EquipmentState fromString(String string) {
+		for (EquipmentState state : values()) {
+			if (state.toString().toLowerCase().equals(string)) { return state; }
+		}
+		return null;
 	}
 }

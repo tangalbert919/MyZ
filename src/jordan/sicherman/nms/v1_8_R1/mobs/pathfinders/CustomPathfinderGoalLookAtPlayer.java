@@ -27,7 +27,6 @@ public class CustomPathfinderGoalLookAtPlayer extends PathfinderGoal {
 	protected Entity target;
 	protected float range;
 	private int lookAway;
-	private final float chanceToNot;
 	protected Class<? extends EntityLiving> classToLookAt;
 
 	public CustomPathfinderGoalLookAtPlayer(EntityInsentient creature, Class<? extends EntityLiving> classToLookAt, float range) {
@@ -39,7 +38,6 @@ public class CustomPathfinderGoalLookAtPlayer extends PathfinderGoal {
 		this.creature = creature;
 		this.classToLookAt = classToLookAt;
 		this.range = range;
-		this.chanceToNot = chanceToNot;
 		a(2);
 	}
 
@@ -53,7 +51,7 @@ public class CustomPathfinderGoalLookAtPlayer extends PathfinderGoal {
 			Player found = players.get(i);
 			double range = found.getExp() * 32;
 			if (found != null && !found.isDead() && found.getGameMode() != GameMode.CREATIVE
-					&& !found.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+					&& !found.hasPotionEffect(PotionEffectType.INVISIBILITY) && !found.hasPotionEffect(PotionEffectType.WITHER)) {
 				double distSquared = found.getLocation().distanceSquared(inLoc);
 				if (distSquared < range * range && (nearestSquared == -1.0D || distSquared < nearestSquared)) {
 					nearestSquared = distSquared;
@@ -66,17 +64,18 @@ public class CustomPathfinderGoalLookAtPlayer extends PathfinderGoal {
 
 	@Override
 	public boolean a() {
-		if (creature.bb().nextFloat() >= chanceToNot) {
-			// return false;
-		}
 		if (creature.getGoalTarget() != null) {
 			target = creature.getGoalTarget();
 		}
-		if (classToLookAt == EntityHuman.class) {
-			CraftPlayer player = (CraftPlayer) findNearbyPlayer(creature.getBukkitEntity().getLocation());
-			target = player == null ? null : player.getHandle();
-		} else {
-			target = creature.world.a(classToLookAt, creature.getBoundingBox().grow(range, 3.0D, range), creature);
+		if (target == null) {
+			if (classToLookAt == EntityHuman.class) {
+				if (creature.bb().nextFloat() <= 0.5) {
+					CraftPlayer player = (CraftPlayer) findNearbyPlayer(creature.getBukkitEntity().getLocation());
+					target = player == null ? null : player.getHandle();
+				}
+			} else {
+				target = creature.world.a(classToLookAt, creature.getBoundingBox().grow(range, 3.0D, range), creature);
+			}
 		}
 		return target != null;
 	}

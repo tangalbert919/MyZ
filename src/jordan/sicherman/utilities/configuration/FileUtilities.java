@@ -42,24 +42,28 @@ public class FileUtilities {
 		return returned;
 	}
 
-	public static FileConfiguration load(String key, SpecificFileMember file) {
-		File folder = new File(MyZ.instance.getDataFolder() + File.separator + file.getPath().replace("$0", key));
-		if (!folder.exists()) {
-			folder.mkdirs();
-		}
+	public static FileConfiguration load(String key, SpecificFileMember... files) {
+		FileConfiguration config = null;
 
-		File f = new File(folder.getPath() + File.separator + file.getFileID());
-
-		if (!f.exists()) {
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				MyZ.log(ChatColor.RED + "Unable to save " + file.getFileID() + ": " + e.getMessage());
+		for (SpecificFileMember file : files) {
+			File folder = new File(MyZ.instance.getDataFolder() + File.separator + file.getPath().replace("$0", key));
+			if (!folder.exists()) {
+				folder.mkdirs();
 			}
-		}
 
-		FileConfiguration config = YamlConfiguration.loadConfiguration(f);
-		loadDefaults(config, (UFiles) file, f);
+			File f = new File(folder.getPath() + File.separator + file.getFileID());
+
+			if (!f.exists()) {
+				try {
+					f.createNewFile();
+				} catch (IOException e) {
+					MyZ.log(ChatColor.RED + "Unable to save " + file.getFileID() + ": " + e.getMessage());
+				}
+			}
+
+			config = YamlConfiguration.loadConfiguration(f);
+			loadDefaults(config, (UFiles) file, f);
+		}
 		return config;
 	}
 

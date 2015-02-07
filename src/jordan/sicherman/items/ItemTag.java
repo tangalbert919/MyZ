@@ -165,4 +165,11 @@ public enum ItemTag {
 
 		return map;
 	}
+
+	public static ItemTag fromString(String string) {
+		for (ItemTag tag : values()) {
+			if (tag.toString().toLowerCase().equals(string)) { return tag; }
+		}
+		return null;
+	}
 }

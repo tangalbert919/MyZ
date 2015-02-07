@@ -276,7 +276,7 @@ public class TemperatureManager {
 	private int getArmourOfType(ItemStack[] armor, String type) {
 		int pieces = 0;
 		for (ItemStack i : armor) {
-			if (i != null && EquipmentState.isArmor(i) && i.getType().toString().toLowerCase().contains(type)) {
+			if (i != null && EquipmentState.isArmor(i.getType()) && i.getType().toString().toLowerCase().contains(type)) {
 				pieces++;
 			}
 		}

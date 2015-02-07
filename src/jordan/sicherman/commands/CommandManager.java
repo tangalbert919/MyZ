@@ -6,6 +6,9 @@ package jordan.sicherman.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import jordan.sicherman.items.EquipmentState;
+import jordan.sicherman.items.ItemTag;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -49,8 +52,18 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 				String key = h.getArgs()[args.length - 1];
 				if (!result.contains(key)) {
 					if (args.length - 1 > 0) {
-						if (args[args.length - 2].equalsIgnoreCase(h.getArgs()[args.length - 2])) {
-							result.add(key);
+						if (args[args.length - 2].equalsIgnoreCase(h.getArgs()[args.length - 2]) || args[args.length - 2].startsWith("$")) {
+							if ("$item".equals(key)) {
+								for (ItemTag tag : ItemTag.values()) {
+									result.add(tag.toString().toLowerCase());
+								}
+							} else if ("$state".equals(key)) {
+								for (EquipmentState state : EquipmentState.values()) {
+									result.add(state.toString().toLowerCase());
+								}
+							} else {
+								result.add(key);
+							}
 						}
 					} else {
 						result.add(key);

@@ -29,12 +29,9 @@ public class CustomPathfinderGoalMoveToLocation extends PathfinderGoal {
 	public boolean a() {
 		target = creature.getSmartTarget();
 		if (target == null) { return false; }
-		// Vec3D localVec3D = RandomPositionGenerator.a(creature.getEntity(),
-		// 16, 7, new Vec3D(target.getX(), target.getY(), target.getZ()));
-		// if (localVec3D == null) { return false; }
-		targetX = target.getX()/*localVec3D.a*/;
-		targetY = target.getY()/*localVec3D.b*/;
-		targetZ = target.getZ()/*localVec3D.c*/;
+		targetX = target.getX();
+		targetY = target.getY();
+		targetZ = target.getZ();
 		return true;
 	}
 

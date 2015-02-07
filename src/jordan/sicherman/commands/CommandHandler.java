@@ -29,7 +29,10 @@ public enum CommandHandler {
 			CommandPermission.SPAWN_KIT_MANAGER, "Manage spawn kits", "manage spawn kit", new SpawnKitManager(), true), RESPAWN_CHESTS(
 			new String[] { "respawn", "chests" }, CommandPermission.CHEST_MANAGER, "Respawn MyZ chests", "respawn chests",
 			new RespawnChests(), ConfigEntries.CHESTS.<Boolean> getValue()), VERSION(new String[] { "version" }, CommandPermission.OP,
-			"Check the version of MyZ on your server", "version", new Version(), true);
+			"Check the version of MyZ on your server", "version", new Version(), true), MYZ_ITEM(new String[] { "item", "get", "$item" },
+			CommandPermission.CHEST_MANAGER, "Get a MyZ item", "item <TAB>", new MyZItem(), true), MYZ_ITEM_STATE(new String[] { "item",
+			"apply", "$state" }, CommandPermission.CHEST_MANAGER, "Apply a MyZ state to the item in your hand", "item <TAB>",
+			new MyZItemState(), true);
 
 	private final String[] args;
 	private final CommandPermission perm;
@@ -73,6 +76,12 @@ public enum CommandHandler {
 
 	private boolean matches(String[] args) {
 		if (args.length != getArgs().length) { return false; }
+
+		if (this == MYZ_ITEM && args.length == getArgs().length && args[0].equalsIgnoreCase(getArgs()[0])
+				&& args[1].equalsIgnoreCase(getArgs()[1])) {
+			return true;
+		} else if (this == MYZ_ITEM_STATE && args.length == getArgs().length && args[0].equalsIgnoreCase(getArgs()[0])
+				&& args[1].equalsIgnoreCase(getArgs()[1])) { return true; }
 
 		for (int i = 0; i < args.length; i++) {
 			if (!args[i].equalsIgnoreCase(getArgs()[i])) { return false; }

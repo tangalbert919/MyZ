@@ -34,7 +34,6 @@ public class CustomEntitySelectorNearestAttackableTarget implements Predicate<En
 			if (((EntityHuman) entity).getBukkitEntity().getGameMode() == GameMode.CREATIVE
 					|| ((Player) entity.getBukkitEntity()).hasPotionEffect(PotionEffectType.WITHER)
 					|| ((Player) entity.getBukkitEntity()).hasPotionEffect(PotionEffectType.INVISIBILITY)) { return false; }
-
 			double range = ((Player) entity.getBukkitEntity()).getExp() * 32;
 
 			if (entity.g(pathfinder.getE()) > range) { return false; }

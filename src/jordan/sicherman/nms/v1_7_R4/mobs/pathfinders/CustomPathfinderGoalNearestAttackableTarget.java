@@ -19,6 +19,7 @@ import net.minecraft.server.v1_7_R4.PathfinderGoalTarget;
 import net.minecraft.server.v1_7_R4.World;
 
 import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
+
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
@@ -97,12 +98,13 @@ public class CustomPathfinderGoalNearestAttackableTarget extends PathfinderGoalT
 		for (int k = i; k <= j; k++) {
 			Iterator<Entity> iterator = ((UnsafeList<Entity>) chunk.entitySlices[k]).iterator();
 			while (iterator.hasNext()) {
-				Entity entity = (Entity) iterator.next();
+				Entity entity = iterator.next();
 				if (oclass.isInstance(entity)) {
-					if (entity instanceof EntityLiving)
-						if ((entity.boundingBox.b(axisalignedbb)) && ((predicate == null) || (predicate.apply((EntityLiving) entity)))) {
+					if (entity instanceof EntityLiving) {
+						if (entity.boundingBox.b(axisalignedbb) && (predicate == null || predicate.apply((EntityLiving) entity))) {
 							list.add((EntityLiving) entity);
 						}
+					}
 				}
 			}
 		}

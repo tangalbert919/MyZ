@@ -174,7 +174,8 @@ public class MyZ extends JavaPlugin {
 		pm.registerEvents(new TakeDamage(), this);
 
 		new Asynchronous().runTaskTimerAsynchronously(instance, 0L, ConfigEntries.TASK_SPEED.<Integer> getValue() * 1L);
-		new Synchronous().runTaskTimer(instance, 0L, ConfigEntries.SAVE_SPEED.<Integer> getValue() * 1L);
+		new Synchronous().runTaskTimer(instance, ConfigEntries.SAVE_SPEED.<Integer> getValue() * 1L,
+				ConfigEntries.SAVE_SPEED.<Integer> getValue() * 1L);
 
 		getServer().addRecipe(new FurnaceRecipe(ItemUtilities.getInstance().getTagItem(ItemTag.WARM_WATER, 1), Material.POTION));
 

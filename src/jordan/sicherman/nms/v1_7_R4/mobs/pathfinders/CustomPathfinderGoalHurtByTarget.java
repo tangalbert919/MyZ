@@ -54,10 +54,9 @@ public class CustomPathfinderGoalHurtByTarget extends PathfinderGoalTarget {
 				EntityCreature entitycreature = iterator.next();
 
 				if (c != entitycreature && entitycreature.getGoalTarget() == null && !entitycreature.c(c.getLastDamager())) {
-					if ((this.c != entitycreature) && (entitycreature.getGoalTarget() == null)
-							&& (!entitycreature.c(this.c.getLastDamager()))) {
+					if (c != entitycreature && entitycreature.getGoalTarget() == null && !entitycreature.c(c.getLastDamager())) {
 						EntityTargetLivingEntityEvent event = CraftEventFactory.callEntityTargetLivingEvent(entitycreature,
-								this.c.getLastDamager(), EntityTargetEvent.TargetReason.TARGET_ATTACKED_NEARBY_ENTITY);
+								c.getLastDamager(), EntityTargetEvent.TargetReason.TARGET_ATTACKED_NEARBY_ENTITY);
 						if (!event.isCancelled()) {
 							entitycreature.setGoalTarget(event.getTarget() == null ? null : ((CraftLivingEntity) event.getTarget())
 									.getHandle());

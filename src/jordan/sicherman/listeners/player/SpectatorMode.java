@@ -119,6 +119,11 @@ public class SpectatorMode implements Listener {
 			e.setCancelled(true);
 		}
 
+		if ((e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
+				&& ItemUtilities.getInstance().hasTag(e.getItem(), ItemTag.RADIO)) {
+			e.setCancelled(true);
+		}
+
 		if (ManagerManager.isManager(player, ManagerType.ENGINEER)
 				&& ItemUtilities.getInstance().hasTag(player.getItemInHand(), ItemTag.WAND)) {
 			switch (e.getAction()) {

@@ -40,7 +40,7 @@ public class CustomContainerAnvil extends Container {
 	public boolean isRealAnvil, validConvert, flag;
 	private int remainingRight, remainingLeft;
 
-	public CustomContainerAnvil(PlayerInventory playerinventory, World world, BlockPosition blockposition, EntityHuman entityhuman,
+	public CustomContainerAnvil(PlayerInventory playerinventory, World world, int i, int j, int k, EntityHuman entityhuman,
 			boolean isRealAnvil) {
 		pInventory = playerinventory;
 		this.world = world;
@@ -48,14 +48,16 @@ public class CustomContainerAnvil extends Container {
 		a(new CustomSlotAnvil(this, process, result, 0, 27, 47));
 		a(new CustomSlotAnvil(this, process, result, 1, 76, 47));
 		a(new Slot(result, 2, 134, 47));
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 9; j++) {
-				a(new Slot(playerinventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+
+		for (int l = 0; l < 3; l++) {
+			for (int i1 = 0; i1 < 9; i1++) {
+				a(new Slot(playerinventory, i1 + l * 9 + 9, 8 + i1 * 18, 84 + l * 18));
 			}
 		}
-		for (int i = 0; i < 9; i++) {
-			a(new Slot(playerinventory, i, 8 + i * 18, 142));
+		for (int l = 0; l < 9; l++) {
+			a(new Slot(playerinventory, l, 8 + l * 18, 142));
 		}
+
 		this.isRealAnvil = isRealAnvil;
 	}
 

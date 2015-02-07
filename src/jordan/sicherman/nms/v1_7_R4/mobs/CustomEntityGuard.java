@@ -142,7 +142,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
 
 		a();
 
-		h(this.random.nextFloat() < 0.55F * this.world.b(this.locX, this.locY, this.locZ));
+		h(random.nextFloat() < 0.55F * world.b(locX, locY, locZ));
 		if (getEquipment(4) == null) {
 			Calendar calendar = world.V();
 			if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31 && random.nextFloat() < 0.25F) {

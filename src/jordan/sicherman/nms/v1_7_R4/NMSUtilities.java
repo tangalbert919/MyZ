@@ -12,18 +12,19 @@ import jordan.sicherman.locales.Locale;
 import jordan.sicherman.locales.LocaleMessage;
 import jordan.sicherman.nms.utilities.NMS;
 import jordan.sicherman.nms.v1_7_R4.anvil.CustomContainerAnvil;
-import jordan.sicherman.nms.v1_7_R4.anvil.TileEntityCustomContainerAnvil;
 import jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityGiantZombie;
 import jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityGuard;
 import jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityPigZombie;
 import jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityZombie;
 import jordan.sicherman.nms.v1_7_R4.mobs.SmartEntity;
 import jordan.sicherman.utilities.Utilities;
+import net.minecraft.server.v1_7_R4.Container;
 import net.minecraft.server.v1_7_R4.EntityHuman;
 import net.minecraft.server.v1_7_R4.EntityInsentient;
 import net.minecraft.server.v1_7_R4.EntityLiving;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
 import net.minecraft.server.v1_7_R4.GroupDataEntity;
+import net.minecraft.server.v1_7_R4.PacketPlayOutOpenWindow;
 import net.minecraft.server.v1_7_R4.World;
 
 import org.bukkit.ChatColor;
@@ -105,20 +106,18 @@ public class NMSUtilities {
 
 	public static void openAnvil(Player player, Block anvil, EngineerRecipe... recipe) {
 		EntityHuman human = (EntityHuman) NMS.castToNMS(player);
-
-		int x = player.getLocation().getBlockX(), y = player.getLocation().getBlockY(), z = player.getLocation().getBlockZ();
-
-		if (anvil != null) {
-			x = anvil.getX();
-			y = anvil.getY();
-			z = anvil.getZ();
-		}
-
-		BlockPosition position = new BlockPosition(x, y, z);
+		EntityPlayer ePlayer = (EntityPlayer) human;
 
 		if (!human.world.isStatic) {
-			ITileEntityContainer itileentitycontainer = new TileEntityCustomContainerAnvil(human.world, position, anvil != null);
-			human.openTileEntity(itileentitycontainer);
+			Container container = new CustomContainerAnvil(human.inventory, human.world, 0, 0, 0, human, anvil != null);
+
+			int count = ePlayer.nextContainerCounter();
+
+			ePlayer.playerConnection.sendPacket(new PacketPlayOutOpenWindow(count, 8, "Repairing", 0, true));
+
+			ePlayer.activeContainer = container;
+			ePlayer.activeContainer.windowId = count;
+			ePlayer.activeContainer.addSlotListener(ePlayer);
 
 			if (recipe != null && recipe.length == 1) {
 				((CustomContainerAnvil) human.activeContainer).activeRecipe = recipe[0];
@@ -156,6 +155,6 @@ public class NMSUtilities {
 		}
 
 		entity.setLocation(inLoc.getX(), inLoc.getY(), inLoc.getZ(), inLoc.getYaw(), inLoc.getPitch());
-		entity.prepare(world.E(new BlockPosition(entity)), (GroupDataEntity) null);
+		entity.prepare((GroupDataEntity) null);
 	}
 }

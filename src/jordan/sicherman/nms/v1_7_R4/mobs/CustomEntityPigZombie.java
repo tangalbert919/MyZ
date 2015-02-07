@@ -91,8 +91,7 @@ public class CustomEntityPigZombie extends EntityPigZombie implements SmartEntit
 
 	@Override
 	public boolean canSpawn() {
-		return world.a(boundingBox, this) && world.getCubes(this, boundingBox).isEmpty()
-				&& !world.containsLiquid(boundingBox);
+		return world.a(boundingBox, this) && world.getCubes(this, boundingBox).isEmpty() && !world.containsLiquid(boundingBox);
 	}
 
 	@Override

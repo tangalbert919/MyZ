@@ -81,17 +81,14 @@ public class TemperatureManager {
 		}
 	}
 
-	public void computeTemperature(Player playerFor, TemperatureEffect... effectsToApply) {
+	public void computeTemperature(final Player playerFor, final TemperatureEffect... effectsToApply) {
 		if (!MyZ.isPremium()) { return; }
 
-		double temperature = DataWrapper.get(playerFor, UserEntries.TEMPERATURE);
+		final double temperature = DataWrapper.get(playerFor, UserEntries.TEMPERATURE);
 
-		World world = playerFor.getWorld();
-		Location loc = playerFor.getLocation();
+		final World world = playerFor.getWorld();
+		final Location loc = playerFor.getLocation();
 
-		Biome biome = world.getBiome(loc.getBlockX(), loc.getBlockZ());
-		double biome_temperature = getTemperature(world, biome);
-		boolean rainedOn = world.isThundering() && world.getHighestBlockYAt(loc) <= loc.getY();
 		boolean onFire = playerFor.getFireTicks() > 0;
 		boolean night = world.getTime() < 13000;
 		int leather_armour = getArmourOfType(playerFor.getEquipment().getArmorContents(), "leather");
@@ -99,151 +96,156 @@ public class TemperatureManager {
 		int iron_armour = getArmourOfType(playerFor.getEquipment().getArmorContents(), "iron");
 		int gold_armour = getArmourOfType(playerFor.getEquipment().getArmorContents(), "gold");
 		int diamond_armour = getArmourOfType(playerFor.getEquipment().getArmorContents(), "diamond");
-		Material at = world.getBlockAt(playerFor.getLocation()).getType();
-		boolean inWater = biome != Biome.OCEAN && biome != Biome.DEEP_OCEAN && biome != Biome.FROZEN_OCEAN
-				&& at == Material.STATIONARY_WATER || at == Material.WATER;
 		boolean infected = DataWrapper.get(playerFor, UserEntries.POISONED);
-		boolean proximity_to_hot = closeToHot(loc);
 		boolean thirsty = DataWrapper.<Double> get(playerFor, UserEntries.THIRST) < ConfigEntries.THIRSTY_THRESHOLD.<Double> getValue();
 
-		double new_temperature = biome_temperature;
+		final Biome biome = world.getBiome(loc.getBlockX(), loc.getBlockZ());
+		double new_temperature = getTemperature(world, biome);
+
 		new_temperature += night ? ConfigEntries.TEMPERATURE_NIGHT.<Double> getValue() : 0;
 		new_temperature += playerFor.isSprinting() ? ConfigEntries.TEMPERATURE_RUNNING.<Double> getValue() : 0;
-		new_temperature += rainedOn ? ConfigEntries.TEMPERATURE_RAIN.<Double> getValue() : 0;
 		new_temperature += leather_armour * ConfigEntries.TEMPERATURE_LEATHER_ARMOUR.<Double> getValue();
 		new_temperature += chain_armour * ConfigEntries.TEMPERATURE_CHAIN_ARMOUR.<Double> getValue();
 		new_temperature += iron_armour * ConfigEntries.TEMPERATURE_IRON_ARMOUR.<Double> getValue();
 		new_temperature += gold_armour * ConfigEntries.TEMPERATURE_GOLD_ARMOUR.<Double> getValue();
 		new_temperature += diamond_armour * ConfigEntries.TEMPERATURE_DIAMOND_ARMOUR.<Double> getValue();
 		new_temperature += infected ? ConfigEntries.TEMPERATURE_INFECTED.<Double> getValue() : 0;
-		new_temperature += proximity_to_hot ? ConfigEntries.TEMPERATURE_NEAR_FIRE.<Double> getValue() : 0;
 		new_temperature += thirsty ? ConfigEntries.TEMPERATURE_THIRSTY.<Double> getValue() : 0;
 		new_temperature += onFire ? ConfigEntries.TEMPERATURE_FIRE.<Double> getValue() : 0;
-		new_temperature += inWater ? ConfigEntries.TEMPERATURE_WATER.<Double> getValue() : 0;
 
-		// Place more weight on the old temperature to ensure gradual shifts.
-		double final_temperature = (temperature * 499.0 + new_temperature) / 500.0;
-
-		DataWrapper.set(playerFor, UserEntries.TEMPERATURE, final_temperature);
-
-		if (effectsToApply != null && effectsToApply.length != 0) {
-			doTemperatureEffects(playerFor, effectsToApply);
-		}
-	}
-
-	public void doTemperatureEffects(final Player playerFor, final TemperatureEffect... effects) {
-		if (!MyZ.isPremium()) { return; }
+		final double the_temperature = new_temperature;
 
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				List<TemperatureEffect> effectList = Arrays.<TemperatureEffect> asList(effects);
-				if (effectList.contains(TemperatureEffect.RELEASE_THERMOMETER)) {
-					Utilities.faceCompass(playerFor, true, null);
-					if (effects.length == 1) { return; }
-				}
+				double working_temperature = the_temperature;
+				// TODO thundering workaround.
+				boolean rainedOn = world.isThundering() && world.getHighestBlockYAt(loc) <= loc.getY();
+				Material at = world.getBlockAt(playerFor.getLocation()).getType();
+				boolean inWater = biome != Biome.OCEAN && biome != Biome.DEEP_OCEAN && biome != Biome.FROZEN_OCEAN
+						&& at == Material.STATIONARY_WATER || at == Material.WATER;
+				boolean proximity_to_hot = closeToHot(loc);
 
-				TemperatureState state = getState(playerFor);
+				working_temperature += rainedOn ? ConfigEntries.TEMPERATURE_RAIN.<Double> getValue() : 0;
+				working_temperature += inWater ? ConfigEntries.TEMPERATURE_WATER.<Double> getValue() : 0;
+				working_temperature += proximity_to_hot ? ConfigEntries.TEMPERATURE_NEAR_FIRE.<Double> getValue() : 0;
 
-				if (effectList.contains(TemperatureEffect.UPDATE_THERMOMETER)) {
-					BlockFace face = BlockFace.NORTH;
-					switch (state) {
-					case HEATSTROKE_1:
-						face = BlockFace.EAST;
-						break;
-					case HEATSTROKE_2:
-						face = BlockFace.NORTH_EAST;
-						break;
-					case HEATSTROKE_3:
-					case HYPOTHERMIA_3:
-						face = BlockFace.NORTH;
-						break;
-					case HYPOTHERMIA_1:
-						face = BlockFace.WEST;
-						break;
-					case HYPOTHERMIA_2:
-						face = BlockFace.NORTH_WEST;
-						break;
-					case NORMAL:
-						face = BlockFace.SOUTH;
-						break;
-					case SHIVERING:
-						face = BlockFace.SOUTH_WEST;
-						break;
-					case SWEATING:
-						face = BlockFace.SOUTH_EAST;
-						break;
-					default:
-						break;
-					}
+				DataWrapper.set(playerFor, UserEntries.TEMPERATURE, (temperature * 499.0 + working_temperature) / 500.0);
 
-					for (int i = 0; i < 9; i++) {
-						ItemStack item = playerFor.getInventory().getItem(i);
-						if (item != null && item.getType() == ItemTag.THERMOMETER.getType()) {
-							Utilities.faceCompass(playerFor, false, face);
-						}
-					}
-				}
-
-				if (state.getRaw() == Goldilocks.JUST_RIGHT) { return; }
-
-				if (state.getRaw() == Goldilocks.TOO_HOT) {
-					if (playerFor.hasPotionEffect(PotionEffectType.FIRE_RESISTANCE)) { return; }
-
-					switch (state) {
-					case HEATSTROKE_3:
-					case HEATSTROKE_2:
-					case HEATSTROKE_1:
-						if (effectList.contains(TemperatureEffect.DAMAGE)) {
-							if ((int) (playerFor.getHealth() - ConfigEntries.DAMAGE_HEATSTROKE.<Double> getValue() * state.getLevel()) > 0) {
-								playerFor.damage(ConfigEntries.DAMAGE_HEATSTROKE.<Double> getValue() * state.getLevel());
-							}
-						}
-					case SWEATING:
-						if (effectList.contains(TemperatureEffect.SWEAT)) {
-							ParticleEffect.DRIP_WATER.display(0.25f, 0.25f, 0.25f, 0f, 50, playerFor.getEyeLocation().subtract(0, 0.5, 0),
-									10.0);
-						}
-						if (effectList.contains(TemperatureEffect.FATIGUE)) {
-							playerFor.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 35, state.getLevel() - 1));
-						}
-						break;
-					default:
-						break;
-					}
-				} else if (state.getRaw() == Goldilocks.TOO_COLD) {
-					switch (state) {
-					case HYPOTHERMIA_3:
-					case HYPOTHERMIA_2:
-						if (effectList.contains(TemperatureEffect.FROSTBITE)) {
-							if (playerFor.getItemInHand() != null && playerFor.getItemInHand().getType() != Material.AIR) {
-								playerFor.getWorld().dropItemNaturally(playerFor.getLocation(), playerFor.getItemInHand().clone());
-								playerFor.setItemInHand(null);
-							}
-						}
-					case HYPOTHERMIA_1:
-						if (effectList.contains(TemperatureEffect.DAMAGE)) {
-							if ((int) (playerFor.getHealth() - ConfigEntries.DAMAGE_HYPOTHERMIA.<Double> getValue() * state.getLevel()) > 0) {
-								playerFor.damage(ConfigEntries.DAMAGE_HYPOTHERMIA.<Double> getValue() * state.getLevel());
-							}
-						}
-						if (effectList.contains(TemperatureEffect.CORNEA_FREEZING)) {
-							playerFor.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 35, state.getLevel() - 1));
-						}
-					case SHIVERING:
-						if (effectList.contains(TemperatureEffect.FATIGUE)) {
-							playerFor.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 35, state.getLevel() - 1));
-						}
-						if (effectList.contains(TemperatureEffect.WEAKNESS)) {
-							playerFor.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 20 * 35, state.getLevel() - 1));
-						}
-						break;
-					default:
-						break;
-					}
+				if (effectsToApply != null && effectsToApply.length != 0) {
+					doTemperatureEffects(playerFor, effectsToApply);
 				}
 			}
 		}.runTaskLater(MyZ.instance, 0L);
+	}
+
+	public void doTemperatureEffects(Player playerFor, TemperatureEffect... effects) {
+		if (!MyZ.isPremium()) { return; }
+
+		List<TemperatureEffect> effectList = Arrays.<TemperatureEffect> asList(effects);
+		if (effectList.contains(TemperatureEffect.RELEASE_THERMOMETER)) {
+			Utilities.faceCompass(playerFor, true, null);
+			if (effects.length == 1) { return; }
+		}
+
+		TemperatureState state = getState(playerFor);
+
+		if (effectList.contains(TemperatureEffect.UPDATE_THERMOMETER)) {
+			BlockFace face = BlockFace.NORTH;
+			switch (state) {
+			case HEATSTROKE_1:
+				face = BlockFace.EAST;
+				break;
+			case HEATSTROKE_2:
+				face = BlockFace.NORTH_EAST;
+				break;
+			case HEATSTROKE_3:
+			case HYPOTHERMIA_3:
+				face = BlockFace.NORTH;
+				break;
+			case HYPOTHERMIA_1:
+				face = BlockFace.WEST;
+				break;
+			case HYPOTHERMIA_2:
+				face = BlockFace.NORTH_WEST;
+				break;
+			case NORMAL:
+				face = BlockFace.SOUTH;
+				break;
+			case SHIVERING:
+				face = BlockFace.SOUTH_WEST;
+				break;
+			case SWEATING:
+				face = BlockFace.SOUTH_EAST;
+				break;
+			default:
+				break;
+			}
+
+			for (int i = 0; i < 9; i++) {
+				ItemStack item = playerFor.getInventory().getItem(i);
+				if (item != null && item.getType() == ItemTag.THERMOMETER.getType()) {
+					Utilities.faceCompass(playerFor, false, face);
+				}
+			}
+		}
+
+		if (state.getRaw() == Goldilocks.JUST_RIGHT) { return; }
+
+		if (state.getRaw() == Goldilocks.TOO_HOT) {
+			if (playerFor.hasPotionEffect(PotionEffectType.FIRE_RESISTANCE)) { return; }
+
+			switch (state) {
+			case HEATSTROKE_3:
+			case HEATSTROKE_2:
+			case HEATSTROKE_1:
+				if (effectList.contains(TemperatureEffect.DAMAGE)) {
+					if ((int) (playerFor.getHealth() - ConfigEntries.DAMAGE_HEATSTROKE.<Double> getValue() * state.getLevel()) > 0) {
+						playerFor.damage(ConfigEntries.DAMAGE_HEATSTROKE.<Double> getValue() * state.getLevel());
+					}
+				}
+			case SWEATING:
+				if (effectList.contains(TemperatureEffect.SWEAT)) {
+					ParticleEffect.DRIP_WATER.display(0.25f, 0.25f, 0.25f, 0f, 50, playerFor.getEyeLocation().subtract(0, 0.5, 0), 10.0);
+				}
+				if (effectList.contains(TemperatureEffect.FATIGUE)) {
+					playerFor.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 35, state.getLevel() - 1));
+				}
+				break;
+			default:
+				break;
+			}
+		} else if (state.getRaw() == Goldilocks.TOO_COLD) {
+			switch (state) {
+			case HYPOTHERMIA_3:
+			case HYPOTHERMIA_2:
+				if (effectList.contains(TemperatureEffect.FROSTBITE)) {
+					if (playerFor.getItemInHand() != null && playerFor.getItemInHand().getType() != Material.AIR) {
+						playerFor.getWorld().dropItemNaturally(playerFor.getLocation(), playerFor.getItemInHand().clone());
+						playerFor.setItemInHand(null);
+					}
+				}
+			case HYPOTHERMIA_1:
+				if (effectList.contains(TemperatureEffect.DAMAGE)) {
+					if ((int) (playerFor.getHealth() - ConfigEntries.DAMAGE_HYPOTHERMIA.<Double> getValue() * state.getLevel()) > 0) {
+						playerFor.damage(ConfigEntries.DAMAGE_HYPOTHERMIA.<Double> getValue() * state.getLevel());
+					}
+				}
+				if (effectList.contains(TemperatureEffect.CORNEA_FREEZING)) {
+					playerFor.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 35, state.getLevel() - 1));
+				}
+			case SHIVERING:
+				if (effectList.contains(TemperatureEffect.FATIGUE)) {
+					playerFor.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 35, state.getLevel() - 1));
+				}
+				if (effectList.contains(TemperatureEffect.WEAKNESS)) {
+					playerFor.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 20 * 35, state.getLevel() - 1));
+				}
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
 	public TemperatureState getState(Player playerFor) {
@@ -263,8 +265,8 @@ public class TemperatureManager {
 
 	private boolean closeToHot(Location centre) {
 		for (int x = centre.getBlockX() - 2; x < centre.getBlockX() + 2; x++) {
-			for (int y = centre.getBlockY() - 3; y < centre.getBlockY(); y++) {
-				for (int z = centre.getBlockZ() - 2; z < centre.getBlockZ(); z++) {
+			for (int y = centre.getBlockY() - 3; y < centre.getBlockY() + 3; y++) {
+				for (int z = centre.getBlockZ() - 2; z < centre.getBlockZ() + 2; z++) {
 					Block at = centre.getWorld().getBlockAt(x, y, z);
 					if (at != null && at.getType() == Material.FIRE || at.getType() == Material.LAVA || at.getType() == Material.TORCH) { return true; }
 				}

@@ -62,17 +62,15 @@ public class CustomPathfinderGoalMeleeAttack extends PathfinderGoal {
 
 	@Override
 	public boolean b() {
-		EntityLiving target = this.creature.getGoalTarget();
+		EntityLiving target = creature.getGoalTarget();
 
-		EntityTargetEvent.TargetReason reason = this.creature.getGoalTarget() == null ? EntityTargetEvent.TargetReason.FORGOT_TARGET
+		EntityTargetEvent.TargetReason reason = creature.getGoalTarget() == null ? EntityTargetEvent.TargetReason.FORGOT_TARGET
 				: EntityTargetEvent.TargetReason.TARGET_DIED;
-		if ((this.creature.getGoalTarget() == null)
-				|| ((this.creature.getGoalTarget() != null) && (!this.creature.getGoalTarget().isAlive()))) {
-			CraftEventFactory.callEntityTargetEvent(this.creature, null, reason);
+		if (creature.getGoalTarget() == null || creature.getGoalTarget() != null && !creature.getGoalTarget().isAlive()) {
+			CraftEventFactory.callEntityTargetEvent(creature, null, reason);
 		}
-		return !this.bypassVision ? false : !this.creature.getNavigation().g() ? true : !target.isAlive() ? false
-				: target == null ? false : this.creature.b(MathHelper.floor(target.locX), MathHelper.floor(target.locY),
-						MathHelper.floor(target.locZ));
+		return !bypassVision ? false : !creature.getNavigation().g() ? true : !target.isAlive() ? false : target == null ? false : creature
+				.b(MathHelper.floor(target.locX), MathHelper.floor(target.locY), MathHelper.floor(target.locZ));
 	}
 
 	@Override

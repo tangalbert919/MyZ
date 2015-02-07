@@ -118,8 +118,7 @@ public class CustomEntityZombie extends EntityZombie implements SmartEntity {
 
 	@Override
 	public boolean canSpawn() {
-		return world.a(boundingBox, this) && world.getCubes(this, boundingBox).isEmpty()
-				&& !world.containsLiquid(boundingBox);
+		return world.a(boundingBox, this) && world.getCubes(this, boundingBox).isEmpty() && !world.containsLiquid(boundingBox);
 	}
 
 	@Override

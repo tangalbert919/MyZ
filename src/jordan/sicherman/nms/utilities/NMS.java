@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
 public class NMS {
 
 	public static enum Version {
-		v1_8_R1("v1_8_R1");
+		v1_8_R1("v1_8_R1"), v1_7_R4("v1_7_R4");
 
 		private final String identifier;
 

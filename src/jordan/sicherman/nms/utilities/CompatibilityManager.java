@@ -73,6 +73,8 @@ public class CompatibilityManager {
 		switch (NMS.compatibilityVersion) {
 		case v1_8_R1:
 			return jordan.sicherman.nms.v1_8_R1.NMSUtilities.murderMessage(message, murdered, murderer, audience);
+		case v1_7_R4:
+			return jordan.sicherman.nms.v1_7_R4.NMSUtilities.murderMessage(message, murdered, murderer, audience);
 		}
 
 		return true;
@@ -92,6 +94,8 @@ public class CompatibilityManager {
 		switch (NMS.compatibilityVersion) {
 		case v1_8_R1:
 			return jordan.sicherman.nms.v1_8_R1.NMSUtilities.deathMessage(message, died, displayOnVariable, audience);
+		case v1_7_R4:
+			return jordan.sicherman.nms.v1_7_R4.NMSUtilities.deathMessage(message, died, displayOnVariable, audience);
 		}
 		return true;
 	}
@@ -101,6 +105,9 @@ public class CompatibilityManager {
 		case v1_8_R1:
 			jordan.sicherman.nms.v1_8_R1.NMSUtilities.openAnvil(player, isAnvil, recipe);
 			break;
+		case v1_7_R4:
+			jordan.sicherman.nms.v1_7_R4.NMSUtilities.openAnvil(player, isAnvil, recipe);
+			break;
 		}
 	}
 
@@ -108,6 +115,8 @@ public class CompatibilityManager {
 		switch (NMS.compatibilityVersion) {
 		case v1_8_R1:
 			return jordan.sicherman.nms.v1_8_R1.NMSUtilities.sendInventoryUpdate(player, slot);
+		case v1_7_R4:
+			return jordan.sicherman.nms.v1_7_R4.NMSUtilities.sendInventoryUpdate(player, slot);
 		}
 		return false;
 	}
@@ -117,6 +126,9 @@ public class CompatibilityManager {
 		case v1_8_R1:
 			jordan.sicherman.nms.v1_8_R1.mobs.CustomEntityType.registerEntities();
 			break;
+		case v1_7_R4:
+			jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityType.registerEntities();
+			break;
 		}
 	}
 
@@ -125,6 +137,9 @@ public class CompatibilityManager {
 		case v1_8_R1:
 			jordan.sicherman.nms.v1_8_R1.mobs.CustomEntityType.unregisterEntities();
 			break;
+		case v1_7_R4:
+			jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityType.unregisterEntities();
+			break;
 		}
 	}
 
@@ -132,6 +147,9 @@ public class CompatibilityManager {
 		switch (NMS.compatibilityVersion) {
 		case v1_8_R1:
 			jordan.sicherman.nms.v1_8_R1.NMSUtilities.spawnEntity(inLoc, type);
+			break;
+		case v1_7_R4:
+			jordan.sicherman.nms.v1_7_R4.NMSUtilities.spawnEntity(inLoc, type);
 			break;
 		}
 	}
@@ -166,6 +184,9 @@ public class CompatibilityManager {
 		switch (NMS.compatibilityVersion) {
 		case v1_8_R1:
 			jordan.sicherman.nms.v1_8_R1.NMSUtilities.attractEntity(entity, inLoc, duration);
+			break;
+		case v1_7_R4:
+			jordan.sicherman.nms.v1_7_R4.NMSUtilities.attractEntity(entity, inLoc, duration);
 			break;
 		}
 	}

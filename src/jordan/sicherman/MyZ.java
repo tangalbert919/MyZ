@@ -212,7 +212,7 @@ public class MyZ extends JavaPlugin {
 	}
 
 	public static void log(String message) {
-		Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "[MyZ 4]" + ChatColor.RESET + message);
+		Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[MyZ 4] " + ChatColor.RESET + message);
 	}
 
 	public void registerSQL() {

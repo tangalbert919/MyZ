@@ -1,7 +1,7 @@
 /**
  * 
  */
-package jordan.sicherman.nms.v1_8_R1.mobs;
+package jordan.sicherman.nms.v1_7_R4.mobs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,14 +10,14 @@ import java.util.Map;
 
 import jordan.sicherman.nms.utilities.NMS;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
-import net.minecraft.server.v1_8_R1.BiomeBase;
-import net.minecraft.server.v1_8_R1.BiomeMeta;
-import net.minecraft.server.v1_8_R1.EntityGiantZombie;
-import net.minecraft.server.v1_8_R1.EntityInsentient;
-import net.minecraft.server.v1_8_R1.EntityPigZombie;
-import net.minecraft.server.v1_8_R1.EntitySkeleton;
-import net.minecraft.server.v1_8_R1.EntityTypes;
-import net.minecraft.server.v1_8_R1.EntityZombie;
+import net.minecraft.server.v1_7_R4.BiomeBase;
+import net.minecraft.server.v1_7_R4.BiomeMeta;
+import net.minecraft.server.v1_7_R4.EntityGiantZombie;
+import net.minecraft.server.v1_7_R4.EntityInsentient;
+import net.minecraft.server.v1_7_R4.EntityPigZombie;
+import net.minecraft.server.v1_7_R4.EntitySkeleton;
+import net.minecraft.server.v1_7_R4.EntityTypes;
+import net.minecraft.server.v1_7_R4.EntityZombie;
 
 import org.bukkit.entity.EntityType;
 
@@ -59,25 +59,25 @@ public enum CustomEntityType {
 
 	private static class DefaultCache {
 
-		List<BiomeMeta> at, au, av, aw;
+		List<BiomeMeta> as, at, au, av;
 
-		private static final String[] keys = new String[] { "at", "au", "av", "aw" };
+		private static final String[] keys = new String[] { "as", "at", "au", "av" };
 
 		@SuppressWarnings("unchecked")
 		public DefaultCache(BiomeBase baseFor) {
 			for (int i = 0; i < keys.length; i++) {
 				switch (i) {
 				case 0:
-					at = new ArrayList<BiomeMeta>((List<BiomeMeta>) NMS.getDeclaredField(baseFor, keys[i]));
+					as = new ArrayList<BiomeMeta>((List<BiomeMeta>) NMS.getDeclaredField(baseFor, keys[i]));
 					break;
 				case 1:
-					au = new ArrayList<BiomeMeta>((List<BiomeMeta>) NMS.getDeclaredField(baseFor, keys[i]));
+					at = new ArrayList<BiomeMeta>((List<BiomeMeta>) NMS.getDeclaredField(baseFor, keys[i]));
 					break;
 				case 2:
-					av = new ArrayList<BiomeMeta>((List<BiomeMeta>) NMS.getDeclaredField(baseFor, keys[i]));
+					au = new ArrayList<BiomeMeta>((List<BiomeMeta>) NMS.getDeclaredField(baseFor, keys[i]));
 					break;
 				case 3:
-					aw = new ArrayList<BiomeMeta>((List<BiomeMeta>) NMS.getDeclaredField(baseFor, keys[i]));
+					av = new ArrayList<BiomeMeta>((List<BiomeMeta>) NMS.getDeclaredField(baseFor, keys[i]));
 					break;
 				}
 			}
@@ -153,19 +153,19 @@ public enum CustomEntityType {
 
 			if (!generalExcluded.contains(biomeBase.ah)) {
 				if (!pigmanExcluded.contains(biomeBase.ah)
-						&& !cache.get(biomeBase).at.contains(CustomEntityType.PIG_ZOMBIE.meta.toBiomeMeta())) {
+						&& !cache.get(biomeBase).as.contains(CustomEntityType.PIG_ZOMBIE.meta.toBiomeMeta())) {
 					List<BiomeMeta> list = (List<BiomeMeta>) NMS.getDeclaredField(biomeBase, DefaultCache.keys[0]);
 					if (list != null) {
 						list.add(CustomEntityType.PIG_ZOMBIE.meta.toBiomeMeta());
 					}
 				}
-				if (!zombieExcluded.contains(biomeBase.ah) && !cache.get(biomeBase).at.contains(CustomEntityType.ZOMBIE.meta.toBiomeMeta())) {
+				if (!zombieExcluded.contains(biomeBase.ah) && !cache.get(biomeBase).as.contains(CustomEntityType.ZOMBIE.meta.toBiomeMeta())) {
 					List<BiomeMeta> list = (List<BiomeMeta>) NMS.getDeclaredField(biomeBase, DefaultCache.keys[0]);
 					if (list != null) {
 						list.add(CustomEntityType.ZOMBIE.meta.toBiomeMeta());
 					}
 				}
-				if (!guardExcluded.contains(biomeBase.ah) && !cache.get(biomeBase).at.contains(CustomEntityType.GUARD.meta.toBiomeMeta())) {
+				if (!guardExcluded.contains(biomeBase.ah) && !cache.get(biomeBase).as.contains(CustomEntityType.GUARD.meta.toBiomeMeta())) {
 					List<BiomeMeta> list = (List<BiomeMeta>) NMS.getDeclaredField(biomeBase, DefaultCache.keys[0]);
 					if (list != null) {
 						list.add(CustomEntityType.GUARD.meta.toBiomeMeta());
@@ -174,7 +174,7 @@ public enum CustomEntityType {
 			}
 
 			if (ConfigEntries.GIANT_INCLUDES.<List<String>> getValue().contains(biomeBase.ah)
-					&& !cache.get(biomeBase).at.contains(CustomEntityType.GIANT_ZOMBIE.meta.toBiomeMeta())) {
+					&& !cache.get(biomeBase).as.contains(CustomEntityType.GIANT_ZOMBIE.meta.toBiomeMeta())) {
 				List<BiomeMeta> list = (List<BiomeMeta>) NMS.getDeclaredField(biomeBase, DefaultCache.keys[0]);
 				if (list != null) {
 					list.add(CustomEntityType.GIANT_ZOMBIE.meta.toBiomeMeta());
@@ -218,10 +218,10 @@ public enum CustomEntityType {
 				continue;
 			}
 
-			NMS.setDeclaredField(biomeBase, DefaultCache.keys[0], cache.get(biomeBase).at);
-			NMS.setDeclaredField(biomeBase, DefaultCache.keys[1], cache.get(biomeBase).au);
-			NMS.setDeclaredField(biomeBase, DefaultCache.keys[2], cache.get(biomeBase).av);
-			NMS.setDeclaredField(biomeBase, DefaultCache.keys[3], cache.get(biomeBase).aw);
+			NMS.setDeclaredField(biomeBase, DefaultCache.keys[0], cache.get(biomeBase).as);
+			NMS.setDeclaredField(biomeBase, DefaultCache.keys[1], cache.get(biomeBase).at);
+			NMS.setDeclaredField(biomeBase, DefaultCache.keys[2], cache.get(biomeBase).au);
+			NMS.setDeclaredField(biomeBase, DefaultCache.keys[3], cache.get(biomeBase).av);
 		}
 
 		cache.clear();

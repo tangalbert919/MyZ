@@ -11,6 +11,8 @@ public class LocaleEnglish {
 
 	public static String getMessage(LocaleMessage message) {
 		switch (message) {
+		case NOT_PREMIUM:
+			return "&4You are running a free version of MyZ. Some features are disabled.";
 		case NO_SQL:
 			return "Not using MySQL for this session.";
 		case SQL_MODIFICATION:

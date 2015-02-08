@@ -47,20 +47,20 @@ public class Death implements Listener {
 		e.setDeathMessage(null);
 		player.setFireTicks(0);
 
-		if (MyZ.zombieFactory.isZombie(player)) {
-			realDeath(player);
-			return;
-		}
-
 		treatDeathMessage(player);
-
-		if (player.getLastDamageCause().getCause() == DamageCause.VOID) {
-			realDeath(player);
-			return;
-		}
 
 		if (overriding.contains(SQLManager.primaryKeyFor(player))) {
 			overriding.remove(SQLManager.primaryKeyFor(player));
+			return;
+		}
+
+		if (MyZ.zombieFactory.isZombie(player) || player.getLastDamageCause().getCause() == DamageCause.VOID) {
+			realDeath(player);
+			return;
+		}
+
+		if ((!ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() && !ConfigEntries.BECOME_GHOST.<Boolean> getValue()) || !MyZ.isPremium()) {
+			realDeath(player);
 			return;
 		}
 

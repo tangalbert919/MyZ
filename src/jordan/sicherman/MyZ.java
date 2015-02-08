@@ -75,16 +75,7 @@ public class MyZ extends JavaPlugin {
 
 	private static Enchantment pseudoEnchant = new PseudoEnchant(69);
 
-	// TODO Premium version allows for:
-	// MySQL
-	// Removes tips
-	// Disables auto-updater (wouldn't work)
-	// Enderpearl grenades
-	// Chat features
-	// Undead and Ghostbourne
-	// Healing
-	// Visibility
-	// Temperature
+	// TODO multiply player damage by itemstack effectiveness.
 
 	// TODO Recipes that can be unlocked per-player to craft new items
 
@@ -102,7 +93,11 @@ public class MyZ extends JavaPlugin {
 	// TODO See todo notes at Death, SpectatorMode, Utilities
 
 	public static boolean isPremium() {
-		return true;
+		return Premium.isPremium;
+	}
+
+	private static boolean isPatched() {
+		return Premium.isPatched;
 	}
 
 	@Override
@@ -127,7 +122,7 @@ public class MyZ extends JavaPlugin {
 		myzapi = new MyZAPI();
 		MyZRank.load();
 
-		if (/*!isPremium() && */ConfigEntries.UPDATE.<Boolean> getValue()) {
+		if ((!isPremium() || isPatched()) && ConfigEntries.UPDATE.<Boolean> getValue()) {
 			new Updater(this, 55557, getFile(), UpdateType.DEFAULT, false);
 		}
 
@@ -217,7 +212,10 @@ public class MyZ extends JavaPlugin {
 	}
 
 	public void registerSQL() {
-		if (!isPremium()) { return; }
+		if (!isPremium()) {
+			sql = new SQLManager();
+			return;
+		}
 
 		sql = new SQLManager(ConfigEntries.SQL_HOST.<String> getValue(), ConfigEntries.SQL_PORT.<Integer> getValue(),
 				ConfigEntries.SQL_DATABASE.<String> getValue(), ConfigEntries.SQL_USERNAME.<String> getValue(),
@@ -247,8 +245,10 @@ public class MyZ extends JavaPlugin {
 	private static final Random random = new Random();
 
 	public static void giveMyZTip(final CommandSender sender) {
-		// if (isPremium()) { return; }
+		if (isPremium()) { return; }
 
+		log(LocaleMessage.NOT_PREMIUM.toString());
+		
 		instance.getServer().getScheduler().runTaskLaterAsynchronously(instance, new Runnable() {
 			@Override
 			public void run() {

@@ -11,6 +11,8 @@ public class LocalePirate {
 
 	public static String getMessage(LocaleMessage message) {
 		switch (message) {
+		case NOT_PREMIUM:
+			return "&4Yer are running MyZ Free. Some features are disabled.";
 		case NO_SQL:
 			return "MySQL has walked te' plank.";
 		case SQL_MODIFICATION:

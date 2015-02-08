@@ -11,6 +11,8 @@ public class LocaleEnglish {
 
 	public static String getMessage(LocaleMessage message) {
 		switch (message) {
+		case REQUIRES_PLAYER:
+			return "&4That command requires you to provide the name of a player.";
 		case NOT_PREMIUM:
 			return "&4You are running a free version of MyZ. Some features are disabled.";
 		case NO_SQL:
@@ -184,9 +186,9 @@ public class LocaleEnglish {
 		case CRACKED:
 			return "&4Cracked~$0% Effective";
 		case BOW_SHARPENED:
-			return "&2Sharpened~$0% Effective~&9+$1 Attack Damage";
+			return "&2Sharpened~$0% Effective~~&9+$1 Attack Damage";
 		case PRECISE:
-			return "&2Precise~$0% Effective~&9+$1 Headshot Damage";
+			return "&2Precise~$0% Effective~~&9+$1 Headshot Damage";
 		case HEADSHOT:
 			return "&eHeadshot! &4+$0 Damage";
 		case SLACK:

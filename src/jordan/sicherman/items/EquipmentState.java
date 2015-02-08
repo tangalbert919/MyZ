@@ -59,7 +59,7 @@ public enum EquipmentState {
 			case SLACK:
 			case REINFORCED:
 			case PRECISE:
-			case SHARPENED:
+			case BOW_SHARPENED:
 				return true;
 			default:
 				return false;

@@ -59,7 +59,7 @@ public class Death implements Listener {
 			return;
 		}
 
-		if ((!ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() && !ConfigEntries.BECOME_GHOST.<Boolean> getValue()) || !MyZ.isPremium()) {
+		if (!ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() && !ConfigEntries.BECOME_GHOST.<Boolean> getValue() || !MyZ.isPremium()) {
 			realDeath(player);
 			return;
 		}

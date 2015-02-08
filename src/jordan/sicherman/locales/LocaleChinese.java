@@ -108,7 +108,7 @@ public class LocaleChinese {
 		case STARTER_SWORD_LORE:
 			return "ç !åˆº!å•Š,æ–­äº†!";
 		case BOW_SHARPENED:
-			return "&2å°–é”çš„~$0% æœ‰æ•ˆçš„~&9+$1 æ”»å‡»ä¼¤å®³";
+			return "&2å°–é”çš„~$0% æœ‰æ•ˆçš„~~&9+$1 æ”»å‡»ä¼¤å®³";
 		case BROKEN:
 			return "&4ç ´ç¢Žçš„~$0% æœ‰æ•ˆçš„";
 		case CRACKED:
@@ -124,7 +124,7 @@ public class LocaleChinese {
 		case ORNATE:
 			return "&6åŽä¸½çš„~$0% æœ‰æ•ˆçš„";
 		case PRECISE:
-			return "&2ç²¾ç¡®çš„~$0% æœ‰æ•ˆçš„~&9+$1 çˆ†å¤´ä¼¤å®³";
+			return "&2ç²¾ç¡®çš„~$0% æœ‰æ•ˆçš„~~&9+$1 çˆ†å¤´ä¼¤å®³";
 		case REINFORCED:
 			return "&6å¼ºåŒ–çš„~$0% æœ‰æ•ˆçš„";
 		case SHARPENED:

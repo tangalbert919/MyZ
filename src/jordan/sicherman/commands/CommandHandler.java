@@ -75,12 +75,9 @@ public enum CommandHandler {
 	}
 
 	private boolean matches(String[] args) {
-		if (args.length != getArgs().length) { return false; }
+		if (args.length < getArgs().length) { return false; }
 
-		if (this == MYZ_ITEM && args.length == getArgs().length && args[0].equalsIgnoreCase(getArgs()[0])
-				&& args[1].equalsIgnoreCase(getArgs()[1])) {
-			return true;
-		} else if (this == MYZ_ITEM_STATE && args.length == getArgs().length && args[0].equalsIgnoreCase(getArgs()[0])
+		if ((this == MYZ_ITEM || this == MYZ_ITEM_STATE) && args[0].equalsIgnoreCase(getArgs()[0])
 				&& args[1].equalsIgnoreCase(getArgs()[1])) { return true; }
 
 		for (int i = 0; i < args.length; i++) {

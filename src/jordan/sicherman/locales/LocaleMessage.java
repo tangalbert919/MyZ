@@ -67,7 +67,8 @@ public enum LocaleMessage {
 			"command.manager.chest.lootset_created", 0), CHEST_MANAGER_REMOVED("command.manager.chest.lootset_removed", 0), CHEST_MANAGER_REMOVE(
 			"command.manager.chest.lootset_remove", 0), CHAT_PREFIX_MANAGER_0("command.manager.chat_prefix.start", 0), CHAT_PREFIX_MANAGER_1(
 			"command.manager.chat_prefix.continue", 0), CHAT_PREFIX_MANAGER_2("command.manager.chat_prefix.finish", 0), MANAGING_SPAWN_KIT(
-			"command.manager.spawn_kit", 0), MANAGING_SPAWN_KIT_CREATED("command.manager.spawn_kit_created", 0), NOT_PREMIUM("trial.enabled", 0);
+			"command.manager.spawn_kit", 0), MANAGING_SPAWN_KIT_CREATED("command.manager.spawn_kit_created", 0), NOT_PREMIUM(
+			"trial.enabled", 0), REQUIRES_PLAYER("command.requires_player", 0);
 
 	private final String key;
 	private final int variables;

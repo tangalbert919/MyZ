@@ -11,6 +11,8 @@ public class LocalePirate {
 
 	public static String getMessage(LocaleMessage message) {
 		switch (message) {
+		case REQUIRES_PLAYER:
+			return "&4That command requires you 'ta provide the name of a crewmate.";
 		case NOT_PREMIUM:
 			return "&4Yer are running MyZ Free. Some features are disabled.";
 		case NO_SQL:
@@ -184,9 +186,9 @@ public class LocalePirate {
 		case CRACKED:
 			return "&4Cracked~$0% Effective";
 		case BOW_SHARPENED:
-			return "&2Sharpened~$0% Effective~&9+$1 Attack Damage";
+			return "&2Sharpened~$0% Effective~~&9+$1 Attack Damage";
 		case PRECISE:
-			return "&2Accurate~$0% Effective~&9+$1 Headshot Damage";
+			return "&2Accurate~$0% Effective~~&9+$1 Headshot Damage";
 		case HEADSHOT:
 			return "&eHeadshot! &4+$0 Damage";
 		case SLACK:

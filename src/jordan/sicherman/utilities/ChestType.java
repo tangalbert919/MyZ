@@ -65,7 +65,7 @@ public class ChestType {
 
 		for (String key : section.getKeys(false)) {
 			Location loc = SerializableLocation.deserialize(key);
-			respawn(loc.getBlock(), true);
+			respawn(loc, true);
 		}
 	}
 
@@ -114,9 +114,9 @@ public class ChestType {
 		}
 	}
 
-	public static void respawn(final Block block, boolean force) {
+	public static void respawn(final Location location, boolean force) {
 		final ConfigurationSection section = ConfigEntries.CHEST_LOCATIONS.<ConfigurationSection> getValue();
-		final String key = SerializableLocation.fromLocation(block.getLocation()).serialize().replaceAll("\\.0", "");
+		final String key = SerializableLocation.fromLocation(location).serialize().replaceAll("\\.0", "");
 		if (section.contains(key)) {
 			long respawn = section.getLong(key + ".respawn_time");
 			if (respawn < 0 && !force) { return; }
@@ -127,6 +127,7 @@ public class ChestType {
 					@Override
 					public void run() {
 						Material matl = Material.valueOf(section.getString(key + ".material"));
+						Block block = location.getBlock();
 						if (block.getType() == matl) {
 							if (!isEmpty(((Chest) block.getState()).getBlockInventory().getContents())) { return; }
 						} else {
@@ -163,7 +164,7 @@ public class ChestType {
 		}
 		FileUtilities.save(CFiles.CHESTS);
 
-		respawn(block, true);
+		respawn(block.getLocation(), true);
 	}
 
 	public static ChestType fromName(String name) {
@@ -249,7 +250,7 @@ public class ChestType {
 		ConfigurationSection chests = ConfigEntries.CHEST_LOCATIONS.<ConfigurationSection> getValue();
 		for (String key : new HashSet<String>(chests.getKeys(false))) {
 			if (key.equals(chests.get(key + ".type"))) {
-				respawn(SerializableLocation.deserialize(chests.getString(key)).getBlock(), true);
+				respawn(SerializableLocation.deserialize(chests.getString(key)), true);
 				chests.set(key, null);
 			}
 		}

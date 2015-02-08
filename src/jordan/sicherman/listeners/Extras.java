@@ -364,12 +364,6 @@ public class Extras implements Listener {
 				((Player) projectile.getShooter()).sendMessage(LocaleMessage.HEADSHOT.filter(
 						ConfigEntries.BOW_PRECISE_HEADSHOT_MOD.<Integer> getValue()).toString((Player) projectile.getShooter()));
 			}
-		} else if (e.getCause() == DamageCause.ENTITY_ATTACK && e.getDamager() instanceof Player
-				&& ((Player) e.getDamager()).getItemInHand() != null) {
-			ItemStack item = ((Player) e.getDamager()).getItemInHand();
-			if (EquipmentState.getState(item) == EquipmentState.BOW_SHARPENED) {
-				e.setDamage(e.getDamage() + ConfigEntries.BOW_SHARPENED_MOD.<Integer> getValue());
-			}
 		}
 	}
 

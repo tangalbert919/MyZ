@@ -4,8 +4,11 @@
 package jordan.sicherman;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import jordan.sicherman.Updater.UpdateType;
 import jordan.sicherman.api.DataManager;
@@ -56,6 +59,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -74,6 +79,8 @@ public class MyZ extends JavaPlugin {
 	public static ZombieFactory zombieFactory;
 
 	private static Enchantment pseudoEnchant = new PseudoEnchant(69);
+
+	private static final Set<Listener> listeners = new HashSet<Listener>();
 
 	// TODO multiply player damage by itemstack effectiveness.
 
@@ -152,21 +159,16 @@ public class MyZ extends JavaPlugin {
 		getCommand("MyZ").setExecutor(new CommandManager());
 
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvents(new Join(), this);
-		pm.registerEvents(new Quit(), this);
-		pm.registerEvents(new Extras(), this);
-		pm.registerEvents(new Visibility(), this);
-		pm.registerEvents(new Chat(), this);
-		pm.registerEvents(new Death(), this);
-		pm.registerEvents(new Revive(), this);
-		pm.registerEvents(new SpectatorMode(), this);
+
+		listeners.addAll(Arrays.asList(new Join(), new Quit(), new Extras(), new Visibility(), new Chat(), new Death(), new Revive(),
+				new SpectatorMode(), new Grappler(), new GetAchievement(), new Healer(), new TakeDamage()));
 		if (ConfigEntries.USE_ENHANCED_ANVILS.<Boolean> getValue()) {
-			pm.registerEvents(new GearModifications(), this);
+			listeners.add(new GearModifications());
 		}
-		pm.registerEvents(new Grappler(), this);
-		pm.registerEvents(new GetAchievement(), this);
-		pm.registerEvents(new Healer(), this);
-		pm.registerEvents(new TakeDamage(), this);
+
+		for (Listener listener : listeners) {
+			pm.registerEvents(listener, this);
+		}
 
 		new Asynchronous().runTaskTimerAsynchronously(instance, 0L, ConfigEntries.TASK_SPEED.<Integer> getValue() * 1L);
 		new Synchronous().runTaskTimer(instance, ConfigEntries.SAVE_SPEED.<Integer> getValue() * 1L,
@@ -188,6 +190,11 @@ public class MyZ extends JavaPlugin {
 		Synchronous.report();
 
 		getServer().getScheduler().cancelTasks(this);
+		for (Listener listener : listeners) {
+			HandlerList.unregisterAll(listener);
+		}
+
+		listeners.clear();
 
 		if (ghostFactory != null) {
 			ghostFactory.clearMembers();
@@ -248,7 +255,7 @@ public class MyZ extends JavaPlugin {
 		if (isPremium()) { return; }
 
 		log(LocaleMessage.NOT_PREMIUM.toString());
-		
+
 		instance.getServer().getScheduler().runTaskLaterAsynchronously(instance, new Runnable() {
 			@Override
 			public void run() {

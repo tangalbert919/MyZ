@@ -146,7 +146,7 @@ public class Asynchronous extends BukkitRunnable {
 
 				for (String key : chests.getKeys(false)) {
 					Location location = SerializableLocation.deserialize(key);
-					ChestType.respawn(location.getWorld().getBlockAt(location), false);
+					ChestType.respawn(location, false);
 				}
 			}
 		});

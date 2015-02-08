@@ -7,6 +7,7 @@ import jordan.sicherman.MyZ;
 import jordan.sicherman.items.EquipmentState;
 import jordan.sicherman.locales.LocaleMessage;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -19,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class MyZItemState extends SimpleCommandExecutor {
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void execute(CommandSender sender, String[] args, CommandHandler handler) {
 		if (!willExecute(sender)) {
@@ -26,7 +28,22 @@ public class MyZItemState extends SimpleCommandExecutor {
 			return;
 		}
 
-		ItemStack hand = ((Player) sender).getItemInHand();
+		Player player;
+		if (sender instanceof Player) {
+			player = (Player) sender;
+		} else {
+			if (args.length < 4) {
+				sender.sendMessage(LocaleMessage.REQUIRES_PLAYER.toString());
+				return;
+			}
+			player = Bukkit.getPlayer(args[3]);
+			if (player == null || !player.isOnline()) {
+				sender.sendMessage(LocaleMessage.NO_USER.toString());
+				return;
+			}
+		}
+
+		ItemStack hand = player.getItemInHand();
 		if (hand == null || hand.getType() == Material.AIR) { return; }
 
 		EquipmentState state = EquipmentState.fromString(args[2]);
@@ -37,6 +54,6 @@ public class MyZItemState extends SimpleCommandExecutor {
 
 	@Override
 	public boolean willExecute(CommandSender sender) {
-		return sender instanceof Player;
+		return true;
 	}
 }

@@ -103,8 +103,9 @@ public class MyZRank {
 			if (rank.identifier == identifier) {
 				return rank;
 			} else if (rank.identifier < identifier) {
-				if (nearest == null || rank.identifier > nearest.identifier)
+				if (nearest == null || rank.identifier > nearest.identifier) {
 					nearest = rank;
+				}
 			}
 		}
 

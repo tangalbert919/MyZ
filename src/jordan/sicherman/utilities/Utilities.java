@@ -187,7 +187,12 @@ public class Utilities {
 					playerFor.damage(damage);
 				}
 				playerFor.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 10, 3));
-				ParticleEffect.REDSTONE.display(0.25f, 0.25f, 0.25f, 0f, 50, playerFor.getEyeLocation().subtract(0, 0.5, 0), 10.0);
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						ParticleEffect.REDSTONE.display(0.25f, 0.25f, 0.25f, 0f, 50, playerFor.getEyeLocation().subtract(0, 0.5, 0), 10.0);
+					}
+				}.runTaskAsynchronously(MyZ.instance);
 			}
 		}.runTaskLater(MyZ.instance, 0L);
 	}

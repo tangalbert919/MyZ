@@ -345,45 +345,49 @@ public class SQLManager {
 
 		String behaviour = ConfigEntries.SQL_BEHAVIOUR.<String> getValue();
 		if ("MySQL->Userdata".equalsIgnoreCase(behaviour)) {
-			MyZ.log(ChatColor.RED + "Pushing data from MySQL to Userdata. Expect lag.");
 			List<String> keys = getKeys();
 			int i = 0;
-			MyZ.log(ChatColor.RED + "" + i + "/" + keys.size() + " completed.");
-			for (String key : keys) {
-				User user = User.forPrimaryKey(key);
-				for (String subkey : values) {
-					DataWrapper.set(user, subkey.replaceAll("_", "\\.").replaceAll("in\\.game", "in_game"), get(key, subkey));
-				}
-				i++;
-				if (i <= keys.size()) {
-					MyZ.log(ChatColor.RED + "" + i + "/" + keys.size() + " completed.");
+			if (keys != null && keys.size() > 0) {
+				MyZ.log(ChatColor.RED + "Pushing data from MySQL to Userdata. Expect lag.");
+				MyZ.log(ChatColor.RED + "" + i + "/" + keys.size() + " completed.");
+				for (String key : keys) {
+					User user = User.forPrimaryKey(key);
+					for (String subkey : values) {
+						DataWrapper.set(user, subkey.replaceAll("_", "\\.").replaceAll("in\\.game", "in_game"), get(key, subkey));
+					}
+					i++;
+					if (i <= keys.size()) {
+						MyZ.log(ChatColor.RED + "" + i + "/" + keys.size() + " completed.");
+					}
 				}
 			}
 		} else if ("Userdata->MySQL".equalsIgnoreCase(behaviour)) {
-			MyZ.log(ChatColor.RED + "Pushing data from Userdata to MySQL. Expect high load.");
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					File userdata = new File(MyZ.instance.getDataFolder().getAbsolutePath() + File.separator + "userdata");
 					String[] keys = userdata.list();
 					int i = 0;
-					MyZ.log(ChatColor.RED + "" + i + "/" + keys.length + " completed.");
-					for (String uuid : keys) {
-						add(uuid);
-						File unique = new File(userdata.getAbsolutePath() + File.separator + uuid);
-						for (String file : new String[] { UFiles.STATISTICS.getFileID(), UFiles.TRACKED.getFileID(),
-								UFiles.SKILLS.getFileID() }) {
-							FileConfiguration yaml = YamlConfiguration.loadConfiguration(new File(unique.getAbsolutePath() + File.separator
-									+ file));
-							for (UserEntries entry : UserEntries.values()) {
-								if (entry.getFile().getFileID().equals(file) && UserEntries.isMySQLKey(entry)) {
-									set(uuid, entry.getKey().replaceAll("\\.", "_"), yaml.get(entry.getKey()), true);
+					if (keys != null && keys.length > 0) {
+						MyZ.log(ChatColor.RED + "Pushing data from Userdata to MySQL. Expect high load.");
+						MyZ.log(ChatColor.RED + "" + i + "/" + keys.length + " completed.");
+						for (String uuid : keys) {
+							add(uuid);
+							File unique = new File(userdata.getAbsolutePath() + File.separator + uuid);
+							for (String file : new String[] { UFiles.STATISTICS.getFileID(), UFiles.TRACKED.getFileID(),
+									UFiles.SKILLS.getFileID() }) {
+								FileConfiguration yaml = YamlConfiguration.loadConfiguration(new File(unique.getAbsolutePath()
+										+ File.separator + file));
+								for (UserEntries entry : UserEntries.values()) {
+									if (entry.getFile().getFileID().equals(file) && UserEntries.isMySQLKey(entry)) {
+										set(uuid, entry.getKey().replaceAll("\\.", "_"), yaml.get(entry.getKey()), true);
+									}
 								}
 							}
-						}
-						i++;
-						if (i <= keys.length) {
-							MyZ.log(ChatColor.RED + "" + i + "/" + keys.length + " completed.");
+							i++;
+							if (i <= keys.length) {
+								MyZ.log(ChatColor.RED + "" + i + "/" + keys.length + " completed.");
+							}
 						}
 					}
 				}

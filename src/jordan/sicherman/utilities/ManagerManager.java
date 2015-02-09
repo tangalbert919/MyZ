@@ -70,9 +70,7 @@ public class ManagerManager {
 			switch (of) {
 			case SPAWN:
 				player.setNoDamageTicks(0);
-				if (player.getGameMode() != GameMode.CREATIVE) {
-					player.setAllowFlight(false);
-				}
+				player.setAllowFlight(false);
 				break;
 			case ENGINEER:
 			case CHESTS:

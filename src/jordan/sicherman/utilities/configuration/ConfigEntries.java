@@ -46,7 +46,7 @@ public enum ConfigEntries {
 			CFiles.EXTRAS, 30), THIRST_DECAY_MUSHROOM("thirst.decay.mushroom", EntryType.INTEGER, CFiles.EXTRAS, 50), THIRST_DECAY_SWAMP(
 			"thirst.decay.swamp", EntryType.INTEGER, CFiles.EXTRAS, 49), CHAT_RADIUS("chat.local.radius", EntryType.INTEGER, CFiles.EXTRAS,
 			20), VULNERABLE_TIME("death.vulnerable_time", EntryType.INTEGER, CFiles.EXTRAS, 300), REVIVE_TIME("death.revive_time",
-			EntryType.INTEGER, CFiles.EXTRAS, 10), GHOST_TIME("death.ghost_time", EntryType.INTEGER, CFiles.EXTRAS, 60), VISIBILITY_CHAT(
+			EntryType.INTEGER, CFiles.EXTRAS, 10), UNDEAD_TIME("death.transition_time", EntryType.INTEGER, CFiles.EXTRAS, 60), VISIBILITY_CHAT(
 			"visibility.player.chat", EntryType.INTEGER, CFiles.EXTRAS, 2), VISIBILITY_ON_FIRE("visibility.player.on_fire",
 			EntryType.INTEGER, CFiles.EXTRAS, 7), SPAWN_POINTS("spawnpoints", EntryType.LIST, CFiles.SPAWNLOCATIONS,
 			new ArrayList<String>()), HOME_SPAWN("home", EntryType.STRING, CFiles.SPAWNLOCATIONS, ""), BLEED_DELAY("bleed.damage_delay",

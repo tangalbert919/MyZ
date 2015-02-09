@@ -209,8 +209,13 @@ public class TemperatureManager {
 						}
 					case SWEATING:
 						if (effectList.contains(TemperatureEffect.SWEAT)) {
-							ParticleEffect.DRIP_WATER.display(0.25f, 0.25f, 0.25f, 0f, 50, playerFor.getEyeLocation().subtract(0, 0.5, 0),
-									10.0);
+							new BukkitRunnable() {
+								@Override
+								public void run() {
+									ParticleEffect.DRIP_WATER.display(0.25f, 0.25f, 0.25f, 0f, 50,
+											playerFor.getEyeLocation().subtract(0, 0.5, 0), 10.0);
+								}
+							}.runTaskAsynchronously(MyZ.instance);
 						}
 						if (effectList.contains(TemperatureEffect.FATIGUE)) {
 							playerFor.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 35, state.getLevel() - 1));

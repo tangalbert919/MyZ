@@ -166,7 +166,7 @@ public class Extras implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.MONITOR)
 	private void onBlock(PlayerInteractEvent e) {
 		if (!Utilities.inWorld(e.getPlayer())) { return; }
 

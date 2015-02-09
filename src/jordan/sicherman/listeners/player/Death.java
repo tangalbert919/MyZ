@@ -64,22 +64,26 @@ public class Death implements Listener {
 			return;
 		}
 
-		final long ghostTime = ConfigEntries.GHOST_TIME.<Integer> getValue() * 20L;
-		long actualTime = ghostTime;
-
 		player.setHealth(player.getMaxHealth());
 		for (PotionEffect effect : player.getActivePotionEffects()) {
 			player.removePotionEffect(effect.getType());
 		}
 
-		if (MyZ.isPremium() && (ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() || ConfigEntries.BECOME_GHOST.<Boolean> getValue())) {
+		if (!MyZ.isPremium()) { return; }
+
+		final long ghostTime = ConfigEntries.UNDEAD_TIME.<Integer> getValue() * 20L;
+		long actualTime = ghostTime;
+
+		if (ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() || ConfigEntries.BECOME_GHOST.<Boolean> getValue()) {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, (int) ghostTime, 2));
 		}
 
 		boolean wasZombie = false;
 
-		if (MyZ.isPremium() && ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() && DataWrapper.<Boolean> get(player, UserEntries.POISONED)) {
-			actualTime /= 2L;
+		if (ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() && DataWrapper.<Boolean> get(player, UserEntries.POISONED)) {
+			if (ConfigEntries.BECOME_GHOST.<Boolean> getValue()) {
+				actualTime /= 2L;
+			}
 			MyZ.zombieFactory.setZombie(player, true);
 			wasZombie = true;
 			player.sendMessage(LocaleMessage.BECAME_ZOMBIE.filter(actualTime / 20L).toString(player));
@@ -90,60 +94,63 @@ public class Death implements Listener {
 		final long ghostFor = actualTime;
 		final boolean zombified = wasZombie;
 
-		if (MyZ.isPremium() && ConfigEntries.BECOME_GHOST.<Boolean> getValue()) {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					if (player != null && player.isOnline()) {
-						if (MyZ.zombieFactory.isZombie(player)) {
-							MyZ.zombieFactory.setZombie(player, false);
-						} else {
-							if (zombified) { return; }
-						}
-
-						if (ReviveManager.getInstance().isVulnerable(player)) {
-							realDeath(player, false);
-							return;
-						}
-
-						player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, (int) ghostFor, 15));
-						MyZ.ghostFactory.setGhost(player, true);
-						player.sendMessage(LocaleMessage.BECAME_GHOST.filter(ghostFor / 20L).toString(player));
-						DataWrapper.set(player, UserEntries.GHOST_TIMES, DataWrapper.<Integer> get(player, UserEntries.GHOST_TIMES) + 1);
-
-						new BukkitRunnable() {
-							@Override
-							public void run() {
-								if (player != null && player.isOnline()) {
-									if (MyZ.ghostFactory.isGhost(player)) {
-										realDeath(player, false);
-									}
-								}
-							}
-
-							@Override
-							public void cancel() {
-								if (player != null && player.isOnline()) {
-									player.removePotionEffect(PotionEffectType.WITHER);
-									if (MyZ.ghostFactory.isGhost(player)) {
-										ReviveManager.getInstance().reportException(player);
-										realDeath(player, false);
-									}
-								}
-							}
-						}.runTaskLater(MyZ.instance, ghostFor);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (player != null && player.isOnline()) {
+					if (MyZ.zombieFactory.isZombie(player)) {
+						MyZ.zombieFactory.setZombie(player, false);
+					} else {
+						if (zombified) { return; }
 					}
-				}
 
-				@Override
-				public void cancel() {
-					MyZ.zombieFactory.setZombie(player, false);
-					MyZ.ghostFactory.setGhost(player, false);
-					player.removePotionEffect(PotionEffectType.HUNGER);
-					player.removePotionEffect(PotionEffectType.WITHER);
+					if (ReviveManager.getInstance().isVulnerable(player)) {
+						realDeath(player, false);
+						return;
+					}
+
+					if (!ConfigEntries.BECOME_GHOST.<Boolean> getValue()) {
+						realDeath(player, false);
+						return;
+					}
+
+					player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, (int) ghostFor, 15));
+					MyZ.ghostFactory.setGhost(player, true);
+					player.sendMessage(LocaleMessage.BECAME_GHOST.filter(ghostFor / 20L).toString(player));
+					DataWrapper.set(player, UserEntries.GHOST_TIMES, DataWrapper.<Integer> get(player, UserEntries.GHOST_TIMES) + 1);
+
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							if (player != null && player.isOnline()) {
+								if (MyZ.ghostFactory.isGhost(player)) {
+									realDeath(player, false);
+								}
+							}
+						}
+
+						@Override
+						public void cancel() {
+							if (player != null && player.isOnline()) {
+								player.removePotionEffect(PotionEffectType.WITHER);
+								if (MyZ.ghostFactory.isGhost(player)) {
+									ReviveManager.getInstance().reportException(player);
+									realDeath(player, false);
+								}
+							}
+						}
+					}.runTaskLater(MyZ.instance, ghostFor);
 				}
-			}.runTaskLater(MyZ.instance, actualTime == ghostTime ? 0L : actualTime);
-		}
+			}
+
+			@Override
+			public void cancel() {
+				MyZ.zombieFactory.setZombie(player, false);
+				MyZ.ghostFactory.setGhost(player, false);
+				player.removePotionEffect(PotionEffectType.HUNGER);
+				player.removePotionEffect(PotionEffectType.WITHER);
+			}
+		}.runTaskLater(MyZ.instance, actualTime == ghostTime ? 0L : actualTime);
 	}
 
 	public static void realDeath(Player playerFor, boolean onLogout) {

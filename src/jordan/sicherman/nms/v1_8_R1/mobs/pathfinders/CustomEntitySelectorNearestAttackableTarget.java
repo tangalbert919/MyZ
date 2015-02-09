@@ -5,10 +5,8 @@ package jordan.sicherman.nms.v1_8_R1.mobs.pathfinders;
 
 import net.minecraft.server.v1_8_R1.EntityHuman;
 import net.minecraft.server.v1_8_R1.EntityLiving;
-
-import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffectType;
+import net.minecraft.server.v1_8_R1.EntityPlayer;
+import net.minecraft.server.v1_8_R1.MobEffectList;
 
 import com.google.common.base.Predicate;
 
@@ -31,10 +29,9 @@ public class CustomEntitySelectorNearestAttackableTarget implements Predicate<En
 	public boolean apply(EntityLiving entity) {
 		if (predicate != null && !predicate.apply(entity)) { return false; }
 		if (entity instanceof EntityHuman) {
-			if (((EntityHuman) entity).getBukkitEntity().getGameMode() == GameMode.CREATIVE
-					|| ((Player) entity.getBukkitEntity()).hasPotionEffect(PotionEffectType.WITHER)
-					|| ((Player) entity.getBukkitEntity()).hasPotionEffect(PotionEffectType.INVISIBILITY)) { return false; }
-			double range = ((Player) entity.getBukkitEntity()).getExp() * 32;
+			if (((EntityPlayer) entity).playerInteractManager.isCreative() || entity.hasEffect(MobEffectList.WITHER)
+					|| entity.hasEffect(MobEffectList.INVISIBILITY)) { return false; }
+			double range = ((EntityHuman) entity).exp * 32;
 
 			if (entity.g(pathfinder.getE()) > range) { return false; }
 		}

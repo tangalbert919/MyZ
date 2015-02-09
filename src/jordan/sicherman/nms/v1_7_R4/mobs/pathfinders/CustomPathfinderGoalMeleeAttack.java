@@ -7,6 +7,7 @@ import net.minecraft.server.v1_7_R4.EntityCreature;
 import net.minecraft.server.v1_7_R4.EntityHuman;
 import net.minecraft.server.v1_7_R4.EntityLiving;
 import net.minecraft.server.v1_7_R4.MathHelper;
+import net.minecraft.server.v1_7_R4.MobEffectList;
 import net.minecraft.server.v1_7_R4.PathEntity;
 import net.minecraft.server.v1_7_R4.PathfinderGoal;
 import net.minecraft.server.v1_7_R4.World;
@@ -64,7 +65,8 @@ public class CustomPathfinderGoalMeleeAttack extends PathfinderGoal {
 	public boolean b() {
 		EntityLiving target = creature.getGoalTarget();
 
-		EntityTargetEvent.TargetReason reason = creature.getGoalTarget() == null ? EntityTargetEvent.TargetReason.FORGOT_TARGET
+		EntityTargetEvent.TargetReason reason = creature.getGoalTarget() == null || target.hasEffect(MobEffectList.WITHER)
+				|| target.hasEffect(MobEffectList.INVISIBILITY) ? EntityTargetEvent.TargetReason.FORGOT_TARGET
 				: EntityTargetEvent.TargetReason.TARGET_DIED;
 		if (creature.getGoalTarget() == null || creature.getGoalTarget() != null && !creature.getGoalTarget().isAlive()) {
 			CraftEventFactory.callEntityTargetEvent(creature, null, reason);

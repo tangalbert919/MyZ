@@ -109,7 +109,13 @@ public class ChestType {
 			section.set(key + ".respawn_time", System.currentTimeMillis() + ConfigEntries.CHEST_RESPAWN_TIME.<Integer> getValue() * 1000);
 			if (block.getType() != Material.AIR) {
 				block.setType(Material.AIR);
-				ParticleEffect.CLOUD.display(-0.5f, 0f, -0.5f, 0.025f, 25, block.getLocation(), 20.0);
+				final Location inLoc = block.getLocation();
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						ParticleEffect.CLOUD.display(0f, 0f, 0f, 0.025f, 25, inLoc, 20.0);
+					}
+				}.runTaskAsynchronously(MyZ.instance);
 			}
 		}
 	}

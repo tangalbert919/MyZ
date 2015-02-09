@@ -7,6 +7,7 @@ import net.minecraft.server.v1_8_R1.BlockPosition;
 import net.minecraft.server.v1_8_R1.EntityCreature;
 import net.minecraft.server.v1_8_R1.EntityHuman;
 import net.minecraft.server.v1_8_R1.EntityLiving;
+import net.minecraft.server.v1_8_R1.MobEffectList;
 import net.minecraft.server.v1_8_R1.PathEntity;
 import net.minecraft.server.v1_8_R1.PathfinderGoal;
 import net.minecraft.server.v1_8_R1.World;
@@ -89,6 +90,11 @@ public class CustomPathfinderGoalMeleeAttack extends PathfinderGoal {
 	@Override
 	public void e() {
 		EntityLiving target = creature.getGoalTarget();
+
+		if (target.hasEffect(MobEffectList.WITHER) || target.hasEffect(MobEffectList.INVISIBILITY)) {
+			creature.setGoalTarget(null);
+			return;
+		}
 
 		// Look at our target.
 		creature.getControllerLook().a(target, 30.0F, 30.0F);

@@ -17,6 +17,8 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class Synchronous extends BukkitRunnable {
 
+	public static int tickCount = 0;
+
 	@Override
 	public void run() {
 		report();

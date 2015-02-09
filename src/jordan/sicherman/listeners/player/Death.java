@@ -55,12 +55,12 @@ public class Death implements Listener {
 		}
 
 		if (MyZ.zombieFactory.isZombie(player) || player.getLastDamageCause().getCause() == DamageCause.VOID) {
-			realDeath(player);
+			realDeath(player, false);
 			return;
 		}
 
 		if (!ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() && !ConfigEntries.BECOME_GHOST.<Boolean> getValue() || !MyZ.isPremium()) {
-			realDeath(player);
+			realDeath(player, false);
 			return;
 		}
 
@@ -76,50 +76,63 @@ public class Death implements Listener {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, (int) ghostTime, 2));
 		}
 
+		boolean wasZombie = false;
+
 		if (MyZ.isPremium() && ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() && DataWrapper.<Boolean> get(player, UserEntries.POISONED)) {
 			actualTime /= 2L;
 			MyZ.zombieFactory.setZombie(player, true);
+			wasZombie = true;
 			player.sendMessage(LocaleMessage.BECAME_ZOMBIE.filter(actualTime / 20L).toString(player));
 			player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, (int) actualTime, 2));
 			DataWrapper.set(player, UserEntries.ZOMBIE_TIMES, DataWrapper.<Integer> get(player, UserEntries.ZOMBIE_TIMES) + 1);
 		}
 
 		final long ghostFor = actualTime;
+		final boolean zombified = wasZombie;
 
 		if (MyZ.isPremium() && ConfigEntries.BECOME_GHOST.<Boolean> getValue()) {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					if (MyZ.zombieFactory.isZombie(player)) {
-						MyZ.zombieFactory.setZombie(player, false);
-					}
-					if (ReviveManager.getInstance().isVulnerable(player)) {
-						realDeath(player);
-						return;
-					}
-
-					player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, (int) ghostFor, 15));
-					MyZ.ghostFactory.setGhost(player, true);
-					player.sendMessage(LocaleMessage.BECAME_GHOST.filter(ghostFor / 20L).toString(player));
-					DataWrapper.set(player, UserEntries.GHOST_TIMES, DataWrapper.<Integer> get(player, UserEntries.GHOST_TIMES) + 1);
-
-					new BukkitRunnable() {
-						@Override
-						public void run() {
-							if (MyZ.ghostFactory.isGhost(player)) {
-								realDeath(player);
-							}
+					if (player != null && player.isOnline()) {
+						if (MyZ.zombieFactory.isZombie(player)) {
+							MyZ.zombieFactory.setZombie(player, false);
+						} else {
+							if (zombified) { return; }
 						}
 
-						@Override
-						public void cancel() {
-							player.removePotionEffect(PotionEffectType.WITHER);
-							if (MyZ.ghostFactory.isGhost(player)) {
-								ReviveManager.getInstance().reportException(player);
-								realDeath(player);
-							}
+						if (ReviveManager.getInstance().isVulnerable(player)) {
+							realDeath(player, false);
+							return;
 						}
-					}.runTaskLater(MyZ.instance, ghostFor);
+
+						player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, (int) ghostFor, 15));
+						MyZ.ghostFactory.setGhost(player, true);
+						player.sendMessage(LocaleMessage.BECAME_GHOST.filter(ghostFor / 20L).toString(player));
+						DataWrapper.set(player, UserEntries.GHOST_TIMES, DataWrapper.<Integer> get(player, UserEntries.GHOST_TIMES) + 1);
+
+						new BukkitRunnable() {
+							@Override
+							public void run() {
+								if (player != null && player.isOnline()) {
+									if (MyZ.ghostFactory.isGhost(player)) {
+										realDeath(player, false);
+									}
+								}
+							}
+
+							@Override
+							public void cancel() {
+								if (player != null && player.isOnline()) {
+									player.removePotionEffect(PotionEffectType.WITHER);
+									if (MyZ.ghostFactory.isGhost(player)) {
+										ReviveManager.getInstance().reportException(player);
+										realDeath(player, false);
+									}
+								}
+							}
+						}.runTaskLater(MyZ.instance, ghostFor);
+					}
 				}
 
 				@Override
@@ -133,7 +146,7 @@ public class Death implements Listener {
 		}
 	}
 
-	public static void realDeath(Player playerFor) {
+	public static void realDeath(Player playerFor, boolean onLogout) {
 		MyZ.zombieFactory.setZombie(playerFor, false);
 		MyZ.ghostFactory.setGhost(playerFor, false);
 
@@ -143,9 +156,13 @@ public class Death implements Listener {
 		Utilities.setBleeding(playerFor, false, true);
 		Utilities.setPoisoned(playerFor, false, true);
 
-		overriding.add(SQLManager.primaryKeyFor(playerFor));
-		if (playerFor.getHealth() > 0) {
-			playerFor.setHealth(0);
+		if (!onLogout) {
+			overriding.add(SQLManager.primaryKeyFor(playerFor));
+			if (playerFor.getHealth() > 0) {
+				playerFor.setHealth(0);
+			}
+		} else {
+			Utilities.respawn(playerFor, true);
 		}
 
 		// TODO zero stats of unranked players

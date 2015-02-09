@@ -181,7 +181,9 @@ public enum ConfigEntries {
 			CFiles.ADDONS, true), CHEST_TYPES("types", EntryType.CONFIGURATION_SECTION, CFiles.CHESTS, null), CHEST_LOCATIONS("locations",
 			EntryType.CONFIGURATION_SECTION, CFiles.CHESTS, null), CHEST_RESPAWN_TIME("chest.respawn_time", EntryType.INTEGER,
 			CFiles.EXTRAS, 300), RANKS("ranks", EntryType.CONFIGURATION_SECTION, CFiles.RANKS, null), SAVE_SPEED("save_delay",
-			EntryType.INTEGER, CFiles.CONFIG, 6000), SQL_BEHAVIOUR("behaviour", EntryType.STRING, CFiles.MYSQL, "Userdata->MySQL");
+			EntryType.INTEGER, CFiles.CONFIG, 6000), SQL_BEHAVIOUR("behaviour", EntryType.STRING, CFiles.MYSQL, "Userdata->MySQL"), DEDICATED(
+			"dedicated-mode", EntryType.BOOLEAN, CFiles.CONFIG, false), SQL_TICKER("sql.transmit_period", EntryType.INTEGER, CFiles.CONFIG,
+			60);
 
 	private final String key;
 	private final EntryType type;

@@ -127,7 +127,7 @@ public class SQLManager {
 		}
 	}
 
-	public void executeQuery(String query) throws SQLException {
+	public void executeQuery(final String query, boolean async) {
 		if (isPseudo()) { return; }
 
 		if (!isConnected()) {
@@ -135,7 +135,24 @@ public class SQLManager {
 			return;
 		}
 
-		sql.createStatement().executeUpdate(query);
+		if (async) {
+			MyZ.instance.getServer().getScheduler().runTaskAsynchronously(MyZ.instance, new Runnable() {
+				@Override
+				public void run() {
+					try {
+						sql.createStatement().executeUpdate(query);
+					} catch (Exception exc) {
+
+					}
+				}
+			});
+		} else {
+			try {
+				sql.createStatement().executeUpdate(query);
+			} catch (Exception e) {
+				MyZ.log(ChatColor.RED + LocaleMessage.SQL_FAIL.toString() + ": " + e.getMessage());
+			}
+		}
 	}
 
 	public void add(OfflinePlayer playerFor) {
@@ -160,11 +177,7 @@ public class SQLManager {
 		}
 
 		if (!isIn(key)) {
-			try {
-				executeQuery("INSERT INTO playerdata (username) VALUES ('" + key + "')");
-			} catch (Exception e) {
-				MyZ.log(ChatColor.RED + LocaleMessage.SQL_FAIL.toString() + ": " + e.getMessage());
-			}
+			executeQuery("INSERT INTO playerdata (username) VALUES ('" + key + "')", true);
 		}
 	}
 
@@ -261,16 +274,12 @@ public class SQLManager {
 			return;
 		}
 
-		try {
-			executeQuery("UPDATE playerdata SET " + field + " = " + (value instanceof String ? "'" + value + "'" : value)
-					+ " WHERE username = '" + key + "' LIMIT 1");
-			if (!cachedValues.containsKey(key)) {
-				cachedValues.put(key, new HashMap<String, Object>());
-			}
-			cachedValues.get(key).put(field, value);
-		} catch (Exception e) {
-			MyZ.log(ChatColor.RED + LocaleMessage.SQL_FAIL.toString() + ": " + e.getMessage());
+		executeQuery("UPDATE playerdata SET " + field + " = " + (value instanceof String ? "'" + value + "'" : value)
+				+ " WHERE username = '" + key + "' LIMIT 1", false);
+		if (!cachedValues.containsKey(key)) {
+			cachedValues.put(key, new HashMap<String, Object>());
 		}
+		cachedValues.get(key).put(field, value);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -332,11 +341,7 @@ public class SQLManager {
 			return;
 		}
 
-		try {
-			executeQuery("CREATE TABLE IF NOT EXISTS playerdata (" + UserEntries.convertToMySQLQuery() + ")");
-		} catch (Exception e) {
-			MyZ.log(ChatColor.RED + LocaleMessage.SQL_FAIL.toString() + ": " + e.getMessage());
-		}
+		executeQuery("CREATE TABLE IF NOT EXISTS playerdata (" + UserEntries.convertToMySQLQuery() + ")", false);
 
 		String behaviour = ConfigEntries.SQL_BEHAVIOUR.<String> getValue();
 		if ("MySQL->Userdata".equalsIgnoreCase(behaviour)) {

@@ -8,6 +8,7 @@ import java.util.List;
 
 import jordan.sicherman.utilities.configuration.UserEntries;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -53,14 +54,14 @@ public class StartingKitManager {
 	public ItemStack getEquipment(Player playerFor, EquipmentPiece piece) {
 		ItemStack item = DataWrapper.<ItemStack> get(playerFor, piece.entry);
 
-		if (item == null) {
+		if (item == null || item.getType() == Material.AIR) {
 			MyZRank rank = Utilities.getRank(playerFor);
 			if (rank != null) {
 				item = rank.getEquipment(piece);
 			}
 		}
 
-		return item;
+		return item != null ? item.clone() : item;
 	}
 
 	public ItemStack[] getInventory(Player playerFor) {

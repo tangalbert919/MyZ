@@ -69,13 +69,17 @@ public class Utilities {
 		if (!DataWrapper.<Boolean> get(player, UserEntries.PLAYING)) {
 			player.setNoDamageTicks(Integer.MAX_VALUE);
 		}
+
+		if (ConfigEntries.DEDICATED.<Boolean> getValue()) {
+			spawnInWorld(player);
+		}
 	}
 
 	public static void doLogout(Player player) {
 		player.setNoDamageTicks(0);
 
 		if (SpectatorMode.isSpectator(player)) {
-			Death.realDeath(player);
+			Death.realDeath(player, true);
 		}
 
 		TemperatureManager.getInstance().doTemperatureEffects(player, TemperatureEffect.RELEASE_THERMOMETER);
@@ -90,7 +94,6 @@ public class Utilities {
 		if (!poisoned) {
 			if (DataWrapper.<Boolean> get(playerFor, UserEntries.POISONED)) {
 				DataWrapper.set(playerFor, UserEntries.POISONED, false);
-				playerFor.removePotionEffect(PotionEffectType.WITHER);
 				playerFor.removePotionEffect(PotionEffectType.CONFUSION);
 				if (!force) {
 					playerFor.sendMessage(LocaleMessage.INFECTION_ENDED.toString(playerFor));
@@ -116,7 +119,6 @@ public class Utilities {
 			if (random.nextDouble() <= percentChance / 100.0) {
 				DataWrapper.set(playerFor, UserEntries.POISONED, true);
 				doPoisonDamage(playerFor, true);
-				playerFor.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, Integer.MAX_VALUE, 0));
 				playerFor.sendMessage(LocaleMessage.INFECTED.toString(playerFor));
 			}
 		}
@@ -283,27 +285,45 @@ public class Utilities {
 	private static final Random random = new Random();
 
 	public static void respawn(Player player) {
-		Location home = null;
+		respawn(player, false);
+	}
 
-		try {
-			home = SerializableLocation.deserialize(ConfigEntries.HOME_SPAWN.<String> getValue());
-		} catch (Exception exc) {
+	public static void respawn(Player player, boolean onLogout) {
+		boolean dedicated = ConfigEntries.DEDICATED.<Boolean> getValue();
 
-		}
+		if (!dedicated) {
+			Location home = null;
 
-		if (home != null) {
-			player.teleport(home);
+			try {
+				home = SerializableLocation.deserialize(ConfigEntries.HOME_SPAWN.<String> getValue());
+			} catch (Exception exc) {
+
+			}
+
+			if (home != null) {
+				player.teleport(home);
+			}
+
+			TemperatureManager.getInstance().doTemperatureEffects(player, TemperatureEffect.RELEASE_THERMOMETER);
 		}
 
 		DataWrapper.set(player, UserEntries.PLAYING, false);
-		TemperatureManager.getInstance().doTemperatureEffects(player, TemperatureEffect.RELEASE_THERMOMETER);
 
-		setBleeding(player, false, true);
-		setPoisoned(player, false, true);
+		if (!onLogout) {
+			setBleeding(player, false, true);
+			setPoisoned(player, false, true);
 
-		MyZ.zombieFactory.setZombie(player, false);
-		MyZ.ghostFactory.setGhost(player, false);
+			MyZ.zombieFactory.setZombie(player, false);
+			MyZ.ghostFactory.setGhost(player, false);
+		}
 
+		for (PotionEffect effect : player.getActivePotionEffects()) {
+			player.removePotionEffect(effect.getType());
+		}
+		player.getInventory().clear();
+		player.setSaturation(1.0f);
+		player.setFireTicks(0);
+		player.getInventory().clear();
 		player.setHealth(player.getMaxHealth());
 		player.setFoodLevel(20);
 		player.setLevel(0);
@@ -311,7 +331,11 @@ public class Utilities {
 
 		if (!Utilities.inWorld(player)) { return; }
 
-		player.setNoDamageTicks(Integer.MAX_VALUE);
+		if (!dedicated) {
+			player.setNoDamageTicks(Integer.MAX_VALUE);
+		} else {
+			spawnInWorld(player);
+		}
 	}
 
 	public static boolean canSpawn(Player player) {
@@ -319,8 +343,14 @@ public class Utilities {
 	}
 
 	public static void spawnInWorld(Player player) {
+		spawnInWorld(player, false);
+	}
+
+	private static void spawnInWorld(Player player, boolean dedicated) {
 		if (DataWrapper.<Boolean> get(player, UserEntries.PLAYING)) {
-			player.sendMessage(LocaleMessage.ALREADY_SPAWNED.toString(player));
+			if (!dedicated) {
+				player.sendMessage(LocaleMessage.ALREADY_SPAWNED.toString(player));
+			}
 			return;
 		}
 

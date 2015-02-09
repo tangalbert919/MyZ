@@ -82,8 +82,6 @@ public class MyZ extends JavaPlugin {
 
 	private static final Set<Listener> listeners = new HashSet<Listener>();
 
-	// TODO multiply player damage by itemstack effectiveness.
-
 	// TODO Recipes that can be unlocked per-player to craft new items
 
 	// TODO Friend system, disabling PVP towards friends that can be added via

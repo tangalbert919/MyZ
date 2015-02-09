@@ -31,6 +31,7 @@ public class Asynchronous extends BukkitRunnable {
 
 	private final boolean visibility, thirst, bleed, infect, temperature;
 	private static int ticks = 0;
+	public static int tickCount = 0;
 
 	public Asynchronous() {
 		visibility = ConfigEntries.USE_VISIBILITY.<Boolean> getValue();
@@ -48,6 +49,11 @@ public class Asynchronous extends BukkitRunnable {
 		if (ticks >= 20) {
 			checkChests();
 			ticks = 0;
+		}
+
+		tickCount++;
+		if (tickCount >= ConfigEntries.SQL_TICKER.<Integer> getValue() * 20) {
+			tickCount = 0;
 		}
 	}
 

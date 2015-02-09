@@ -3,6 +3,7 @@
  */
 package jordan.sicherman.utilities;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -97,31 +98,41 @@ public class MyZRank {
 	}
 
 	public static MyZRank forInt(int identifier) {
-		MyZRank forZero = null;
+		MyZRank nearest = null;
 		for (MyZRank rank : values) {
 			if (rank.identifier == identifier) {
 				return rank;
-			} else if (rank.identifier == 0) {
-				forZero = rank;
+			} else if (rank.identifier < identifier) {
+				if (nearest == null || rank.identifier > nearest.identifier)
+					nearest = rank;
 			}
 		}
 
-		return forZero;
+		return nearest;
 	}
 
 	public ItemStack getEquipment(EquipmentPiece piece) {
+		ItemStack item = null;
 		switch (piece) {
 		case BOOTS:
-			return boots;
+			item = boots;
+			break;
 		case CHESTPLATE:
-			return chestplate;
+			item = chestplate;
+			break;
 		case HELMET:
-			return helmet;
+			item = helmet;
+			break;
 		case LEGGINGS:
-			return leggings;
+			item = leggings;
+			break;
 		default:
 			return null;
 		}
+
+		if (item == null && identifier > 0) { return forInt(identifier - 1).getEquipment(piece); }
+
+		return item;
 	}
 
 	public String getChatPrefix() {
@@ -129,6 +140,18 @@ public class MyZRank {
 	}
 
 	public ItemStack[] getInventory() {
-		return inventory;
+		Set<ItemStack> items = new HashSet<ItemStack>();
+		items.addAll(Arrays.asList(inventory));
+
+		Set<Integer> ids = new HashSet<Integer>();
+		for (int i = identifier - 1; i >= 0; i--) {
+			MyZRank rank = forInt(i);
+			if (!ids.contains(rank.identifier)) {
+				ids.add(rank.identifier);
+				items.addAll(Arrays.asList(rank.inventory));
+			}
+		}
+
+		return items.toArray(new ItemStack[0]);
 	}
 }

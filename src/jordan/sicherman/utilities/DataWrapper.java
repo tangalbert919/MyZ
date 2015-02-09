@@ -6,6 +6,7 @@ package jordan.sicherman.utilities;
 import jordan.sicherman.MyZ;
 import jordan.sicherman.nms.utilities.EntryType;
 import jordan.sicherman.player.User;
+import jordan.sicherman.scheduled.Asynchronous;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
 import jordan.sicherman.utilities.configuration.FileUtilities;
 import jordan.sicherman.utilities.configuration.UserEntries;
@@ -53,8 +54,21 @@ public class DataWrapper {
 	 *            Any less will result in an exception ----------------------
 	 */
 	public static void set(OfflinePlayer playerFor, UserEntries entry, Object value, boolean... options) {
-		if (MyZ.sql.isConnected()) {
-			MyZ.sql.set(playerFor, entry.getKey(), entry.getType() == EntryType.LIST ? UserEntries.toStringList(value) : value, options[0]);
+		if (MyZ.sql.isConnected() && UserEntries.isMySQLKey(entry)) {
+			boolean update = true;
+			switch (entry) {
+			case TEMPERATURE:
+			case THIRST:
+				update = Asynchronous.tickCount == 0;
+				break;
+			default:
+				break;
+			}
+
+			if (update) {
+				MyZ.sql.set(playerFor, entry.getKey().replaceAll("\\.", "_"),
+						entry.getType() == EntryType.LIST ? UserEntries.toStringList(value) : value, options[0]);
+			}
 		}
 
 		doSet(User.forPlayer(playerFor), entry, value, options);

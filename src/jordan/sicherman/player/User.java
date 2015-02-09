@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import jordan.sicherman.MyZ;
 import jordan.sicherman.sql.SQLManager;
 import jordan.sicherman.utilities.configuration.FileUtilities;
 import jordan.sicherman.utilities.configuration.SpecificFileMember;
@@ -99,13 +100,19 @@ public class User {
 		return user;
 	}
 
-	public static void freePlayer(OfflinePlayer playerFor) {
-		User user = forPlayer(playerFor);
-		for (UFiles file : UFiles.values()) {
-			FileUtilities.save(user, file);
-		}
+	public static void freePlayer(final OfflinePlayer playerFor) {
+		final User user = forPlayer(playerFor);
 
-		cache.remove(SQLManager.primaryKeyFor(playerFor));
+		MyZ.instance.getServer().getScheduler().runTaskLater(MyZ.instance, new Runnable() {
+			@Override
+			public void run() {
+				for (UFiles file : UFiles.values()) {
+					FileUtilities.save(user, file);
+				}
+
+				cache.remove(SQLManager.primaryKeyFor(playerFor));
+			}
+		}, 1L);
 	}
 
 	private User(UserFile files, String storedPrimaryKey) {

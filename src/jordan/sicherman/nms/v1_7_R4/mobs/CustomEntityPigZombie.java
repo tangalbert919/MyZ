@@ -62,7 +62,7 @@ public class CustomEntityPigZombie extends EntityPigZombie implements SmartEntit
 
 	@Override
 	protected void bj() {
-		motY = 0.4199999868869782D * ConfigEntries.PIGMAN_JUMP_MULTIPLIER.<Double> getValue();
+		motY = 0.46D * ConfigEntries.PIGMAN_JUMP_MULTIPLIER.<Double> getValue();
 		if (hasEffect(MobEffectList.JUMP)) {
 			motY += (getEffect(MobEffectList.JUMP).getAmplifier() + 1) * 0.1F;
 		}
@@ -101,9 +101,9 @@ public class CustomEntityPigZombie extends EntityPigZombie implements SmartEntit
 		goalSelector.a(4,
 				new CustomPathfinderGoalMeleeAttack(this, CustomEntityGuard.class, ConfigEntries.PIGMAN_SPEED_TARGET.<Double> getValue()
 						* (isBaby() ? 0.5D : 1.0D), true));
-		targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { EntityHuman.class }));
-		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, EntityHuman.class, true));
-		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGuard.class, false));
+		targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { EntityHuman.class, CustomEntityGuard.class }));
+		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, EntityHuman.class, 0, true));
+		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGuard.class, 0, false));
 	}
 
 	@Override

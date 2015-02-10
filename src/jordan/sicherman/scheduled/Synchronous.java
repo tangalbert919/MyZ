@@ -39,6 +39,22 @@ public class Synchronous extends BukkitRunnable {
 		doSave(new HashSet<User>(User.cache.values()));
 	}
 
+	public static void save() {
+		if (ConfigEntries.NOTIFY_SAVE.<Boolean> getValue()) {
+			MyZ.log(ChatColor.YELLOW + "Performing save. Expect lag.");
+		}
+
+		for (User user : User.cache.values()) {
+			for (UFiles file : UFiles.values()) {
+				FileUtilities.save(user, file);
+			}
+		}
+
+		if (ConfigEntries.NOTIFY_SAVE.<Boolean> getValue()) {
+			MyZ.log(ChatColor.YELLOW + "Save completed.");
+		}
+	}
+
 	private static void doSave(Set<User> users) {
 		long start = System.currentTimeMillis();
 		final Set<User> workingUsers = new HashSet<User>(users);

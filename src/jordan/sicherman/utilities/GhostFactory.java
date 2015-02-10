@@ -43,8 +43,9 @@ public class GhostFactory {
 
 	public GhostFactory() {
 		// Initialize
-		if (isEnabled())
+		if (isEnabled()) {
 			createGetTeam();
+		}
 	}
 
 	private void createGetTeam() {
@@ -114,7 +115,7 @@ public class GhostFactory {
 	 */
 	public boolean hasPlayer(Player player) {
 		if (!isEnabled()) { return false; }
-		
+
 		validateState();
 		return ghostTeam.hasPlayer(player);
 	}
@@ -129,7 +130,7 @@ public class GhostFactory {
 	 */
 	public void setGhost(Player player, boolean isGhost) {
 		if (!isEnabled()) { return; }
-		
+
 		// Make sure the player is tracked by this manager
 		if (!hasPlayer(player)) {
 			addPlayer(player, isGhost);
@@ -153,7 +154,7 @@ public class GhostFactory {
 	 */
 	public void removePlayer(Player player) {
 		if (!isEnabled()) { return; }
-		
+
 		validateState();
 		if (ghostTeam.removePlayer(player)) {
 			player.removePotionEffect(PotionEffectType.INVISIBILITY);
@@ -167,7 +168,7 @@ public class GhostFactory {
 	 */
 	public OfflinePlayer[] getGhosts() {
 		if (!isEnabled()) { return new OfflinePlayer[0]; }
-		
+
 		validateState();
 		Set<OfflinePlayer> players = new HashSet<OfflinePlayer>(ghostTeam.getPlayers());
 
@@ -187,7 +188,7 @@ public class GhostFactory {
 	 */
 	public OfflinePlayer[] getMembers() {
 		if (!isEnabled()) { return new OfflinePlayer[0]; }
-		
+
 		validateState();
 		return toArray(ghostTeam.getPlayers());
 	}
@@ -202,7 +203,7 @@ public class GhostFactory {
 
 	public void close() {
 		if (!isEnabled()) { return; }
-		
+
 		if (!closed) {
 			ghostTeam.unregister();
 			closed = true;
@@ -219,7 +220,7 @@ public class GhostFactory {
 
 	public void populate(Collection<? extends Player> collection) {
 		if (!isEnabled()) { return; }
-		
+
 		for (Player player : collection) {
 			if (Utilities.inWorld(player)) {
 				addPlayer(player, false);

@@ -17,6 +17,7 @@ import jordan.sicherman.commands.CommandManager;
 import jordan.sicherman.items.EngineerManager;
 import jordan.sicherman.items.ItemTag;
 import jordan.sicherman.items.ItemUtilities;
+import jordan.sicherman.listeners.CrackShot;
 import jordan.sicherman.listeners.Extras;
 import jordan.sicherman.listeners.Visibility;
 import jordan.sicherman.listeners.player.Chat;
@@ -83,7 +84,7 @@ public class MyZ extends JavaPlugin {
 	private static final Set<Listener> listeners = new HashSet<Listener>();
 
 	// TODO Combat logger
-	
+
 	// TODO Recipes that can be unlocked per-player to craft new items
 
 	// TODO Friend system, disabling PVP towards friends that can be added via
@@ -165,6 +166,9 @@ public class MyZ extends JavaPlugin {
 		if (ConfigEntries.USE_ENHANCED_ANVILS.<Boolean> getValue()) {
 			listeners.add(new GearModifications());
 		}
+		if (getServer().getPluginManager().isPluginEnabled("CrackShot")) {
+			listeners.add(new CrackShot());
+		}
 
 		for (Listener listener : listeners) {
 			pm.registerEvents(listener, this);
@@ -187,7 +191,7 @@ public class MyZ extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		Synchronous.report();
+		Synchronous.save();
 
 		getServer().getScheduler().cancelTasks(this);
 		for (Listener listener : listeners) {

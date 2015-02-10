@@ -134,12 +134,16 @@ public class VisibilityManager {
 	}
 
 	public void overloadXPBarVisibility(final Player playerFor, VisibilityCause cause) {
+		overloadXPBarVisibility(playerFor, cause.toFill(), cause.getDuration());
+	}
+
+	public void overloadXPBarVisibility(final Player playerFor, final float fill, final long duration) {
 		Biome biome = playerFor.getWorld().getBiome(playerFor.getLocation().getBlockX(), playerFor.getLocation().getBlockZ());
 		if (playerFor.getWorld().hasStorm() && biome != Biome.DESERT && biome != Biome.DESERT_HILLS && biome != Biome.DESERT_MOUNTAINS) { return; }
 
 		if (!MyZ.isPremium()) { return; }
 
-		playerFor.setMetadata("MyZ.overload_visibility", new FixedMetadataValue(MyZ.instance, cause.toFill()));
+		playerFor.setMetadata("MyZ.overload_visibility", new FixedMetadataValue(MyZ.instance, fill));
 
 		new BukkitRunnable() {
 			@Override
@@ -151,7 +155,7 @@ public class VisibilityManager {
 			public void cancel() {
 				playerFor.removeMetadata("MyZ.overload_visibility", MyZ.instance);
 			}
-		}.runTaskLater(MyZ.instance, cause.getDuration());
+		}.runTaskLater(MyZ.instance, duration);
 	}
 
 	private Entity[] getNearbyEntities(Location l, float radius) {

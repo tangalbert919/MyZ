@@ -4,6 +4,7 @@ version: ${version}
 name: ${project.name}
 description: ${project.description}
 depend: ${project.depends}
+softdepend: ${project.softdepends}
 
 commands:
   MyZ:

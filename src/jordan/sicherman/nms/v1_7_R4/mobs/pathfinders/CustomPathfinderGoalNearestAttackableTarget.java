@@ -3,26 +3,18 @@
  */
 package jordan.sicherman.nms.v1_7_R4.mobs.pathfinders;
 
-import java.util.ArrayList;
+import java.lang.ref.WeakReference;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.server.v1_7_R4.AxisAlignedBB;
-import net.minecraft.server.v1_7_R4.Chunk;
 import net.minecraft.server.v1_7_R4.DistanceComparator;
-import net.minecraft.server.v1_7_R4.Entity;
 import net.minecraft.server.v1_7_R4.EntityCreature;
+import net.minecraft.server.v1_7_R4.EntityHuman;
 import net.minecraft.server.v1_7_R4.EntityLiving;
-import net.minecraft.server.v1_7_R4.MathHelper;
+import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_7_R4.IEntitySelector;
+import net.minecraft.server.v1_7_R4.MobEffectList;
 import net.minecraft.server.v1_7_R4.PathfinderGoalTarget;
-import net.minecraft.server.v1_7_R4.World;
-
-import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Lists;
 
 /**
  * @author Jordan
@@ -30,103 +22,66 @@ import com.google.common.collect.Lists;
  */
 public class CustomPathfinderGoalNearestAttackableTarget extends PathfinderGoalTarget {
 
-	private static final Predicate<EntityLiving> d = new CustomEntitySelectorNonPlayer();
+	private final Class<?> targetClass;
+	private final int randomChanceDoNotAttack;
+	private final DistanceComparator distanceComparator;
+	private final IEntitySelector entitySelector;
+	private WeakReference<EntityLiving> targetReference = new WeakReference<EntityLiving>(null);
 
-	protected final Class<? extends EntityLiving> classToTarget;
-	protected final DistanceComparator distanceComparator;
-	protected Predicate<EntityLiving> entitySelector;
-	protected EntityLiving target;
-
-	public CustomPathfinderGoalNearestAttackableTarget(EntityCreature entitycreature, Class<? extends EntityLiving> targetClass,
+	public CustomPathfinderGoalNearestAttackableTarget(EntityCreature creature, Class<?> targetClass, int randomChanceDoNotAttack,
 			boolean flag) {
-		this(entitycreature, targetClass, flag, false);
+		this(creature, targetClass, randomChanceDoNotAttack, flag, false);
 	}
 
-	public CustomPathfinderGoalNearestAttackableTarget(EntityCreature entitycreature, Class<? extends EntityLiving> targetClass,
+	public CustomPathfinderGoalNearestAttackableTarget(EntityCreature creature, Class<?> targetClass, int randomChanceDoNotAttack,
 			boolean flag, boolean flag1) {
-		this(entitycreature, targetClass, 10, flag, flag1, (Predicate<EntityLiving>) null);
+		this(creature, targetClass, randomChanceDoNotAttack, flag, flag1, (IEntitySelector) null);
 	}
 
-	public CustomPathfinderGoalNearestAttackableTarget(EntityCreature entitycreature, Class<? extends EntityLiving> targetClass,
-			int chanceToCancel, boolean flag, boolean flag1, Predicate<EntityLiving> predicate) {
-		super(entitycreature, flag, flag1);
-		classToTarget = targetClass;
-		distanceComparator = new DistanceComparator(entitycreature);
+	public CustomPathfinderGoalNearestAttackableTarget(EntityCreature creature, Class<?> targetClass, int randomChanceDoNotAttack,
+			boolean flag, boolean flag1, IEntitySelector ientityselector) {
+		super(creature, flag, flag1);
+		this.targetClass = targetClass;
+		this.randomChanceDoNotAttack = randomChanceDoNotAttack;
+		distanceComparator = new DistanceComparator(creature);
 		a(1);
-		entitySelector = new CustomEntitySelectorNearestAttackableTarget(this, predicate);
+		entitySelector = new CustomEntitySelectorNearestAttackableTarget(this, ientityselector);
 	}
 
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("unchecked")
 	public boolean a() {
-		double range = f();
-		List list = a(c.world, classToTarget, c.boundingBox.grow(range, 4.0D, range), Predicates.and(entitySelector, d));
+		if (randomChanceDoNotAttack > 0 && c.aI().nextInt(randomChanceDoNotAttack) != 0) { return false; }
+		double distance = f();
+		List<?> entities = c.world.a(targetClass, c.boundingBox.grow(distance, 4.0D, distance), entitySelector);
 
-		Collections.sort(list, distanceComparator);
-
-		if (list.isEmpty()) { return false; }
-
-		target = (EntityLiving) list.get(0);
+		Collections.sort(entities, distanceComparator);
+		if (entities.isEmpty()) { return false; }
+		targetReference = new WeakReference<EntityLiving>((EntityLiving) entities.get(0));
 		return true;
 	}
 
-	public List<EntityLiving> a(World world, Class<? extends EntityLiving> oclass, AxisAlignedBB axisalignedbb,
-			Predicate<EntityLiving> predicate) {
-		int i = MathHelper.floor((axisalignedbb.a - 2.0D) / 16.0D);
-		int j = MathHelper.floor((axisalignedbb.d + 2.0D) / 16.0D);
-		int k = MathHelper.floor((axisalignedbb.c - 2.0D) / 16.0D);
-		int l = MathHelper.floor((axisalignedbb.f + 2.0D) / 16.0D);
-		ArrayList<EntityLiving> arraylist = Lists.newArrayList();
-		for (int i1 = i; i1 <= j; i1++) {
-			for (int j1 = k; j1 <= l; j1++) {
-				if (world.chunkProvider.isChunkLoaded(i1, j1)) {
-					a(world.getChunkAt(i1, j1), oclass, axisalignedbb, arraylist, predicate);
-				}
-			}
-		}
-		return arraylist;
-	}
-
-	@SuppressWarnings("unchecked")
-	public void a(Chunk chunk, Class<? extends Entity> oclass, AxisAlignedBB axisalignedbb, List<EntityLiving> list,
-			Predicate<EntityLiving> predicate) {
-		int i = MathHelper.floor((axisalignedbb.b - 2.0D) / 16.0D);
-		int j = MathHelper.floor((axisalignedbb.e + 2.0D) / 16.0D);
-
-		i = MathHelper.a(i, 0, chunk.entitySlices.length - 1);
-		j = MathHelper.a(j, 0, chunk.entitySlices.length - 1);
-		for (int k = i; k <= j; k++) {
-			Iterator<Entity> iterator = ((UnsafeList<Entity>) chunk.entitySlices[k]).iterator();
-			while (iterator.hasNext()) {
-				Entity entity = iterator.next();
-				if (oclass.isInstance(entity)) {
-					if (entity instanceof EntityLiving) {
-						if (entity.boundingBox.b(axisalignedbb) && (predicate == null || predicate.apply((EntityLiving) entity))) {
-							list.add((EntityLiving) entity);
-						}
-					}
-				}
-			}
-		}
+	@Override
+	public boolean a(EntityLiving entity, boolean b) {
+		return super.a(entity, b);
 	}
 
 	@Override
 	public void c() {
+		EntityLiving target = targetReference.get();
+
+		if (target != null && target instanceof EntityHuman) {
+			if (((EntityPlayer) target).playerInteractManager.isCreative() || target.hasEffect(MobEffectList.WITHER)
+					|| target.hasEffect(MobEffectList.INVISIBILITY)) {
+				target = null;
+			} else if (target != null) {
+				double range = ((EntityHuman) target).exp * 32;
+				if (c.f(target) > range * range) {
+					target = null;
+				}
+			}
+		}
 		c.setGoalTarget(target);
 		super.c();
-	}
-
-	@Override
-	protected boolean a(EntityLiving creature, boolean bool) {
-		return super.a(creature, bool);
-	}
-
-	@Override
-	protected double f() {
-		return super.f();
-	}
-
-	public Entity getE() {
-		return c;
 	}
 }

@@ -94,7 +94,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
 
 	@Override
 	protected void bj() {
-		motY = 0.4199999868869782D * ConfigEntries.GUARD_JUMP_MULTIPLIER.<Double> getValue();
+		motY = 0.46D * ConfigEntries.GUARD_JUMP_MULTIPLIER.<Double> getValue();
 		if (hasEffect(MobEffectList.JUMP)) {
 			motY += (getEffect(MobEffectList.JUMP).getAmplifier() + 1) * 0.1F;
 		}
@@ -135,10 +135,10 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
 		goalSelector.a(4, new CustomPathfinderGoalMoveToLocation(this, 1.2D));
 		goalSelector.a(8, new CustomPathfinderGoalRandomLookaround(this));
 		targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { CustomEntityZombie.class,
-				CustomEntityPigZombie.class, CustomEntityGiantZombie.class }));
-		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityZombie.class, false));
-		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityPigZombie.class, true));
-		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGiantZombie.class, true));
+				CustomEntityPigZombie.class, CustomEntityGiantZombie.class, EntityHuman.class }));
+		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityZombie.class, 0, true));
+		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityPigZombie.class, 0, true));
+		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGiantZombie.class, 0, true));
 	}
 
 	@Override

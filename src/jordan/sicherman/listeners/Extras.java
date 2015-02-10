@@ -128,6 +128,43 @@ public class Extras implements Listener {
 			e.setCancelled(true);
 			CompatibilityManager.spawnEntity(e.getLocation(), EntityType.GIANT);
 		}
+
+		int maximum_z, minimum_z;
+
+		switch (e.getEntityType()) {
+		case ZOMBIE:
+			if (!ConfigEntries.ZOMBIE_LIMITER.<Boolean> getValue()) { return; }
+
+			maximum_z = ConfigEntries.ZOMBIE_MAX_Z.<Integer> getValue();
+			minimum_z = ConfigEntries.ZOMBIE_MIN_Z.<Integer> getValue();
+			break;
+		case PIG_ZOMBIE:
+			if (!ConfigEntries.PIGMAN_LIMITER.<Boolean> getValue()) { return; }
+
+			maximum_z = ConfigEntries.PIGMAN_MAX_Z.<Integer> getValue();
+			minimum_z = ConfigEntries.PIGMAN_MIN_Z.<Integer> getValue();
+			break;
+		case GIANT:
+			if (!ConfigEntries.GIANT_LIMITER.<Boolean> getValue()) { return; }
+
+			maximum_z = ConfigEntries.GIANT_MAX_Z.<Integer> getValue();
+			minimum_z = ConfigEntries.GIANT_MIN_Z.<Integer> getValue();
+			break;
+		case SKELETON:
+			if (!ConfigEntries.GUARD_LIMITER.<Boolean> getValue()) { return; }
+
+			maximum_z = ConfigEntries.GUARD_MAX_Z.<Integer> getValue();
+			minimum_z = ConfigEntries.GUARD_MIN_Z.<Integer> getValue();
+			break;
+		default:
+			return;
+		}
+
+		int z = e.getLocation().getBlockZ();
+
+		if (z < minimum_z || z > maximum_z) {
+			e.setCancelled(true);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

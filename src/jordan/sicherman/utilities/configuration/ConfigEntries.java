@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
+import jordan.sicherman.MyZ;
 import jordan.sicherman.items.EquipmentState;
 import jordan.sicherman.items.ItemTag;
 import jordan.sicherman.items.ItemUtilities;
@@ -14,6 +15,7 @@ import jordan.sicherman.utilities.configuration.Configuration.CFiles;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -187,7 +189,15 @@ public enum ConfigEntries {
 			EntryType.INTEGER, CFiles.CONFIG, 6000), SQL_BEHAVIOUR("behaviour", EntryType.STRING, CFiles.MYSQL, "Userdata->MySQL"), DEDICATED(
 			"dedicated-mode", EntryType.BOOLEAN, CFiles.CONFIG, false), SQL_TICKER("sql.transmit_period", EntryType.INTEGER, CFiles.CONFIG,
 			60), NOTIFY_SAVE("notify_on_save", EntryType.BOOLEAN, CFiles.CONFIG, true), ALWAYS_ZOMBIE("death.become_zombie.always",
-			EntryType.BOOLEAN, CFiles.ADDONS, false);
+			EntryType.BOOLEAN, CFiles.ADDONS, false), ZOMBIE_MIN_Z("zombie.spawn.limits.minimum_z", EntryType.INTEGER, CFiles.MOBS, 0), ZOMBIE_MAX_Z(
+			"zombie.spawn.limits.maximum_z", EntryType.INTEGER, CFiles.MOBS, 0), ZOMBIE_LIMITER("zombie.spawn.limits.enabled",
+			EntryType.BOOLEAN, CFiles.MOBS, false), PIGMAN_MIN_Z("pigman.spawn.limits.minimum_z", EntryType.INTEGER, CFiles.MOBS, 0), PIGMAN_MAX_Z(
+			"pigman.spawn.limits.maximum_z", EntryType.INTEGER, CFiles.MOBS, 0), PIGMAN_LIMITER("pigman.spawn.limits.enabled",
+			EntryType.BOOLEAN, CFiles.MOBS, false), GIANT_MIN_Z("giant.spawn.limits.minimum_z", EntryType.INTEGER, CFiles.MOBS, 0), GIANT_MAX_Z(
+			"giant.spawn.limits.maximum_z", EntryType.INTEGER, CFiles.MOBS, 0), GIANT_LIMITER("giant.spawn.limits.enabled",
+			EntryType.BOOLEAN, CFiles.MOBS, false), GUARD_MIN_Z("guard.spawn.limits.minimum_z", EntryType.INTEGER, CFiles.MOBS, 0), GUARD_MAX_Z(
+			"guard.spawn.limits.maximum_z", EntryType.INTEGER, CFiles.MOBS, 0), GUARD_LIMITER("guard.spawn.limits.enabled",
+			EntryType.BOOLEAN, CFiles.MOBS, false);
 
 	private final String key;
 	private final EntryType type;
@@ -330,5 +340,23 @@ public enum ConfigEntries {
 			section.set("100.equipment.inventory", new ArrayList<ItemStack>());
 		}
 		return section;
+	}
+
+	public static void loadCrackshot() {
+		if (MyZ.instance.getServer().getPluginManager().isPluginEnabled("CrackShot")) {
+			FileConfiguration file = CFiles.EXTRAS.getFile();
+
+			com.shampaggon.crackshot.CSUtility crackshot = new com.shampaggon.crackshot.CSUtility();
+			for (String key : crackshot.getHandle().parentlist.values()) {
+				if (!file.isSet("visibility.player.crackshot." + key)) {
+					file.set("visibility.player.crackshot." + key + ".shoot", 7);
+					file.set("visibility.player.crackshot." + key + ".reload", 2);
+				}
+			}
+		}
+	}
+
+	public static int getCrackshot(String name, String action) {
+		return CFiles.EXTRAS.getFile().getInt("visibility.player.crackshot." + name + "." + action);
 	}
 }

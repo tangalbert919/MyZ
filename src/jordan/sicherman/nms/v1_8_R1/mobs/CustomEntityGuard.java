@@ -125,7 +125,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
 		goalSelector.a(4, new CustomPathfinderGoalMoveToLocation(this, 1.2D));
 		goalSelector.a(8, new CustomPathfinderGoalRandomLookaround(this));
 		targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { CustomEntityZombie.class,
-				CustomEntityPigZombie.class, CustomEntityGiantZombie.class }));
+				CustomEntityPigZombie.class, CustomEntityGiantZombie.class, EntityHuman.class }));
 		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityZombie.class, false));
 		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityPigZombie.class, true));
 		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGiantZombie.class, true));

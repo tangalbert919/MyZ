@@ -68,10 +68,11 @@ public class CustomPathfinderGoalMeleeAttack extends PathfinderGoal {
 		EntityTargetEvent.TargetReason reason = creature.getGoalTarget() == null || target.hasEffect(MobEffectList.WITHER)
 				|| target.hasEffect(MobEffectList.INVISIBILITY) ? EntityTargetEvent.TargetReason.FORGOT_TARGET
 				: EntityTargetEvent.TargetReason.TARGET_DIED;
-		if (creature.getGoalTarget() == null || creature.getGoalTarget() != null && !creature.getGoalTarget().isAlive()) {
+		if (creature.getGoalTarget() == null || !creature.getGoalTarget().isAlive()) {
 			CraftEventFactory.callEntityTargetEvent(creature, null, reason);
 		}
-		return !bypassVision ? false : !creature.getNavigation().g() ? true : !target.isAlive() ? false : target == null ? false : creature
+
+		return target == null ? false : !bypassVision ? false : !creature.getNavigation().g() ? true : !target.isAlive() ? false : creature
 				.b(MathHelper.floor(target.locX), MathHelper.floor(target.locY), MathHelper.floor(target.locZ));
 	}
 
@@ -89,6 +90,10 @@ public class CustomPathfinderGoalMeleeAttack extends PathfinderGoal {
 	@Override
 	public void e() {
 		EntityLiving target = creature.getGoalTarget();
+		if (target == null || target.hasEffect(MobEffectList.WITHER) || target.hasEffect(MobEffectList.INVISIBILITY)) {
+			creature.setGoalTarget(null);
+			return;
+		}
 
 		// Look at our target.
 		creature.getControllerLook().a(target, 30.0F, 30.0F);
@@ -98,10 +103,8 @@ public class CustomPathfinderGoalMeleeAttack extends PathfinderGoal {
 		delay -= 1;
 
 		// Bypass or can see.
-		if ((bypassVision || creature.getEntitySenses().canSee(target))
-				&& delay <= 0
-				&& (targetX == 0.0D && targetY == 0.0D && targetZ == 0.0D || target.e(targetX, targetY, targetZ) >= 1.0D || creature.aI()
-						.nextFloat() < 0.05F)) {
+		if ((bypassVision || creature.getEntitySenses().canSee(target)) && delay <= 0
+				&& (targetX == 0.0D && targetY == 0.0D && targetZ == 0.0D || target.e(targetX, targetY, targetZ) >= 1.0D)) {
 			targetX = target.locX;
 			targetY = target.boundingBox.b;
 			targetZ = target.locZ;

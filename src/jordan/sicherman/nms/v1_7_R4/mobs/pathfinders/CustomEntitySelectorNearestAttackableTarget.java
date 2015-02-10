@@ -3,38 +3,30 @@
  */
 package jordan.sicherman.nms.v1_7_R4.mobs.pathfinders;
 
-import net.minecraft.server.v1_7_R4.EntityHuman;
+import net.minecraft.server.v1_7_R4.Entity;
 import net.minecraft.server.v1_7_R4.EntityLiving;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.MobEffectList;
-
-import com.google.common.base.Predicate;
+import net.minecraft.server.v1_7_R4.IEntitySelector;
 
 /**
  * @author Jordan
  * 
  */
-public class CustomEntitySelectorNearestAttackableTarget implements Predicate<EntityLiving> {
+public class CustomEntitySelectorNearestAttackableTarget implements IEntitySelector {
 
-	private final Predicate<EntityLiving> predicate;
-	private final CustomPathfinderGoalNearestAttackableTarget pathfinder;
+	private final IEntitySelector entitySelector;
+	private final CustomPathfinderGoalNearestAttackableTarget pathfinderGoal;
 
-	public CustomEntitySelectorNearestAttackableTarget(CustomPathfinderGoalNearestAttackableTarget pathfinder,
-			Predicate<EntityLiving> predicate) {
-		this.predicate = predicate;
-		this.pathfinder = pathfinder;
+	public CustomEntitySelectorNearestAttackableTarget(CustomPathfinderGoalNearestAttackableTarget pathfinderGoal,
+			IEntitySelector entitySelector) {
+		this.entitySelector = entitySelector;
+		this.pathfinderGoal = pathfinderGoal;
 	}
 
 	@Override
-	public boolean apply(EntityLiving entity) {
-		if (predicate != null && !predicate.apply(entity)) { return false; }
-		if (entity instanceof EntityHuman) {
-			if (((EntityPlayer) entity).playerInteractManager.isCreative() || entity.hasEffect(MobEffectList.WITHER)
-					|| entity.hasEffect(MobEffectList.INVISIBILITY)) { return false; }
-			double range = ((EntityHuman) entity).exp * 32;
+	public boolean a(Entity entity) {
+		if (!(entity instanceof EntityLiving)) { return false; }
 
-			if (entity.e(pathfinder.getE()) > range) { return false; }
-		}
-		return pathfinder.a(entity, false);
+		if (entitySelector != null && !entitySelector.a(entity)) { return false; }
+		return pathfinderGoal.a((EntityLiving) entity, false);
 	}
 }

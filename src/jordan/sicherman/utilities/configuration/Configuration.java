@@ -41,6 +41,7 @@ public class Configuration {
 			for (ConfigEntries entry : ConfigEntries.values()) {
 				FileUtilities.set(entry.getKey(), entry.getValue(), entry.getFile(), false);
 			}
+			ConfigEntries.loadCrackshot();
 			FileUtilities.save(CFiles.values());
 		}
 

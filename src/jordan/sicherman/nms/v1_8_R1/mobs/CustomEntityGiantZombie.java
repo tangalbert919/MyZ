@@ -78,7 +78,7 @@ public class CustomEntityGiantZombie extends EntityGiantZombie implements SmartE
 		goalSelector.a(4,
 				new CustomPathfinderGoalMeleeAttack(this, CustomEntityGuard.class, ConfigEntries.GIANT_SPEED_TARGET.<Double> getValue(),
 						true));
-		targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { EntityHuman.class }));
+		targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { EntityHuman.class, CustomEntityGuard.class }));
 		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, EntityHuman.class, true));
 		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGuard.class, false));
 	}

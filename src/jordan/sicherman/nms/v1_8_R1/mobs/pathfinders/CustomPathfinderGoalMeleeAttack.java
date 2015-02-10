@@ -91,7 +91,7 @@ public class CustomPathfinderGoalMeleeAttack extends PathfinderGoal {
 	public void e() {
 		EntityLiving target = creature.getGoalTarget();
 
-		if (target.hasEffect(MobEffectList.WITHER) || target.hasEffect(MobEffectList.INVISIBILITY)) {
+		if (target != null && (target.hasEffect(MobEffectList.WITHER) || target.hasEffect(MobEffectList.INVISIBILITY))) {
 			creature.setGoalTarget(null);
 			return;
 		}

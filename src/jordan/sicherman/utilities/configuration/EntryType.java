@@ -1,7 +1,7 @@
 /**
  * 
  */
-package jordan.sicherman.nms.utilities;
+package jordan.sicherman.utilities.configuration;
 
 /**
  * @author Jordan

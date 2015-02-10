@@ -6,7 +6,6 @@ package jordan.sicherman.utilities.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-import jordan.sicherman.nms.utilities.EntryType;
 import jordan.sicherman.player.User;
 import jordan.sicherman.player.User.UFiles;
 

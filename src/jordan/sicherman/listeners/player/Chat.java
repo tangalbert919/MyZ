@@ -107,7 +107,7 @@ public class Chat implements Listener {
 			e.setCancelled(true);
 
 			try {
-				MyZRank rank = MyZRank.forInt(Integer.parseInt(e.getMessage()));
+				MyZRank rank = MyZRank.forInt(Integer.parseInt(e.getMessage()), true);
 				rank.setEquipment(EquipmentPiece.BOOTS, from.getEquipment().getBoots() != null ? from.getEquipment().getBoots().clone()
 						: null);
 				rank.setEquipment(EquipmentPiece.LEGGINGS, from.getEquipment().getLeggings() != null ? from.getEquipment().getLeggings()

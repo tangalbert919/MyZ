@@ -77,6 +77,11 @@ public class CustomEntityZombie extends EntityZombie implements SmartEntity {
 		}
 	}
 
+	@Override
+	protected float bD() {
+		return (float) (super.bD() * ConfigEntries.ZOMBIE_JUMP_MULTIPLIER.<Double> getValue());
+	}
+
 	@SuppressWarnings("unchecked")
 	public CustomEntityZombie(World world) {
 		super(world);

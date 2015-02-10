@@ -25,9 +25,13 @@ public class MyZRank {
 	private static Set<MyZRank> values = new HashSet<MyZRank>();
 
 	private final int identifier;
-	private final ItemStack[] inventory;
-	private final ItemStack helmet, chestplate, leggings, boots;
-	private final String chat;
+	private ItemStack[] inventory;
+	private ItemStack helmet, chestplate, leggings, boots;
+	private String chat;
+
+	public MyZRank(int identifier) {
+		this.identifier = identifier;
+	}
 
 	public MyZRank(int identifier, String chat, ItemStack[] inventory, ItemStack helmet, ItemStack chestplate, ItemStack leggings,
 			ItemStack boots) {
@@ -45,6 +49,8 @@ public class MyZRank {
 
 		ranks.set(identifier + ".chat_prefix", prefix);
 		FileUtilities.save(ConfigEntries.RANKS.getFile());
+
+		chat = prefix;
 	}
 
 	public void setEquipment(EquipmentPiece piece, ItemStack item) {
@@ -54,15 +60,19 @@ public class MyZRank {
 		switch (piece) {
 		case BOOTS:
 			slug = "boots";
+			boots = item;
 			break;
 		case CHESTPLATE:
 			slug = "chestplate";
+			chestplate = item;
 			break;
 		case HELMET:
 			slug = "helmet";
+			helmet = item;
 			break;
 		case LEGGINGS:
 			slug = "leggings";
+			leggings = item;
 			break;
 		}
 		ranks.set(identifier + ".equipment." + slug, item);
@@ -74,6 +84,8 @@ public class MyZRank {
 
 		ranks.set(identifier + ".equipment.inventory", inventory);
 		FileUtilities.save(ConfigEntries.RANKS.getFile());
+
+		this.inventory = inventory.toArray(new ItemStack[0]);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -97,7 +109,7 @@ public class MyZRank {
 		}
 	}
 
-	public static MyZRank forInt(int identifier) {
+	public static MyZRank forInt(int identifier, boolean create) {
 		MyZRank nearest = null;
 		for (MyZRank rank : values) {
 			if (rank.identifier == identifier) {
@@ -109,7 +121,15 @@ public class MyZRank {
 			}
 		}
 
+		if (create) {
+			nearest = new MyZRank(identifier);
+			values.add(nearest);
+		}
 		return nearest;
+	}
+
+	public static MyZRank forInt(int identifier) {
+		return forInt(identifier, false);
 	}
 
 	public ItemStack getEquipment(EquipmentPiece piece) {

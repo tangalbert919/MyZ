@@ -15,6 +15,7 @@ import jordan.sicherman.utilities.configuration.UserEntries;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -133,7 +134,9 @@ public class VisibilityManager {
 	}
 
 	public void overloadXPBarVisibility(final Player playerFor, VisibilityCause cause) {
-		// TODO return if thunder at location.
+		Biome biome = playerFor.getWorld().getBiome(playerFor.getLocation().getBlockX(), playerFor.getLocation().getBlockZ());
+		if (playerFor.getWorld().hasStorm() && biome != Biome.DESERT && biome != Biome.DESERT_HILLS && biome != Biome.DESERT_MOUNTAINS) { return; }
+
 		if (!MyZ.isPremium()) { return; }
 
 		playerFor.setMetadata("MyZ.overload_visibility", new FixedMetadataValue(MyZ.instance, cause.toFill()));
@@ -169,7 +172,9 @@ public class VisibilityManager {
 	}
 
 	public void overloadXPBarVisibility(Location locationFor, VisibilityCause cause) {
-		// TODO return if thunder at location.
+		Biome biome = locationFor.getWorld().getBiome(locationFor.getBlockX(), locationFor.getBlockZ());
+		if (locationFor.getWorld().hasStorm() && biome != Biome.DESERT && biome != Biome.DESERT_HILLS && biome != Biome.DESERT_MOUNTAINS) { return; }
+
 		if (!MyZ.isPremium()) { return; }
 
 		float range = cause.toFill * 16.0f;

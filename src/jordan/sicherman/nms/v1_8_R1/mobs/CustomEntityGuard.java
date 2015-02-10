@@ -92,6 +92,11 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
 	private final CustomPathfinderGoalArrowAttack rangedAttack = new CustomPathfinderGoalArrowAttack(this,
 			ConfigEntries.GUARD_SPEED_TARGET.<Double> getValue(), 20, 50, 15.0F);
 
+	@Override
+	protected float bD() {
+		return (float) (super.bD() * ConfigEntries.GUARD_JUMP_MULTIPLIER.<Double> getValue());
+	}
+
 	@SuppressWarnings("unchecked")
 	public CustomEntityGuard(World world) {
 		super(world);

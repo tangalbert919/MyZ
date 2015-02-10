@@ -119,8 +119,8 @@ public class TemperatureManager {
 			@Override
 			public void run() {
 				double working_temperature = the_temperature;
-				// TODO thundering workaround.
-				boolean rainedOn = world.isThundering() && world.getHighestBlockYAt(loc) <= loc.getY();
+				boolean rainedOn = world.hasStorm() && world.getHighestBlockYAt(loc) <= loc.getY() && biome != Biome.DESERT
+						&& biome != Biome.DESERT_HILLS && biome != Biome.DESERT_MOUNTAINS;
 				Material at = world.getBlockAt(playerFor.getLocation()).getType();
 				boolean inWater = biome != Biome.OCEAN && biome != Biome.DEEP_OCEAN && biome != Biome.FROZEN_OCEAN
 						&& at == Material.STATIONARY_WATER || at == Material.WATER;

@@ -10,7 +10,6 @@ import java.util.UUID;
 import jordan.sicherman.items.EquipmentState;
 import jordan.sicherman.items.ItemTag;
 import jordan.sicherman.items.ItemUtilities;
-import jordan.sicherman.nms.utilities.EntryType;
 import jordan.sicherman.utilities.configuration.Configuration.CFiles;
 
 import org.bukkit.Material;
@@ -75,8 +74,8 @@ public enum ConfigEntries {
 			"enderpearls_explode.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), LOCAL_CHAT("chat.local.enabled", EntryType.BOOLEAN,
 			CFiles.ADDONS, true), RADIO_CHAT("chat.radio.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), PRIVATE_CHAT(
 			"chat.private.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), DEATH_MESSAGES("enhanced_deathmessages.enabled",
-			EntryType.BOOLEAN, CFiles.ADDONS, true), BECOME_GHOST("death.become_zombie.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), BECOME_ZOMBIE(
-			"death.become_ghost.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), ENHANCE_FURNACES("enhance_furnaces.enabled",
+			EntryType.BOOLEAN, CFiles.ADDONS, true), BECOME_GHOST("death.become_ghost.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), BECOME_ZOMBIE(
+			"death.become_zombie.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), ENHANCE_FURNACES("enhance_furnaces.enabled",
 			EntryType.BOOLEAN, CFiles.ADDONS, true), USE_BANDAGES("bandages.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), USE_HEALING(
 			"use_healing.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), ALLOW_REVIVALS("reviving.enabled", EntryType.BOOLEAN,
 			CFiles.ADDONS, true), USE_VISIBILITY("visibility.enabled", EntryType.BOOLEAN, CFiles.ADDONS, true), USE_BLEEDING(
@@ -139,7 +138,11 @@ public enum ConfigEntries {
 			"pigman.attribute.knockback_resistance", EntryType.DOUBLE, CFiles.MOBS, 0.0), PIGMAN_DAMAGE("pigman.attribute.damage",
 			EntryType.DOUBLE, CFiles.MOBS, 10.0), GIANT_HEALTH("giant.attribute.health", EntryType.DOUBLE, CFiles.MOBS, 100.0), GIANT_SPEED(
 			"giant.attribute.speed.no_target", EntryType.DOUBLE, CFiles.MOBS, 0.23), GIANT_SPEED_TARGET(
-			"giant.attribute.speed.target_multiplier", EntryType.DOUBLE, CFiles.MOBS, 1.5), GIANT_KNOCKBACK_RESIST(
+			"giant.attribute.speed.target_multiplier", EntryType.DOUBLE, CFiles.MOBS, 1.5), GIANT_JUMP_MULTIPLIER(
+			"giant.attribute.jump.multiplier", EntryType.DOUBLE, CFiles.MOBS, 4.1), ZOMBIE_JUMP_MULTIPLIER(
+			"zombie.attribute.jump.multiplier", EntryType.DOUBLE, CFiles.MOBS, 1.05), PIGMAN_JUMP_MULTIPLIER(
+			"pigman.attribute.jump.multiplier", EntryType.DOUBLE, CFiles.MOBS, 1.05), GUARD_JUMP_MULTIPLIER(
+			"guard.attribute.jump.multiplier", EntryType.DOUBLE, CFiles.MOBS, 1.05), GIANT_KNOCKBACK_RESIST(
 			"giant.attribute.knockback_resistance", EntryType.DOUBLE, CFiles.MOBS, 0.0), GIANT_DAMAGE("giant.attribute.damage",
 			EntryType.DOUBLE, CFiles.MOBS, 12.0), GUARD_HEALTH("guard.attribute.health", EntryType.DOUBLE, CFiles.MOBS, 20.0), GUARD_SPEED(
 			"guard.attribute.speed.no_target", EntryType.DOUBLE, CFiles.MOBS, 0.23), GUARD_SPEED_TARGET(
@@ -183,7 +186,8 @@ public enum ConfigEntries {
 			CFiles.EXTRAS, 300), RANKS("ranks", EntryType.CONFIGURATION_SECTION, CFiles.RANKS, null), SAVE_SPEED("save_delay",
 			EntryType.INTEGER, CFiles.CONFIG, 6000), SQL_BEHAVIOUR("behaviour", EntryType.STRING, CFiles.MYSQL, "Userdata->MySQL"), DEDICATED(
 			"dedicated-mode", EntryType.BOOLEAN, CFiles.CONFIG, false), SQL_TICKER("sql.transmit_period", EntryType.INTEGER, CFiles.CONFIG,
-			60);
+			60), NOTIFY_SAVE("notify_on_save", EntryType.BOOLEAN, CFiles.CONFIG, true), ALWAYS_ZOMBIE("death.become_zombie.always",
+			EntryType.BOOLEAN, CFiles.ADDONS, false);
 
 	private final String key;
 	private final EntryType type;

@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import jordan.sicherman.utilities.configuration.ConfigEntries;
 import jordan.sicherman.utilities.configuration.UserEntries;
 
 import org.bukkit.Bukkit;
@@ -36,9 +37,14 @@ public class GhostFactory {
 	// Task that must be cleaned up
 	private boolean closed;
 
+	private boolean isEnabled() {
+		return ConfigEntries.BECOME_GHOST.<Boolean> getValue();
+	}
+
 	public GhostFactory() {
 		// Initialize
-		createGetTeam();
+		if (isEnabled())
+			createGetTeam();
 	}
 
 	private void createGetTeam() {
@@ -75,6 +81,7 @@ public class GhostFactory {
 	 *            - TRUE to initialize as a ghost, FALSE otherwise.
 	 */
 	public void addPlayer(Player player, boolean ghost) {
+		if (!isEnabled()) { return; }
 		validateState();
 		if (!ghostTeam.hasPlayer(player)) {
 			ghostTeam.addPlayer(player);
@@ -93,6 +100,7 @@ public class GhostFactory {
 	 * @return TRUE if it is, FALSE otherwise.
 	 */
 	public boolean isGhost(Player player) {
+		if (!isEnabled()) { return false; }
 		return player != null && hasPlayer(player) && DataWrapper.<Boolean> get(player, UserEntries.GHOST);
 	}
 
@@ -105,6 +113,8 @@ public class GhostFactory {
 	 * @return TRUE if it is, FALSE otherwise.
 	 */
 	public boolean hasPlayer(Player player) {
+		if (!isEnabled()) { return false; }
+		
 		validateState();
 		return ghostTeam.hasPlayer(player);
 	}
@@ -118,6 +128,8 @@ public class GhostFactory {
 	 *            - TRUE to make the given player into a ghost, FALSE otherwise.
 	 */
 	public void setGhost(Player player, boolean isGhost) {
+		if (!isEnabled()) { return; }
+		
 		// Make sure the player is tracked by this manager
 		if (!hasPlayer(player)) {
 			addPlayer(player, isGhost);
@@ -140,6 +152,8 @@ public class GhostFactory {
 	 *            - the player to remove from the ghost manager.
 	 */
 	public void removePlayer(Player player) {
+		if (!isEnabled()) { return; }
+		
 		validateState();
 		if (ghostTeam.removePlayer(player)) {
 			player.removePotionEffect(PotionEffectType.INVISIBILITY);
@@ -152,6 +166,8 @@ public class GhostFactory {
 	 * @return Every tracked ghost.
 	 */
 	public OfflinePlayer[] getGhosts() {
+		if (!isEnabled()) { return new OfflinePlayer[0]; }
+		
 		validateState();
 		Set<OfflinePlayer> players = new HashSet<OfflinePlayer>(ghostTeam.getPlayers());
 
@@ -170,6 +186,8 @@ public class GhostFactory {
 	 * @return Every ghost or every observer.
 	 */
 	public OfflinePlayer[] getMembers() {
+		if (!isEnabled()) { return new OfflinePlayer[0]; }
+		
 		validateState();
 		return toArray(ghostTeam.getPlayers());
 	}
@@ -183,6 +201,8 @@ public class GhostFactory {
 	}
 
 	public void close() {
+		if (!isEnabled()) { return; }
+		
 		if (!closed) {
 			ghostTeam.unregister();
 			closed = true;
@@ -198,6 +218,8 @@ public class GhostFactory {
 	}
 
 	public void populate(Collection<? extends Player> collection) {
+		if (!isEnabled()) { return; }
+		
 		for (Player player : collection) {
 			if (Utilities.inWorld(player)) {
 				addPlayer(player, false);

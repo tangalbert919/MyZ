@@ -59,7 +59,7 @@ public class Death implements Listener {
 			return;
 		}
 
-		if (!ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() && !ConfigEntries.BECOME_GHOST.<Boolean> getValue() || !MyZ.isPremium()) {
+		if ((!ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() && !ConfigEntries.BECOME_GHOST.<Boolean> getValue()) || !MyZ.isPremium()) {
 			realDeath(player, false);
 			return;
 		}
@@ -74,13 +74,12 @@ public class Death implements Listener {
 		final long ghostTime = ConfigEntries.UNDEAD_TIME.<Integer> getValue() * 20L;
 		long actualTime = ghostTime;
 
-		if (ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() || ConfigEntries.BECOME_GHOST.<Boolean> getValue()) {
-			player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, (int) ghostTime, 2));
-		}
+		player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, (int) ghostTime, 2));
 
 		boolean wasZombie = false;
 
-		if (ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() && DataWrapper.<Boolean> get(player, UserEntries.POISONED)) {
+		if (ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue()
+				&& (ConfigEntries.ALWAYS_ZOMBIE.<Boolean> getValue() || DataWrapper.<Boolean> get(player, UserEntries.POISONED))) {
 			if (ConfigEntries.BECOME_GHOST.<Boolean> getValue()) {
 				actualTime /= 2L;
 			}
@@ -150,7 +149,7 @@ public class Death implements Listener {
 				player.removePotionEffect(PotionEffectType.HUNGER);
 				player.removePotionEffect(PotionEffectType.WITHER);
 			}
-		}.runTaskLater(MyZ.instance, actualTime == ghostTime ? 0L : actualTime);
+		}.runTaskLater(MyZ.instance, actualTime == ghostTime ? wasZombie ? actualTime : 0L : actualTime);
 	}
 
 	public static void realDeath(Player playerFor, boolean onLogout) {

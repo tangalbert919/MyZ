@@ -4,10 +4,10 @@
 package jordan.sicherman.utilities;
 
 import jordan.sicherman.MyZ;
-import jordan.sicherman.nms.utilities.EntryType;
 import jordan.sicherman.player.User;
 import jordan.sicherman.scheduled.Asynchronous;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
+import jordan.sicherman.utilities.configuration.EntryType;
 import jordan.sicherman.utilities.configuration.FileUtilities;
 import jordan.sicherman.utilities.configuration.UserEntries;
 

@@ -36,6 +36,7 @@ import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -156,5 +157,6 @@ public class NMSUtilities {
 
 		entity.setLocation(inLoc.getX(), inLoc.getY(), inLoc.getZ(), inLoc.getYaw(), inLoc.getPitch());
 		entity.prepare((GroupDataEntity) null);
+		world.addEntity(entity, SpawnReason.CUSTOM);
 	}
 }

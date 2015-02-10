@@ -48,7 +48,6 @@ public class ManagerManager {
 			switch (of) {
 			case SPAWN:
 				if (player.getGameMode() != GameMode.CREATIVE) {
-					player.setNoDamageTicks(Integer.MAX_VALUE);
 					player.setAllowFlight(true);
 				}
 				break;
@@ -69,7 +68,6 @@ public class ManagerManager {
 
 			switch (of) {
 			case SPAWN:
-				player.setNoDamageTicks(0);
 				player.setAllowFlight(false);
 				break;
 			case ENGINEER:

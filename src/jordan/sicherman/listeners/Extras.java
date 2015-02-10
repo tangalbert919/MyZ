@@ -126,7 +126,7 @@ public class Extras implements Listener {
 
 		if (e.getSpawnReason() == SpawnReason.SPAWNER_EGG && e.getEntityType() == EntityType.MUSHROOM_COW) {
 			e.setCancelled(true);
-			CompatibilityManager.spawnEntity(e.getLocation().subtract(0, 5, 0), EntityType.GIANT);
+			CompatibilityManager.spawnEntity(e.getLocation(), EntityType.GIANT);
 		}
 	}
 
@@ -232,66 +232,69 @@ public class Extras implements Listener {
 				return;
 			}
 		} else if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getPlayer().getItemInHand() != null) {
-			if (e.getPlayer().getItemInHand().getType() == Material.GLASS_BOTTLE) {
-				e.setCancelled(true);
-				switch (e.getClickedBlock().getBiome()) {
-				case FROZEN_OCEAN:
-				case COLD_BEACH:
-				case FROZEN_RIVER:
-				case COLD_TAIGA:
-				case COLD_TAIGA_HILLS:
-				case COLD_TAIGA_MOUNTAINS:
-				case ICE_MOUNTAINS:
-				case ICE_PLAINS:
-				case ICE_PLAINS_SPIKES:
-				case MEGA_SPRUCE_TAIGA:
-				case MEGA_SPRUCE_TAIGA_HILLS:
-				case MEGA_TAIGA:
-				case MEGA_TAIGA_HILLS:
-				case TAIGA:
-				case TAIGA_HILLS:
-				case TAIGA_MOUNTAINS:
-				case EXTREME_HILLS:
-					e.getPlayer().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.COLD_WATER, 1));
-					break;
-				case DEEP_OCEAN:
-				case OCEAN:
-				case BEACH:
-				case STONE_BEACH:
-					e.getPlayer().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.SALTY_WATER, 1));
-					break;
-				case DESERT:
-				case DESERT_HILLS:
-				case DESERT_MOUNTAINS:
-				case MESA:
-				case MESA_BRYCE:
-				case MESA_PLATEAU:
-				case MESA_PLATEAU_FOREST:
-				case MESA_PLATEAU_FOREST_MOUNTAINS:
-				case MESA_PLATEAU_MOUNTAINS:
-				case SAVANNA:
-				case SAVANNA_PLATEAU:
-				case SAVANNA_PLATEAU_MOUNTAINS:
-				case SAVANNA_MOUNTAINS:
-					if (e.getPlayer().getWorld().getTime() < 13000) {
-						e.getPlayer().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.WARM_WATER, 1));
-					} else {
+			Material type = e.getClickedBlock().getType();
+			if (type == Material.WATER || type == Material.CAULDRON || type == Material.CAULDRON_ITEM || type == Material.STATIONARY_WATER) {
+				if (e.getPlayer().getItemInHand().getType() == Material.GLASS_BOTTLE) {
+					e.setCancelled(true);
+					switch (e.getClickedBlock().getBiome()) {
+					case FROZEN_OCEAN:
+					case COLD_BEACH:
+					case FROZEN_RIVER:
+					case COLD_TAIGA:
+					case COLD_TAIGA_HILLS:
+					case COLD_TAIGA_MOUNTAINS:
+					case ICE_MOUNTAINS:
+					case ICE_PLAINS:
+					case ICE_PLAINS_SPIKES:
+					case MEGA_SPRUCE_TAIGA:
+					case MEGA_SPRUCE_TAIGA_HILLS:
+					case MEGA_TAIGA:
+					case MEGA_TAIGA_HILLS:
+					case TAIGA:
+					case TAIGA_HILLS:
+					case TAIGA_MOUNTAINS:
+					case EXTREME_HILLS:
+						e.getPlayer().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.COLD_WATER, 1));
+						break;
+					case DEEP_OCEAN:
+					case OCEAN:
+					case BEACH:
+					case STONE_BEACH:
+						e.getPlayer().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.SALTY_WATER, 1));
+						break;
+					case DESERT:
+					case DESERT_HILLS:
+					case DESERT_MOUNTAINS:
+					case MESA:
+					case MESA_BRYCE:
+					case MESA_PLATEAU:
+					case MESA_PLATEAU_FOREST:
+					case MESA_PLATEAU_FOREST_MOUNTAINS:
+					case MESA_PLATEAU_MOUNTAINS:
+					case SAVANNA:
+					case SAVANNA_PLATEAU:
+					case SAVANNA_PLATEAU_MOUNTAINS:
+					case SAVANNA_MOUNTAINS:
+						if (e.getPlayer().getWorld().getTime() < 13000) {
+							e.getPlayer().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.WARM_WATER, 1));
+						} else {
+							e.getPlayer().setItemInHand(new ItemStack(Material.POTION, 1));
+						}
+						break;
+					case JUNGLE:
+					case JUNGLE_EDGE:
+					case JUNGLE_EDGE_MOUNTAINS:
+					case JUNGLE_HILLS:
+					case JUNGLE_MOUNTAINS:
+					case RIVER:
+					case SWAMPLAND:
+					case SWAMPLAND_MOUNTAINS:
+						e.getPlayer().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.MURKY_WATER, 1));
+						break;
+					default:
 						e.getPlayer().setItemInHand(new ItemStack(Material.POTION, 1));
+						break;
 					}
-					break;
-				case JUNGLE:
-				case JUNGLE_EDGE:
-				case JUNGLE_EDGE_MOUNTAINS:
-				case JUNGLE_HILLS:
-				case JUNGLE_MOUNTAINS:
-				case RIVER:
-				case SWAMPLAND:
-				case SWAMPLAND_MOUNTAINS:
-					e.getPlayer().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.MURKY_WATER, 1));
-					break;
-				default:
-					e.getPlayer().setItemInHand(new ItemStack(Material.POTION, 1));
-					break;
 				}
 			}
 		}

@@ -58,6 +58,11 @@ public class CustomEntityPigZombie extends EntityPigZombie implements SmartEntit
 		return this;
 	}
 
+	@Override
+	protected float bD() {
+		return (float) (super.bD() * ConfigEntries.PIGMAN_JUMP_MULTIPLIER.<Double> getValue());
+	}
+
 	@SuppressWarnings("unchecked")
 	public CustomEntityPigZombie(World world) {
 		super(world);

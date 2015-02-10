@@ -82,6 +82,8 @@ public class MyZ extends JavaPlugin {
 
 	private static final Set<Listener> listeners = new HashSet<Listener>();
 
+	// TODO Combat logger
+	
 	// TODO Recipes that can be unlocked per-player to craft new items
 
 	// TODO Friend system, disabling PVP towards friends that can be added via
@@ -95,7 +97,7 @@ public class MyZ extends JavaPlugin {
 	// TODO Care packages falling from sky at random time intervals at marked
 	// locations.
 
-	// TODO See todo notes at Death, SpectatorMode, Utilities
+	// TODO See todo notes at Death, Utilities
 
 	public static boolean isPremium() {
 		return Premium.isPremium;

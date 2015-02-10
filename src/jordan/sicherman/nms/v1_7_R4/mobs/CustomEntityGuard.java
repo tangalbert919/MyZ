@@ -29,6 +29,8 @@ import net.minecraft.server.v1_7_R4.GroupDataEntity;
 import net.minecraft.server.v1_7_R4.Item;
 import net.minecraft.server.v1_7_R4.ItemStack;
 import net.minecraft.server.v1_7_R4.Items;
+import net.minecraft.server.v1_7_R4.MathHelper;
+import net.minecraft.server.v1_7_R4.MobEffectList;
 import net.minecraft.server.v1_7_R4.PathfinderGoalFloat;
 import net.minecraft.server.v1_7_R4.PathfinderGoalMoveTowardsRestriction;
 import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
@@ -89,6 +91,21 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
 
 	private final CustomPathfinderGoalArrowAttack rangedAttack = new CustomPathfinderGoalArrowAttack(this,
 			ConfigEntries.GUARD_SPEED_TARGET.<Double> getValue(), 20, 50, 15.0F);
+
+	@Override
+	protected void bj() {
+		motY = 0.4199999868869782D * ConfigEntries.GUARD_JUMP_MULTIPLIER.<Double> getValue();
+		if (hasEffect(MobEffectList.JUMP)) {
+			motY += (getEffect(MobEffectList.JUMP).getAmplifier() + 1) * 0.1F;
+		}
+		if (isSprinting()) {
+			float f = yaw * 0.01745329F;
+
+			motX -= MathHelper.sin(f) * 0.2F;
+			motZ += MathHelper.cos(f) * 0.2F;
+		}
+		al = true;
+	}
 
 	@SuppressWarnings("unchecked")
 	public CustomEntityGuard(World world) {

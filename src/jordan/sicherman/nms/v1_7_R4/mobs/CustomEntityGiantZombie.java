@@ -20,6 +20,8 @@ import net.minecraft.server.v1_7_R4.GenericAttributes;
 import net.minecraft.server.v1_7_R4.Item;
 import net.minecraft.server.v1_7_R4.ItemStack;
 import net.minecraft.server.v1_7_R4.Items;
+import net.minecraft.server.v1_7_R4.MathHelper;
+import net.minecraft.server.v1_7_R4.MobEffectList;
 import net.minecraft.server.v1_7_R4.PathfinderGoalFloat;
 import net.minecraft.server.v1_7_R4.PathfinderGoalMoveTowardsRestriction;
 import net.minecraft.server.v1_7_R4.World;
@@ -55,6 +57,21 @@ public class CustomEntityGiantZombie extends EntityGiantZombie implements SmartE
 	@Override
 	public EntityCreature getEntity() {
 		return this;
+	}
+
+	@Override
+	protected void bj() {
+		motY = 0.4199999868869782D * ConfigEntries.GIANT_JUMP_MULTIPLIER.<Double> getValue();
+		if (hasEffect(MobEffectList.JUMP)) {
+			motY += (getEffect(MobEffectList.JUMP).getAmplifier() + 1) * 0.1F;
+		}
+		if (isSprinting()) {
+			float f = yaw * 0.01745329F;
+
+			motX -= MathHelper.sin(f) * 0.2F;
+			motZ += MathHelper.cos(f) * 0.2F;
+		}
+		al = true;
 	}
 
 	@SuppressWarnings("unchecked")

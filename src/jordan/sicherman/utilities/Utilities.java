@@ -66,9 +66,6 @@ public class Utilities {
 		if (!player.isOp()) {
 			MyZ.giveMyZTip(player);
 		}
-		if (!DataWrapper.<Boolean> get(player, UserEntries.PLAYING)) {
-			player.setNoDamageTicks(Integer.MAX_VALUE);
-		}
 
 		if (ConfigEntries.DEDICATED.<Boolean> getValue()) {
 			spawnInWorld(player);
@@ -76,8 +73,6 @@ public class Utilities {
 	}
 
 	public static void doLogout(Player player) {
-		player.setNoDamageTicks(0);
-
 		if (SpectatorMode.isSpectator(player)) {
 			Death.realDeath(player, true);
 		}
@@ -336,9 +331,7 @@ public class Utilities {
 
 		if (!Utilities.inWorld(player)) { return; }
 
-		if (!dedicated) {
-			player.setNoDamageTicks(Integer.MAX_VALUE);
-		} else {
+		if (dedicated) {
 			spawnInWorld(player);
 		}
 	}

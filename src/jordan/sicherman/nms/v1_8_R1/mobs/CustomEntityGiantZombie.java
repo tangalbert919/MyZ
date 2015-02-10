@@ -57,6 +57,11 @@ public class CustomEntityGiantZombie extends EntityGiantZombie implements SmartE
 		return this;
 	}
 
+	@Override
+	protected float bD() {
+		return (float) (super.bD() * ConfigEntries.GIANT_JUMP_MULTIPLIER.<Double> getValue());
+	}
+
 	@SuppressWarnings("unchecked")
 	public CustomEntityGiantZombie(World world) {
 		super(world);

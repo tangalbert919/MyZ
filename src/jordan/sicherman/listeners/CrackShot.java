@@ -24,15 +24,15 @@ public class CrackShot implements Listener {
 	private void onReload(WeaponReloadEvent e) {
 		if (!Utilities.inWorld(e.getPlayer())) { return; }
 
-		VisibilityManager.getInstance().overloadXPBarVisibility(e.getPlayer(), ConfigEntries.getCrackshot(e.getWeaponTitle(), "reload")/18f,
-				100L);
+		VisibilityManager.getInstance().overloadXPBarVisibility(e.getPlayer(),
+				ConfigEntries.getCrackshot(e.getWeaponTitle(), "reload") / 18f, 100L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	private void onShoot(WeaponShootEvent e) {
 		if (!Utilities.inWorld(e.getPlayer())) { return; }
 
-		VisibilityManager.getInstance().overloadXPBarVisibility(e.getPlayer(), ConfigEntries.getCrackshot(e.getWeaponTitle(), "shoot")/18f,
-				100L);
+		VisibilityManager.getInstance().overloadXPBarVisibility(e.getPlayer(),
+				ConfigEntries.getCrackshot(e.getWeaponTitle(), "shoot") / 18f, 100L);
 	}
 }

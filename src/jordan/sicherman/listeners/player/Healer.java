@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -38,7 +39,8 @@ public class Healer implements Listener {
 
 		Player playerFor = e.getPlayer();
 		ItemStack with = e.getPlayer().getItemInHand();
-		if (ItemUtilities.getInstance().hasTag(with, ItemTag.BANDAGE)) {
+		if (ItemUtilities.getInstance().hasTag(with, ItemTag.BANDAGE)
+				&& (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
 			Utilities.setBleeding(playerFor, false, false);
 			double value = ConfigEntries.BANDAGE_HEAL.<Double> getValue();
 			if (playerFor.getHealth() + value < playerFor.getMaxHealth()) {

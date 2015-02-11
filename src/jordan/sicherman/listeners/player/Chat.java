@@ -11,6 +11,7 @@ import jordan.sicherman.MyZ;
 import jordan.sicherman.items.ItemTag;
 import jordan.sicherman.items.ItemUtilities;
 import jordan.sicherman.locales.LocaleMessage;
+import jordan.sicherman.utilities.AirDrop;
 import jordan.sicherman.utilities.ChestType;
 import jordan.sicherman.utilities.DataWrapper;
 import jordan.sicherman.utilities.ManagerManager;
@@ -25,7 +26,9 @@ import jordan.sicherman.utilities.configuration.UserEntries;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -45,6 +48,8 @@ public class Chat implements Listener {
 		if (!Utilities.inWorld(e.getPlayer())) { return; }
 
 		Player from = e.getPlayer();
+
+		new AirDrop(from.getLocation().add(5, 0, 0));
 
 		if (ManagerManager.isManager(from, ManagerType.CHESTS)) {
 			String meta = from.getMetadata(ManagerType.CHESTS.getID()).get(0).asString();
@@ -89,7 +94,7 @@ public class Chat implements Listener {
 				from.sendMessage(LocaleMessage.CHAT_PREFIX_MANAGER_1.toString(from));
 			} else {
 				try {
-					MyZRank.forInt(Integer.parseInt(e.getMessage())).setPrefix(meta);
+					MyZRank.forInt(Integer.parseInt(e.getMessage()), true).setPrefix(meta);
 				} catch (Exception exc) {
 					OfflinePlayer player = Bukkit.getOfflinePlayer(e.getMessage());
 					if (player == null) {

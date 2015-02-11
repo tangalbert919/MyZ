@@ -42,6 +42,7 @@ public class Configuration {
 				FileUtilities.set(entry.getKey(), entry.getValue(), entry.getFile(), false);
 			}
 			ConfigEntries.loadCrackshot();
+			ConfigEntries.loadImportantDefaults();
 			FileUtilities.save(CFiles.values());
 		}
 

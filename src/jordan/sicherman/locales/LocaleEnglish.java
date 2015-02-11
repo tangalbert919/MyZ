@@ -14,7 +14,7 @@ public class LocaleEnglish {
 		case REQUIRES_PLAYER:
 			return "&4That command requires you to provide the name of a player.";
 		case NOT_PREMIUM:
-			return "&4You are running a free version of MyZ. Some features are disabled.";
+			return "&4Some features are disabled in this version of MyZ.";
 		case NO_SQL:
 			return "Not using MySQL for this session.";
 		case SQL_MODIFICATION:
@@ -110,7 +110,7 @@ public class LocaleEnglish {
 		case CANNOT_COMMAND:
 			return "You cannot execute this command as the console.";
 		case MANAGING_SPAWNS:
-			return "&eYou are now managing spawnpoints.\n&9o&f Right click to cycle spawnpoints.\n&9o&f Left click a spawnpoint to remove it\n&9o&f Left click to add a spawnpoint\n&9o&f Left click while crouching to set the home point\n&9o&f Drop wand to end";
+			return "&eYou are now managing spawnpoints.\n&9o&f Right click to cycle spawnpoints\n&9o&f Left click a spawnpoint to remove it\n&9o&f Left click to add a spawnpoint\n&9o&f Left click while crouching to set the home point\n&9o&f Drop wand to end";
 		case MANAGING_OVER:
 			return "&eYou have finished managing.";
 		case ADDED_SPAWN:

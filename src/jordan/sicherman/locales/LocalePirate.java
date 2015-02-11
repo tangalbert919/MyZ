@@ -14,7 +14,7 @@ public class LocalePirate {
 		case REQUIRES_PLAYER:
 			return "&4That command requires you 'ta provide the name of a crewmate.";
 		case NOT_PREMIUM:
-			return "&4Yer are running MyZ Free. Some features are disabled.";
+			return "&4Some features are disabled in this version of MyZ.";
 		case NO_SQL:
 			return "MySQL has walked te' plank.";
 		case SQL_MODIFICATION:

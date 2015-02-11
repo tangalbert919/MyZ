@@ -5,6 +5,7 @@ package jordan.sicherman.utilities.configuration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import jordan.sicherman.MyZ;
 import jordan.sicherman.player.User;
@@ -223,5 +224,33 @@ public class FileUtilities {
 		if (save) {
 			save(file);
 		}
+	}
+
+	public static File getSchematicFile(String path) {
+		File folder = new File(MyZ.instance.getDataFolder().getAbsolutePath() + File.separator + "schematics");
+
+		if (!folder.exists()) {
+			folder.mkdirs();
+		}
+
+		File file;
+		if (path.contains("$0")) {
+			Random random = new Random();
+			File internalFolder = new File(folder.getAbsolutePath() + File.separator + path.substring(0, path.lastIndexOf(File.separator)));
+			String[] files = internalFolder.list();
+			file = new File(internalFolder.getAbsolutePath() + File.separator + files[random.nextInt(files.length)]);
+		} else {
+			file = new File(folder.getAbsolutePath() + File.separator + path + ".schematic");
+		}
+
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				MyZ.log(ChatColor.RED + "Unable to save new schematic file: " + e.getMessage());
+			}
+		}
+
+		return file;
 	}
 }

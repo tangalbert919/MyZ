@@ -72,13 +72,15 @@ public class ChestType {
 	public ItemStack[] generate() {
 		List<ItemStack> items = new ArrayList<ItemStack>();
 
-		for (ItemProperties properties : contents.keySet()) {
-			if (properties.prob > 0 && random.nextInt(101) <= properties.prob) {
-				int amount = random.nextInt(properties.max - properties.min + 1) + properties.min;
-				if (amount > 0) {
-					ItemStack item = contents.get(properties).clone();
-					item.setAmount(amount);
-					items.add(item);
+		while (items.isEmpty()) {
+			for (ItemProperties properties : contents.keySet()) {
+				if (properties.prob > 0 && random.nextInt(101) <= properties.prob) {
+					int amount = random.nextInt(properties.max - properties.min + 1) + properties.min;
+					if (amount > 0) {
+						ItemStack item = contents.get(properties).clone();
+						item.setAmount(amount);
+						items.add(item);
+					}
 				}
 			}
 		}
@@ -95,7 +97,7 @@ public class ChestType {
 		return null;
 	}
 
-	private static ChestType fromString(String key) {
+	public static ChestType fromString(String key) {
 		for (ChestType type : values()) {
 			if (type.key.equals(key)) { return type; }
 		}
@@ -103,10 +105,17 @@ public class ChestType {
 	}
 
 	public static void despawn(Block block) {
+		despawn(block, false);
+	}
+
+	public static void despawn(Block block, boolean force) {
 		ConfigurationSection section = ConfigEntries.CHEST_LOCATIONS.<ConfigurationSection> getValue();
 		String key = SerializableLocation.fromLocation(block.getLocation()).serialize().replaceAll("\\.0", "");
-		if (section.contains(key)) {
-			section.set(key + ".respawn_time", System.currentTimeMillis() + ConfigEntries.CHEST_RESPAWN_TIME.<Integer> getValue() * 1000);
+		boolean contains = section.contains(key);
+		if (contains || force) {
+			if (contains)
+				section.set(key + ".respawn_time", System.currentTimeMillis() + ConfigEntries.CHEST_RESPAWN_TIME.<Integer> getValue()
+						* 1000);
 			if (block.getType() != Material.AIR) {
 				block.setType(Material.AIR);
 				final Location inLoc = block.getLocation();

@@ -20,6 +20,8 @@ import jordan.sicherman.utilities.ManagerManager.ManagerType;
 import jordan.sicherman.utilities.SerializableLocation;
 import jordan.sicherman.utilities.Utilities;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
+import jordan.sicherman.utilities.configuration.Configuration.CFiles;
+import jordan.sicherman.utilities.configuration.FileUtilities;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -66,13 +68,15 @@ public class SpectatorMode implements Listener {
 				MyZ.instance.getServer().getScheduler().runTaskLater(MyZ.instance, new Runnable() {
 					@Override
 					public void run() {
-						ChestType.despawn(((Chest) e.getInventory().getHolder()).getBlock());
+						ChestType.despawn(((Chest) e.getInventory().getHolder()).getBlock(), ((Chest) e.getInventory().getHolder())
+								.getBlock().hasMetadata("MyZ.airdrop"));
 					}
 				}, 20L);
 			}
 		} else if ("Create Lootset".equals(e.getInventory().getName())) {
 			e.getPlayer().setMetadata(ManagerType.CHESTS.getID(), new FixedMetadataValue(MyZ.instance, null));
 			((Player) e.getPlayer()).sendMessage(LocaleMessage.CHEST_MANAGER_COMPLETE.toString((Player) e.getPlayer()));
+			FileUtilities.save(CFiles.CHESTS);
 		}
 	}
 

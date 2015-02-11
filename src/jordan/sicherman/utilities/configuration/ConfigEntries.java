@@ -3,6 +3,7 @@
  */
 package jordan.sicherman.utilities.configuration;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
@@ -11,9 +12,11 @@ import jordan.sicherman.MyZ;
 import jordan.sicherman.items.EquipmentState;
 import jordan.sicherman.items.ItemTag;
 import jordan.sicherman.items.ItemUtilities;
+import jordan.sicherman.utilities.AirDrop;
 import jordan.sicherman.utilities.configuration.Configuration.CFiles;
 
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -197,7 +200,11 @@ public enum ConfigEntries {
 			"giant.spawn.limits.maximum_z", EntryType.INTEGER, CFiles.MOBS, 0), GIANT_LIMITER("giant.spawn.limits.enabled",
 			EntryType.BOOLEAN, CFiles.MOBS, false), GUARD_MIN_Z("guard.spawn.limits.minimum_z", EntryType.INTEGER, CFiles.MOBS, 0), GUARD_MAX_Z(
 			"guard.spawn.limits.maximum_z", EntryType.INTEGER, CFiles.MOBS, 0), GUARD_LIMITER("guard.spawn.limits.enabled",
-			EntryType.BOOLEAN, CFiles.MOBS, false);
+			EntryType.BOOLEAN, CFiles.MOBS, false), FIRST_RUN("first_run", EntryType.BOOLEAN, CFiles.CONFIG, true), AIRDROP_BREAK(
+			"airdrop.break_blocks", EntryType.BOOLEAN, CFiles.EXTRAS, true), AIRDROP_WRECKAGE("airdrop.create_wreckage", EntryType.BOOLEAN,
+			CFiles.EXTRAS, true), AIRDROP_FIRE("airdrop.set_fires", EntryType.BOOLEAN, CFiles.EXTRAS, false), AIRDROP_EXPLOSION_MAGNITUDE(
+			"airdrop.explosion_magnitude", EntryType.DOUBLE, CFiles.EXTRAS, 2.0), AIRDROP_CHESTS("airdrop.chest_types", EntryType.LIST,
+			CFiles.EXTRAS, Arrays.asList("Supplies - Rare", "Weaponry - Rare", "Armor - Rare", "Food - Rare"));
 
 	private final String key;
 	private final EntryType type;
@@ -340,6 +347,168 @@ public enum ConfigEntries {
 			section.set("100.equipment.inventory", new ArrayList<ItemStack>());
 		}
 		return section;
+	}
+
+	public static void loadImportantDefaults() {
+		for (BlockFace face : AirDrop.directions) {
+			File schematicFolder = new File(MyZ.instance.getDataFolder().getAbsolutePath() + File.separator + "schematics" + File.separator
+					+ "airdrop" + File.separator + face.name().toLowerCase());
+
+			if (!schematicFolder.exists()) {
+				schematicFolder.mkdirs();
+			}
+		}
+
+		if (!FIRST_RUN.<Boolean> getValue()) { return; }
+
+		ConfigurationSection section = CFiles.CHESTS.getFile().getConfigurationSection("types");
+
+		setLootset(section, "Weaponry - Common", UUID.randomUUID().toString(), 8, 1, 1,
+				EquipmentState.DULL.applyTo(new ItemStack(Material.WOOD_SWORD)));
+		setLootset(section, "Weaponry - Common", UUID.randomUUID().toString(), 30, 1, 1,
+				EquipmentState.DULL.applyTo(damage(Material.WOOD_SWORD, 2)));
+		setLootset(section, "Weaponry - Common", UUID.randomUUID().toString(), 10, 1, 1,
+				EquipmentState.WEAKENED.applyTo(damage(Material.STONE_SWORD, 2)));
+		setLootset(section, "Weaponry - Common", UUID.randomUUID().toString(), 13, 1, 1,
+				EquipmentState.DULL.applyTo(new ItemStack(Material.WOOD_SWORD)));
+
+		setLootset(section, "Weaponry - Uncommon", UUID.randomUUID().toString(), 13, 1, 1,
+				EquipmentState.SHARPENED.applyTo(new ItemStack(Material.STONE_SWORD)));
+		setLootset(section, "Weaponry - Uncommon", UUID.randomUUID().toString(), 9, 1, 1,
+				EquipmentState.BROKEN.applyTo(damage(Material.IRON_SWORD, 2)));
+		setLootset(section, "Weaponry - Uncommon", UUID.randomUUID().toString(), 34, 1, 1,
+				EquipmentState.BROKEN.applyTo(damage(Material.IRON_SWORD, 3)));
+		setLootset(section, "Weaponry - Uncommon", UUID.randomUUID().toString(), 18, 1, 1,
+				EquipmentState.BROKEN.applyTo(damage(Material.BOW, 5)));
+
+		setLootset(section, "Weaponry - Rare", UUID.randomUUID().toString(), 8, 1, 1,
+				EquipmentState.TEMPERED.applyTo(new ItemStack(Material.STONE_SWORD)));
+		setLootset(section, "Weaponry - Rare", UUID.randomUUID().toString(), 6, 1, 1,
+				EquipmentState.SHARPENED.applyTo(damage(Material.IRON_SWORD, 4)));
+		setLootset(section, "Weaponry - Rare", UUID.randomUUID().toString(), 7, 1, 1,
+				EquipmentState.SLACK.applyTo(new ItemStack(Material.BOW)));
+		setLootset(section, "Weaponry - Rare", UUID.randomUUID().toString(), 23, 1, 1, new ItemStack(Material.IRON_SWORD));
+
+		setLootset(section, "Armor - Common", UUID.randomUUID().toString(), 9, 1, 1,
+				EquipmentState.BROKEN.applyTo(new ItemStack(Material.LEATHER_CHESTPLATE)));
+		setLootset(section, "Armor - Common", UUID.randomUUID().toString(), 13, 1, 1,
+				EquipmentState.BROKEN.applyTo(damage(Material.LEATHER_HELMET, 2)));
+		setLootset(section, "Armor - Common", UUID.randomUUID().toString(), 11, 1, 1,
+				EquipmentState.WEAKENED.applyTo(damage(Material.LEATHER_LEGGINGS, 1.4)));
+		setLootset(section, "Armor - Common", UUID.randomUUID().toString(), 10, 1, 1,
+				EquipmentState.BROKEN.applyTo(damage(Material.CHAINMAIL_HELMET, 2)));
+		setLootset(section, "Armor - Common", UUID.randomUUID().toString(), 12, 1, 1,
+				EquipmentState.WEAKENED.applyTo(damage(Material.CHAINMAIL_BOOTS, 1.2)));
+		setLootset(section, "Armor - Common", UUID.randomUUID().toString(), 13, 1, 1, damage(Material.LEATHER_HELMET, 2));
+		setLootset(section, "Armor - Common", UUID.randomUUID().toString(), 10, 1, 1, damage(Material.LEATHER_BOOTS, 1.7));
+
+		setLootset(section, "Armor - Uncommon", UUID.randomUUID().toString(), 13, 1, 1, damage(Material.CHAINMAIL_HELMET, 1.1));
+		setLootset(section, "Armor - Uncommon", UUID.randomUUID().toString(), 9, 1, 1, damage(Material.CHAINMAIL_LEGGINGS, 1.8));
+		setLootset(section, "Armor - Uncommon", UUID.randomUUID().toString(), 20, 1, 1,
+				EquipmentState.FORTIFIED.applyTo(damage(Material.LEATHER_LEGGINGS, 1.1)));
+		setLootset(section, "Armor - Uncommon", UUID.randomUUID().toString(), 17, 1, 1,
+				EquipmentState.REINFORCED.applyTo(damage(Material.LEATHER_CHESTPLATE, 1.1)));
+		setLootset(section, "Armor - Uncommon", UUID.randomUUID().toString(), 7, 1, 1,
+				EquipmentState.BROKEN.applyTo(damage(Material.IRON_HELMET, 1.7)));
+		setLootset(section, "Armor - Uncommon", UUID.randomUUID().toString(), 8, 1, 1,
+				EquipmentState.DEVASTATED.applyTo(damage(Material.IRON_CHESTPLATE, 3.1)));
+		setLootset(section, "Armor - Uncommon", UUID.randomUUID().toString(), 4, 1, 1,
+				EquipmentState.BROKEN.applyTo(damage(Material.IRON_LEGGINGS, 3)));
+		setLootset(section, "Armor - Uncommon", UUID.randomUUID().toString(), 15, 1, 1,
+				EquipmentState.REINFORCED.applyTo(damage(Material.CHAINMAIL_LEGGINGS, 4.1)));
+
+		setLootset(section, "Armor - Rare", UUID.randomUUID().toString(), 17, 1, 1,
+				EquipmentState.ORNATE.applyTo(damage(Material.CHAINMAIL_LEGGINGS, 1.6)));
+		setLootset(section, "Armor - Rare", UUID.randomUUID().toString(), 10, 1, 1,
+				EquipmentState.ORNATE.applyTo(damage(Material.CHAINMAIL_HELMET, 1.5)));
+		setLootset(section, "Armor - Rare", UUID.randomUUID().toString(), 15, 1, 1,
+				EquipmentState.WEAKENED.applyTo(damage(Material.IRON_LEGGINGS, 1.2)));
+		setLootset(section, "Armor - Rare", UUID.randomUUID().toString(), 8, 1, 1, damage(Material.IRON_CHESTPLATE, 1.6));
+		setLootset(section, "Armor - Rare", UUID.randomUUID().toString(), 16, 1, 1,
+				EquipmentState.ORNATE.applyTo(damage(Material.CHAINMAIL_CHESTPLATE, 1.1)));
+		setLootset(section, "Armor - Rare", UUID.randomUUID().toString(), 13, 1, 1,
+				EquipmentState.WEAKENED.applyTo(damage(Material.IRON_HELMET, 1.2)));
+		setLootset(section, "Armor - Rare", UUID.randomUUID().toString(), 11, 1, 1, damage(Material.IRON_BOOTS, 1.3));
+
+		setLootset(section, "Supplies - Common", UUID.randomUUID().toString(), 11, 1, 2,
+				ItemUtilities.getInstance().getTagItem(ItemTag.BANDAGE, 1));
+		setLootset(section, "Supplies - Common", UUID.randomUUID().toString(), 15, 1, 1,
+				ItemUtilities.getInstance().getTagItem(ItemTag.WARM_WATER, 1));
+		setLootset(section, "Supplies - Common", UUID.randomUUID().toString(), 13, 1, 1,
+				ItemUtilities.getInstance().getTagItem(ItemTag.SALTY_WATER, 1));
+		setLootset(section, "Supplies - Common", UUID.randomUUID().toString(), 6, 1, 2,
+				ItemUtilities.getInstance().getTagItem(ItemTag.SCISSORS, 1));
+		setLootset(section, "Supplies - Common", UUID.randomUUID().toString(), 11, 1, 4, new ItemStack(Material.STICK));
+		setLootset(section, "Supplies - Common", UUID.randomUUID().toString(), 6, 1, 2, new ItemStack(Material.COBBLESTONE));
+		setLootset(section, "Supplies - Common", UUID.randomUUID().toString(), 9, 1, 1, new ItemStack(Material.LEATHER));
+		setLootset(section, "Supplies - Common", UUID.randomUUID().toString(), 14, 1, 1,
+				ItemUtilities.getInstance().getTagItem(ItemTag.MURKY_WATER, 1));
+
+		setLootset(section, "Supplies - Uncommon", UUID.randomUUID().toString(), 11, 1, 1,
+				ItemUtilities.getInstance().getTagItem(ItemTag.OINTMENT, 1));
+		setLootset(section, "Supplies - Uncommon", UUID.randomUUID().toString(), 12, 1, 1,
+				ItemUtilities.getInstance().getTagItem(ItemTag.ANTISEPTIC, 1));
+		setLootset(section, "Supplies - Uncommon", UUID.randomUUID().toString(), 5, 1, 1,
+				ItemUtilities.getInstance().getTagItem(ItemTag.SCISSORS, 1));
+		setLootset(section, "Supplies - Uncommon", UUID.randomUUID().toString(), 15, 1, 1, new ItemStack(Material.POTION));
+		setLootset(section, "Supplies - Uncommon", UUID.randomUUID().toString(), 6, 1, 3,
+				ItemUtilities.getInstance().getTagItem(ItemTag.CHAIN, 1));
+		setLootset(section, "Supplies - Uncommon", UUID.randomUUID().toString(), 3, 1, 1,
+				ItemUtilities.getInstance().getTagItem(ItemTag.MEDICINE, 1));
+		setLootset(section, "Supplies - Uncommon", UUID.randomUUID().toString(), 4, 1, 1, new ItemStack(Material.GOLD_INGOT));
+		setLootset(section, "Supplies - Uncommon", UUID.randomUUID().toString(), 8, 1, 6, new ItemStack(Material.ARROW));
+		setLootset(section, "Supplies - Uncommon", UUID.randomUUID().toString(), 3, 1, 1, new ItemStack(Material.ENDER_PEARL));
+		setLootset(section, "Supplies - Uncommon", UUID.randomUUID().toString(), 11, 1, 1, new ItemStack(Material.SNOW_BALL));
+		setLootset(section, "Supplies - Uncommon", UUID.randomUUID().toString(), 12, 1, 1, new ItemStack(Material.MILK_BUCKET));
+
+		setLootset(section, "Supplies - Rare", UUID.randomUUID().toString(), 11, 1, 1,
+				ItemUtilities.getInstance().getTagItem(ItemTag.COLD_WATER, 1));
+		setLootset(section, "Supplies - Rare", UUID.randomUUID().toString(), 18, 1, 1,
+				ItemUtilities.getInstance().getTagItem(ItemTag.MEDICINE, 1));
+		setLootset(section, "Supplies - Rare", UUID.randomUUID().toString(), 7, 1, 1, new ItemStack(Material.IRON_INGOT));
+		setLootset(section, "Supplies - Rare", UUID.randomUUID().toString(), 8, 2, 5,
+				ItemUtilities.getInstance().getTagItem(ItemTag.CHAIN, 1));
+		setLootset(section, "Supplies - Rare", UUID.randomUUID().toString(), 11, 5, 13, new ItemStack(Material.ARROW));
+		setLootset(section, "Supplies - Rare", UUID.randomUUID().toString(), 8, 1, 1, new ItemStack(Material.ENDER_PEARL));
+		setLootset(section, "Supplies - Rare", UUID.randomUUID().toString(), 8, 1, 1, new ItemStack(Material.SKULL_ITEM, 1, (byte) 2));
+		setLootset(section, "Supplies - Rare", UUID.randomUUID().toString(), 6, 1, 1,
+				EquipmentState.GRAPPLE_WEAK.applyTo(ItemUtilities.getInstance().getTagItem(ItemTag.GRAPPLE, 1)));
+
+		setLootset(section, "Food - Common", UUID.randomUUID().toString(), 11, 1, 2, new ItemStack(Material.ROTTEN_FLESH));
+		setLootset(section, "Food - Common", UUID.randomUUID().toString(), 8, 1, 1, new ItemStack(Material.MELON));
+		setLootset(section, "Food - Common", UUID.randomUUID().toString(), 9, 1, 1, new ItemStack(Material.COOKIE));
+		setLootset(section, "Food - Common", UUID.randomUUID().toString(), 12, 1, 2, new ItemStack(Material.WHEAT));
+		setLootset(section, "Food - Common", UUID.randomUUID().toString(), 8, 1, 2, new ItemStack(Material.COCOA));
+		setLootset(section, "Food - Common", UUID.randomUUID().toString(), 7, 1, 1, new ItemStack(Material.BOWL));
+		setLootset(section, "Food - Common", UUID.randomUUID().toString(), 11, 1, 1, new ItemStack(Material.RED_MUSHROOM));
+		setLootset(section, "Food - Common", UUID.randomUUID().toString(), 15, 1, 1, new ItemStack(Material.BROWN_MUSHROOM));
+
+		setLootset(section, "Food - Uncommon", UUID.randomUUID().toString(), 11, 1, 2, new ItemStack(Material.RAW_CHICKEN));
+		setLootset(section, "Food - Uncommon", UUID.randomUUID().toString(), 9, 1, 1, new ItemStack(Material.MUSHROOM_SOUP));
+		setLootset(section, "Food - Uncommon", UUID.randomUUID().toString(), 13, 1, 2, new ItemStack(Material.APPLE));
+		setLootset(section, "Food - Uncommon", UUID.randomUUID().toString(), 15, 1, 2, new ItemStack(Material.BAKED_POTATO));
+		setLootset(section, "Food - Uncommon", UUID.randomUUID().toString(), 4, 1, 1, new ItemStack(Material.COOKED_BEEF));
+		setLootset(section, "Food - Uncommon", UUID.randomUUID().toString(), 8, 1, 3, new ItemStack(Material.COOKED_MUTTON));
+
+		setLootset(section, "Food - Rare", UUID.randomUUID().toString(), 11, 3, 6, new ItemStack(Material.WHEAT));
+		setLootset(section, "Food - Rare", UUID.randomUUID().toString(), 7, 2, 4, new ItemStack(Material.COOKED_FISH));
+		setLootset(section, "Food - Rare", UUID.randomUUID().toString(), 13, 1, 2, new ItemStack(Material.COOKED_CHICKEN));
+		setLootset(section, "Food - Rare", UUID.randomUUID().toString(), 16, 1, 3, new ItemStack(Material.PUMPKIN_PIE));
+		setLootset(section, "Food - Rare", UUID.randomUUID().toString(), 13, 4, 8, new ItemStack(Material.COOKIE));
+		setLootset(section, "Food - Rare", UUID.randomUUID().toString(), 6, 2, 4, new ItemStack(Material.MUSHROOM_SOUP));
+
+		FileUtilities.set(FIRST_RUN.getKey(), false, FIRST_RUN.getFile(), true);
+	}
+
+	private static ItemStack damage(Material material, double percent) {
+		return new ItemStack(material, 1, (short) (material.getMaxDurability() / percent));
+	}
+
+	private static void setLootset(ConfigurationSection section, String name, String uid, int probability, int min, int max, ItemStack item) {
+		section.set(name + "." + uid + ".probability", probability);
+		section.set(name + "." + uid + ".amount_minimum", min);
+		section.set(name + "." + uid + ".amount_maximum", max);
+		section.set(name + "." + uid + ".item", item);
 	}
 
 	public static void loadCrackshot() {

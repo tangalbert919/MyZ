@@ -13,6 +13,7 @@ import jordan.sicherman.items.ItemTag;
 import jordan.sicherman.items.ItemUtilities;
 import jordan.sicherman.locales.LocaleMessage;
 import jordan.sicherman.nms.utilities.CompatibilityManager;
+import jordan.sicherman.utilities.ChestType;
 import jordan.sicherman.utilities.DataWrapper;
 import jordan.sicherman.utilities.TemperatureManager;
 import jordan.sicherman.utilities.TemperatureManager.TemperatureState;
@@ -22,9 +23,12 @@ import jordan.sicherman.utilities.configuration.ConfigEntries;
 import jordan.sicherman.utilities.configuration.UserEntries;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -33,6 +37,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -46,6 +51,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -56,6 +62,48 @@ import org.bukkit.potion.PotionEffectType;
 public class Extras implements Listener {
 
 	private static final Random random = new Random();
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	private void onAirDrop(EntityChangeBlockEvent e) {
+		if (!Utilities.inWorld(e.getBlock().getLocation())) { return; }
+
+		if (e.getEntity() instanceof FallingBlock) {
+			FallingBlock fall = (FallingBlock) e.getEntity();
+
+			if (fall.hasMetadata("MyZ.airdrop")) {
+				List<String> possible_chests = ConfigEntries.AIRDROP_CHESTS.<List<String>> getValue();
+
+				if (random.nextDouble() <= 0.3) {
+					fall.getWorld().createExplosion(fall.getLocation().getX(), fall.getLocation().getY(), fall.getLocation().getZ(),
+							ConfigEntries.AIRDROP_EXPLOSION_MAGNITUDE.<Double> getValue().floatValue(),
+							ConfigEntries.AIRDROP_FIRE.<Boolean> getValue(), ConfigEntries.AIRDROP_BREAK.<Boolean> getValue());
+				}
+
+				if (fall.getMaterial() == Material.CHEST) {
+					final ChestType type = ChestType.fromString(possible_chests.get(random.nextInt(possible_chests.size())));
+
+					if (type != null) {
+						final Block chest = e.getBlock();
+						MyZ.instance.getServer().getScheduler().runTaskLater(MyZ.instance, new Runnable() {
+							@SuppressWarnings("deprecation")
+							public void run() {
+								chest.setMetadata("MyZ.airdrop", new FixedMetadataValue(MyZ.instance, true));
+								chest.setTypeIdAndData(Material.CHEST.getId(), (byte) random.nextInt(5), true);
+								((Chest) chest.getState()).getBlockInventory().setContents(type.generate());
+								CompatibilityManager.renameChest(((Chest) chest.getState()), type.getName());
+							}
+						}, 1L);
+					}
+				}
+
+				if (!ConfigEntries.AIRDROP_WRECKAGE.<Boolean> getValue()) {
+					fall.setDropItem(false);
+					fall.remove();
+					e.setCancelled(true);
+				}
+			}
+		}
+	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	private void onGrenadeLand(PlayerTeleportEvent e) {

@@ -113,9 +113,10 @@ public class ChestType {
 		String key = SerializableLocation.fromLocation(block.getLocation()).serialize().replaceAll("\\.0", "");
 		boolean contains = section.contains(key);
 		if (contains || force) {
-			if (contains)
+			if (contains) {
 				section.set(key + ".respawn_time", System.currentTimeMillis() + ConfigEntries.CHEST_RESPAWN_TIME.<Integer> getValue()
 						* 1000);
+			}
 			if (block.getType() != Material.AIR) {
 				block.setType(Material.AIR);
 				final Location inLoc = block.getLocation();
@@ -153,7 +154,7 @@ public class ChestType {
 						((DirectionalContainer) block.getState().getData()).setFacingDirection(BlockFace.valueOf(section.getString(key
 								+ ".orientation")));
 						CompatibilityManager.renameChest(chest, section.getString(key + ".type"));
-						block.getState().update();
+						block.getState().update(true);
 
 						ChestType type = ChestType.fromName(section.getString(key + ".type"));
 						if (type != null) {

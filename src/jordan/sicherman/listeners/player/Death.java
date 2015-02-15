@@ -43,7 +43,11 @@ public class Death implements Listener {
 		final Player player = e.getEntity();
 
 		e.setDroppedExp(0);
-		e.setKeepInventory(false);
+		try {
+			e.setKeepInventory(false);
+		} catch (Exception exc) {
+
+		}
 		e.setDeathMessage(null);
 		player.setFireTicks(0);
 

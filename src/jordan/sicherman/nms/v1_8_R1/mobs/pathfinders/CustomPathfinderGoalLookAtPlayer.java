@@ -5,6 +5,7 @@ package jordan.sicherman.nms.v1_8_R1.mobs.pathfinders;
 
 import java.util.List;
 
+import jordan.sicherman.utilities.configuration.ConfigEntries;
 import net.minecraft.server.v1_8_R1.Entity;
 import net.minecraft.server.v1_8_R1.EntityHuman;
 import net.minecraft.server.v1_8_R1.EntityInsentient;
@@ -24,6 +25,7 @@ public class CustomPathfinderGoalLookAtPlayer extends PathfinderGoal {
 	protected Entity target;
 	protected float range;
 	private int lookAway;
+	private static final double stretch = ConfigEntries.VISIBILITY_STRETCHER.<Double> getValue();
 	protected Class<? extends EntityLiving> classToLookAt;
 
 	public CustomPathfinderGoalLookAtPlayer(EntityInsentient creature, Class<? extends EntityLiving> classToLookAt, float range) {
@@ -46,7 +48,7 @@ public class CustomPathfinderGoalLookAtPlayer extends PathfinderGoal {
 		List<EntityHuman> players = world.players;
 
 		for (EntityHuman found : players) {
-			double range = found.exp * 32;
+			double range = found.exp * stretch;
 			if (found != null && found.isAlive() && !((EntityPlayer) found).playerInteractManager.isCreative()
 					&& !found.hasEffect(MobEffectList.INVISIBILITY) && !found.hasEffect(MobEffectList.WITHER)) {
 				double fX = found.locX, fY = found.locY, fZ = found.locZ;

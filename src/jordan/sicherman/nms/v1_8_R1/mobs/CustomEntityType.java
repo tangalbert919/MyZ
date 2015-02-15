@@ -44,11 +44,13 @@ public enum CustomEntityType {
 
 		private final Class<? extends EntityInsentient> nms, custom;
 		private final BiomeMeta meta;
+		private final boolean enabled;
 
 		public CustomBiomeMeta(Class<? extends EntityInsentient> nms, Class<? extends EntityInsentient> custom, int spawn_chance,
 				int range_min, int range_max) {
 			this.nms = nms;
 			this.custom = custom;
+			enabled = spawn_chance > 0;
 			meta = new BiomeMeta(custom, spawn_chance, range_min, range_max);
 		}
 
@@ -152,32 +154,34 @@ public enum CustomEntityType {
 			}
 
 			if (!generalExcluded.contains(biomeBase.ah)) {
-				if (!pigmanExcluded.contains(biomeBase.ah)
-						&& !cache.get(biomeBase).at.contains(CustomEntityType.PIG_ZOMBIE.meta.toBiomeMeta())) {
+				if (PIG_ZOMBIE.meta.enabled && !pigmanExcluded.contains(biomeBase.ah)
+						&& !cache.get(biomeBase).at.contains(PIG_ZOMBIE.meta.toBiomeMeta())) {
 					List<BiomeMeta> list = (List<BiomeMeta>) NMS.getDeclaredField(biomeBase, DefaultCache.keys[0]);
 					if (list != null) {
-						list.add(CustomEntityType.PIG_ZOMBIE.meta.toBiomeMeta());
+						list.add(PIG_ZOMBIE.meta.toBiomeMeta());
 					}
 				}
-				if (!zombieExcluded.contains(biomeBase.ah) && !cache.get(biomeBase).at.contains(CustomEntityType.ZOMBIE.meta.toBiomeMeta())) {
+				if (ZOMBIE.meta.enabled && !zombieExcluded.contains(biomeBase.ah)
+						&& !cache.get(biomeBase).at.contains(ZOMBIE.meta.toBiomeMeta())) {
 					List<BiomeMeta> list = (List<BiomeMeta>) NMS.getDeclaredField(biomeBase, DefaultCache.keys[0]);
 					if (list != null) {
-						list.add(CustomEntityType.ZOMBIE.meta.toBiomeMeta());
+						list.add(ZOMBIE.meta.toBiomeMeta());
 					}
 				}
-				if (!guardExcluded.contains(biomeBase.ah) && !cache.get(biomeBase).at.contains(CustomEntityType.GUARD.meta.toBiomeMeta())) {
+				if (GUARD.meta.enabled && !guardExcluded.contains(biomeBase.ah)
+						&& !cache.get(biomeBase).at.contains(GUARD.meta.toBiomeMeta())) {
 					List<BiomeMeta> list = (List<BiomeMeta>) NMS.getDeclaredField(biomeBase, DefaultCache.keys[0]);
 					if (list != null) {
-						list.add(CustomEntityType.GUARD.meta.toBiomeMeta());
+						list.add(GUARD.meta.toBiomeMeta());
 					}
 				}
 			}
 
-			if (ConfigEntries.GIANT_INCLUDES.<List<String>> getValue().contains(biomeBase.ah)
-					&& !cache.get(biomeBase).at.contains(CustomEntityType.GIANT_ZOMBIE.meta.toBiomeMeta())) {
+			if (GIANT_ZOMBIE.meta.enabled && ConfigEntries.GIANT_INCLUDES.<List<String>> getValue().contains(biomeBase.ah)
+					&& !cache.get(biomeBase).at.contains(GIANT_ZOMBIE.meta.toBiomeMeta())) {
 				List<BiomeMeta> list = (List<BiomeMeta>) NMS.getDeclaredField(biomeBase, DefaultCache.keys[0]);
 				if (list != null) {
-					list.add(CustomEntityType.GIANT_ZOMBIE.meta.toBiomeMeta());
+					list.add(GIANT_ZOMBIE.meta.toBiomeMeta());
 				}
 			}
 		}

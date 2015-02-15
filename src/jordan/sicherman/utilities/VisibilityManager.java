@@ -50,6 +50,10 @@ public class VisibilityManager {
 
 		float value = ConfigEntries.VISIBILITY_BASE.<Integer> getValue() / 18f;
 
+		if (playerFor.getLocation().getWorld().getBlockAt(playerFor.getLocation()).getType() == Material.LONG_GRASS) {
+			value += ConfigEntries.VISIBILITY_GRASS.<Integer> getValue() / 18f;
+		}
+
 		if (playerFor.isSneaking()) {
 			value += ConfigEntries.VISIBILITY_SNEAKING.<Integer> getValue() / 18f;
 		}
@@ -84,7 +88,6 @@ public class VisibilityManager {
 		}
 
 		if (playerFor.hasMetadata("MyZ.overload_visibility")) {
-			// Since this is async, we might do this once our meta is gone.
 			try {
 				value += playerFor.getMetadata("MyZ.overload_visibility").get(0).asFloat();
 			} catch (Exception e) {

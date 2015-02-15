@@ -83,7 +83,12 @@ public class MyZ extends JavaPlugin {
 
 	private static final Set<Listener> listeners = new HashSet<Listener>();
 
+	// TODO BUGS:
+	// Zombie min/max spawning
+
 	// TODO Combat logger
+
+	// TODO Use action bar
 
 	// TODO Recipes that can be unlocked per-player to craft new items
 

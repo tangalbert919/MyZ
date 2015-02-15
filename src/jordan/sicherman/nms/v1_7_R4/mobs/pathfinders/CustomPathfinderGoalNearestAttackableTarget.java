@@ -7,6 +7,7 @@ import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.List;
 
+import jordan.sicherman.utilities.configuration.ConfigEntries;
 import net.minecraft.server.v1_7_R4.DistanceComparator;
 import net.minecraft.server.v1_7_R4.EntityCreature;
 import net.minecraft.server.v1_7_R4.EntityHuman;
@@ -26,6 +27,7 @@ public class CustomPathfinderGoalNearestAttackableTarget extends PathfinderGoalT
 	private final int randomChanceDoNotAttack;
 	private final DistanceComparator distanceComparator;
 	private final IEntitySelector entitySelector;
+	private static final double stretch = ConfigEntries.VISIBILITY_STRETCHER.<Double> getValue();
 	private WeakReference<EntityLiving> targetReference = new WeakReference<EntityLiving>(null);
 
 	public CustomPathfinderGoalNearestAttackableTarget(EntityCreature creature, Class<?> targetClass, int randomChanceDoNotAttack,
@@ -75,7 +77,7 @@ public class CustomPathfinderGoalNearestAttackableTarget extends PathfinderGoalT
 					|| target.hasEffect(MobEffectList.INVISIBILITY)) {
 				target = null;
 			} else if (target != null) {
-				double range = ((EntityHuman) target).exp * 32;
+				double range = ((EntityHuman) target).exp * stretch;
 				if (c.f(target) > range * range) {
 					target = null;
 				}

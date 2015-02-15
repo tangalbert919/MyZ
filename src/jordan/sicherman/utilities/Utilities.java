@@ -68,7 +68,7 @@ public class Utilities {
 		}
 
 		if (ConfigEntries.DEDICATED.<Boolean> getValue()) {
-			spawnInWorld(player);
+			spawnInWorld(player, true);
 		}
 	}
 
@@ -332,7 +332,7 @@ public class Utilities {
 		if (!Utilities.inWorld(player)) { return; }
 
 		if (dedicated) {
-			spawnInWorld(player);
+			spawnInWorld(player, dedicated);
 		}
 	}
 

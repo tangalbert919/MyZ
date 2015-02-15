@@ -151,7 +151,8 @@ public class MyZRank {
 			return null;
 		}
 
-		if (item == null && identifier > 0) { return forInt(identifier - 1).getEquipment(piece); }
+		if (item == null && identifier > 0) { return ConfigEntries.RANK_CARRYOVER.<Boolean> getValue() ? forInt(identifier - 1)
+				.getEquipment(piece) : null; }
 
 		return item;
 	}
@@ -164,12 +165,14 @@ public class MyZRank {
 		Set<ItemStack> items = new HashSet<ItemStack>();
 		items.addAll(Arrays.asList(inventory));
 
-		Set<Integer> ids = new HashSet<Integer>();
-		for (int i = identifier - 1; i >= 0; i--) {
-			MyZRank rank = forInt(i);
-			if (!ids.contains(rank.identifier)) {
-				ids.add(rank.identifier);
-				items.addAll(Arrays.asList(rank.inventory));
+		if (ConfigEntries.RANK_CARRYOVER.<Boolean> getValue()) {
+			Set<Integer> ids = new HashSet<Integer>();
+			for (int i = identifier - 1; i >= 0; i--) {
+				MyZRank rank = forInt(i);
+				if (!ids.contains(rank.identifier)) {
+					ids.add(rank.identifier);
+					items.addAll(Arrays.asList(rank.inventory));
+				}
 			}
 		}
 

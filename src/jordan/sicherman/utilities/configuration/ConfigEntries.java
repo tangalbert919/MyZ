@@ -204,7 +204,9 @@ public enum ConfigEntries {
 			"airdrop.break_blocks", EntryType.BOOLEAN, CFiles.EXTRAS, true), AIRDROP_WRECKAGE("airdrop.create_wreckage", EntryType.BOOLEAN,
 			CFiles.EXTRAS, true), AIRDROP_FIRE("airdrop.set_fires", EntryType.BOOLEAN, CFiles.EXTRAS, false), AIRDROP_EXPLOSION_MAGNITUDE(
 			"airdrop.explosion_magnitude", EntryType.DOUBLE, CFiles.EXTRAS, 2.0), AIRDROP_CHESTS("airdrop.chest_types", EntryType.LIST,
-			CFiles.EXTRAS, Arrays.asList("Supplies - Rare", "Weaponry - Rare", "Armor - Rare", "Food - Rare"));
+			CFiles.EXTRAS, Arrays.asList("Supplies - Rare", "Weaponry - Rare", "Armor - Rare", "Food - Rare")), VISIBILITY_GRASS(
+			"visibility.player.in_grass", EntryType.INTEGER, CFiles.EXTRAS, -5), VISIBILITY_STRETCHER("visibility.stretch",
+			EntryType.DOUBLE, CFiles.EXTRAS, 32.0), RANK_CARRYOVER("spawnkit.hierarchical", EntryType.BOOLEAN, CFiles.EXTRAS, false);
 
 	private final String key;
 	private final EntryType type;
@@ -488,7 +490,7 @@ public enum ConfigEntries {
 		setLootset(section, "Food - Uncommon", UUID.randomUUID().toString(), 13, 1, 2, new ItemStack(Material.APPLE));
 		setLootset(section, "Food - Uncommon", UUID.randomUUID().toString(), 15, 1, 2, new ItemStack(Material.BAKED_POTATO));
 		setLootset(section, "Food - Uncommon", UUID.randomUUID().toString(), 4, 1, 1, new ItemStack(Material.COOKED_BEEF));
-		setLootset(section, "Food - Uncommon", UUID.randomUUID().toString(), 8, 1, 3, new ItemStack(Material.COOKED_MUTTON));
+		setLootset(section, "Food - Uncommon", UUID.randomUUID().toString(), 8, 1, 3, new ItemStack(Material.COOKED_FISH));
 
 		setLootset(section, "Food - Rare", UUID.randomUUID().toString(), 11, 3, 6, new ItemStack(Material.WHEAT));
 		setLootset(section, "Food - Rare", UUID.randomUUID().toString(), 7, 2, 4, new ItemStack(Material.COOKED_FISH));

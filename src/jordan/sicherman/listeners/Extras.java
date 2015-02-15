@@ -85,12 +85,13 @@ public class Extras implements Listener {
 					if (type != null) {
 						final Block chest = e.getBlock();
 						MyZ.instance.getServer().getScheduler().runTaskLater(MyZ.instance, new Runnable() {
+							@Override
 							@SuppressWarnings("deprecation")
 							public void run() {
 								chest.setMetadata("MyZ.airdrop", new FixedMetadataValue(MyZ.instance, true));
 								chest.setTypeIdAndData(Material.CHEST.getId(), (byte) random.nextInt(5), true);
 								((Chest) chest.getState()).getBlockInventory().setContents(type.generate());
-								CompatibilityManager.renameChest(((Chest) chest.getState()), type.getName());
+								CompatibilityManager.renameChest((Chest) chest.getState(), type.getName());
 							}
 						}, 1L);
 					}

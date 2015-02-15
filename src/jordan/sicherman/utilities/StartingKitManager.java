@@ -74,6 +74,7 @@ public class StartingKitManager {
 				}
 			}
 		}
+
 		MyZRank rank = Utilities.getRank(playerFor);
 		if (rank != null) {
 			for (ItemStack i : rank.getInventory()) {

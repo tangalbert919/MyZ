@@ -3,7 +3,6 @@
  */
 package jordan.sicherman.listeners.player;
 
-import jordan.sicherman.MyZ;
 import jordan.sicherman.items.EquipmentState;
 import jordan.sicherman.utilities.Utilities;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
@@ -41,8 +40,7 @@ public class TakeDamage implements Listener {
 			Utilities.setBleeding((Player) e.getEntity(), true, false);
 
 			if (e.getDamager().getType() == EntityType.ZOMBIE || e.getDamager().getType() == EntityType.PIG_ZOMBIE
-					|| e.getDamager().getType() == EntityType.GIANT || e.getDamager() instanceof Player
-					&& MyZ.zombieFactory.isZombie((Player) e.getDamager())) {
+					|| e.getDamager().getType() == EntityType.GIANT) {
 				Utilities.setPoisoned((Player) e.getEntity(), true, false);
 			}
 		}

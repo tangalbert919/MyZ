@@ -17,18 +17,14 @@ import jordan.sicherman.commands.CommandManager;
 import jordan.sicherman.items.EngineerManager;
 import jordan.sicherman.items.ItemTag;
 import jordan.sicherman.items.ItemUtilities;
-import jordan.sicherman.listeners.CrackShot;
 import jordan.sicherman.listeners.Extras;
-import jordan.sicherman.listeners.Visibility;
 import jordan.sicherman.listeners.player.Chat;
 import jordan.sicherman.listeners.player.Death;
 import jordan.sicherman.listeners.player.GearModifications;
 import jordan.sicherman.listeners.player.GetAchievement;
 import jordan.sicherman.listeners.player.Grappler;
-import jordan.sicherman.listeners.player.Healer;
 import jordan.sicherman.listeners.player.Join;
 import jordan.sicherman.listeners.player.Quit;
-import jordan.sicherman.listeners.player.Revive;
 import jordan.sicherman.listeners.player.SpectatorMode;
 import jordan.sicherman.listeners.player.TakeDamage;
 import jordan.sicherman.locales.Locale;
@@ -38,17 +34,11 @@ import jordan.sicherman.nms.utilities.NMS;
 import jordan.sicherman.nms.utilities.PseudoEnchant;
 import jordan.sicherman.scheduled.Asynchronous;
 import jordan.sicherman.scheduled.Synchronous;
-import jordan.sicherman.sql.SQLManager;
 import jordan.sicherman.utilities.AchievementManager;
 import jordan.sicherman.utilities.ChestType;
-import jordan.sicherman.utilities.GhostFactory;
 import jordan.sicherman.utilities.MyZRank;
-import jordan.sicherman.utilities.ReviveManager;
 import jordan.sicherman.utilities.StartingKitManager;
-import jordan.sicherman.utilities.TemperatureManager;
 import jordan.sicherman.utilities.ThirstManager;
-import jordan.sicherman.utilities.VisibilityManager;
-import jordan.sicherman.utilities.ZombieFactory;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
 import jordan.sicherman.utilities.configuration.Configuration;
 
@@ -75,9 +65,6 @@ public class MyZ extends JavaPlugin {
 	public static MyZ instance;
 	public static MyZAPI myzapi;
 	public static Configuration configuration;
-	public static SQLManager sql;
-	public static GhostFactory ghostFactory;
-	public static ZombieFactory zombieFactory;
 
 	private static Enchantment pseudoEnchant = new PseudoEnchant(69);
 
@@ -105,14 +92,6 @@ public class MyZ extends JavaPlugin {
 
 	// TODO See todo notes at Death, Utilities
 
-	public static boolean isPremium() {
-		return Premium.isPremium;
-	}
-
-	private static boolean isPatched() {
-		return Premium.isPatched;
-	}
-
 	@Override
 	public void onEnable() {
 		getDataFolder().mkdir();
@@ -126,16 +105,13 @@ public class MyZ extends JavaPlugin {
 
 		new EngineerManager();
 		new ThirstManager();
-		new VisibilityManager();
 		new AchievementManager().reload();
-		new ReviveManager();
 		new DataManager();
 		new StartingKitManager();
-		new TemperatureManager();
 		myzapi = new MyZAPI();
 		MyZRank.load();
 
-		if ((!isPremium() || isPatched()) && ConfigEntries.UPDATE.<Boolean> getValue()) {
+		if (ConfigEntries.UPDATE.<Boolean> getValue()) {
 			new Updater(this, 55557, getFile(), UpdateType.DEFAULT, false);
 		}
 
@@ -153,12 +129,8 @@ public class MyZ extends JavaPlugin {
 		}
 
 		registerPseudoEnchantment();
-		registerSQL();
 
 		EngineerManager.getInstance().reload();
-		ghostFactory = new GhostFactory();
-		ghostFactory.populate(getServer().getOnlinePlayers());
-		zombieFactory = new ZombieFactory();
 
 		CompatibilityManager.registerEntities();
 
@@ -166,13 +138,10 @@ public class MyZ extends JavaPlugin {
 
 		PluginManager pm = getServer().getPluginManager();
 
-		listeners.addAll(Arrays.asList(new Join(), new Quit(), new Extras(), new Visibility(), new Chat(), new Death(), new Revive(),
-				new SpectatorMode(), new Grappler(), new GetAchievement(), new Healer(), new TakeDamage()));
+		listeners.addAll(Arrays.asList(new Join(), new Quit(), new Extras(), new Chat(), new Death(), new SpectatorMode(), new Grappler(),
+				new GetAchievement(), new TakeDamage()));
 		if (ConfigEntries.USE_ENHANCED_ANVILS.<Boolean> getValue()) {
 			listeners.add(new GearModifications());
-		}
-		if (getServer().getPluginManager().isPluginEnabled("CrackShot")) {
-			listeners.add(new CrackShot());
 		}
 
 		for (Listener listener : listeners) {
@@ -205,11 +174,6 @@ public class MyZ extends JavaPlugin {
 
 		listeners.clear();
 
-		if (ghostFactory != null) {
-			ghostFactory.clearMembers();
-			ghostFactory.close();
-		}
-
 		for (String id : ConfigEntries.WORLDS.<List<String>> getValue()) {
 			World world = Bukkit.getWorld(id);
 
@@ -225,17 +189,6 @@ public class MyZ extends JavaPlugin {
 
 	public static void log(String message) {
 		Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[MyZ 4] " + ChatColor.RESET + message);
-	}
-
-	public void registerSQL() {
-		if (!isPremium()) {
-			sql = new SQLManager();
-			return;
-		}
-
-		sql = new SQLManager(ConfigEntries.SQL_HOST.<String> getValue(), ConfigEntries.SQL_PORT.<Integer> getValue(),
-				ConfigEntries.SQL_DATABASE.<String> getValue(), ConfigEntries.SQL_USERNAME.<String> getValue(),
-				ConfigEntries.SQL_PASSWORD.<String> getValue());
 	}
 
 	private static boolean registerPseudoEnchantment() {
@@ -261,10 +214,6 @@ public class MyZ extends JavaPlugin {
 	private static final Random random = new Random();
 
 	public static void giveMyZTip(final CommandSender sender) {
-		if (isPremium()) { return; }
-
-		log(LocaleMessage.NOT_PREMIUM.toString());
-
 		instance.getServer().getScheduler().runTaskLaterAsynchronously(instance, new Runnable() {
 			@Override
 			public void run() {

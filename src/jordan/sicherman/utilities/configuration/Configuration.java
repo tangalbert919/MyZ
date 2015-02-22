@@ -17,8 +17,8 @@ public class Configuration {
 	}
 
 	public static enum CFiles implements FileMember {
-		CONFIG("config.yml"), MOBS("mob_settings.yml"), EXTRAS("settings.yml"), SPAWNLOCATIONS("spawns.yml"), CHESTS("chests.yml"), MYSQL(
-				"SQL.yml"), ENGINEER("engineering.yml"), ACHIEVEMENTS("achievements.yml"), ADDONS("addons.yml"), RANKS("ranks.yml");
+		CONFIG("config.yml"), MOBS("mob_settings.yml"), EXTRAS("settings.yml"), SPAWNLOCATIONS("spawns.yml"), CHESTS("chests.yml"), ENGINEER(
+				"engineering.yml"), ACHIEVEMENTS("achievements.yml"), ADDONS("addons.yml"), RANKS("ranks.yml");
 
 		private final String fileID;
 		private FileConfiguration file;

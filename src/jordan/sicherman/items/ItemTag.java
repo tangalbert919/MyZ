@@ -4,11 +4,9 @@
 package jordan.sicherman.items;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jordan.sicherman.MyZ;
 import jordan.sicherman.locales.LocaleMessage;
 
 import org.bukkit.ChatColor;
@@ -22,26 +20,15 @@ import org.bukkit.inventory.ItemStack;
  */
 public enum ItemTag {
 	MURKY_WATER(Material.POTION, new TagMeta(0, LocaleMessage.MURKY_WATER, null, null), TagDefinition.TITLE), SALTY_WATER(Material.POTION,
-			new TagMeta(0, LocaleMessage.SALT_WATER, null, null), TagDefinition.TITLE), BANDAGE(Material.PAPER, new TagMeta(0,
-			LocaleMessage.BANDAGE_DISPLAY, LocaleMessage.BANDAGE_LORE, null), TagDefinition.TITLE), WAND(Material.BLAZE_ROD, new TagMeta(0,
-			ChatColor.BLUE + "MyZ Wand", ChatColor.GOLD + "Drop to stop managing", null), TagDefinition.TITLE, TagDefinition.LORE), RADIO(
-			Material.EYE_OF_ENDER, new TagMeta(0, LocaleMessage.RADIO_DISPLAY, LocaleMessage.RADIO_LORE, null), TagDefinition.TITLE), STARTER_CHESTPLATE(
+			new TagMeta(0, LocaleMessage.SALT_WATER, null, null), TagDefinition.TITLE), WAND(Material.BLAZE_ROD, new TagMeta(0,
+			ChatColor.BLUE + "MyZ Wand", ChatColor.GOLD + "Drop to stop managing", null), TagDefinition.TITLE, TagDefinition.LORE), STARTER_CHESTPLATE(
 			Material.LEATHER_CHESTPLATE, new TagMeta(0, LocaleMessage.STARTER_TUNIC_DISPLAY, LocaleMessage.STARTER_TUNIC_LORE, null),
 			TagDefinition.TITLE), STARTER_SWORD(Material.WOOD_SWORD, new TagMeta(0, LocaleMessage.STARTER_SWORD_DISPLAY,
-			LocaleMessage.STARTER_SWORD_LORE, null), TagDefinition.TITLE), OINTMENT(Material.INK_SACK, new TagMeta(1,
-			LocaleMessage.OINTMENT_DISPLAY, LocaleMessage.OINTMENT_LORE, getMapFor(new Object[][] { { MyZ.getPseudoEnchantment(), 9 } })),
-			TagDefinition.DURABILITY, TagDefinition.TITLE, TagDefinition.LORE, TagDefinition.ENCHANTS), ANTISEPTIC(Material.INK_SACK,
-			new TagMeta(10, LocaleMessage.ANTISEPTIC_DISPLAY, LocaleMessage.ANTISEPTIC_LORE, getMapFor(new Object[][] { {
-					MyZ.getPseudoEnchantment(), 9 } })), TagDefinition.DURABILITY, TagDefinition.TITLE, TagDefinition.LORE,
-			TagDefinition.ENCHANTS), SCISSORS(Material.SHEARS, new TagMeta(0, LocaleMessage.SCISSORS_DISPLAY, LocaleMessage.SCISSORS_LORE,
-			null), TagDefinition.TITLE, TagDefinition.LORE), CHAIN(Material.IRON_FENCE, new TagMeta(0, LocaleMessage.CHAIN, null, null),
-			TagDefinition.TITLE), GRAPPLE(Material.FISHING_ROD, new TagMeta(0, LocaleMessage.GRAPPLE_DISPLAY, LocaleMessage.GRAPPLE_LORE,
-			null), TagDefinition.TITLE), MEDICINE(Material.INK_SACK, new TagMeta(11, LocaleMessage.MEDICINE_DISPLAY,
-			LocaleMessage.MEDICINE_LORE, getMapFor(new Object[][] { { MyZ.getPseudoEnchantment(), 9 } })), TagDefinition.DURABILITY,
-			TagDefinition.TITLE, TagDefinition.LORE, TagDefinition.ENCHANTS), COLD_WATER(Material.POTION, new TagMeta(0,
-			LocaleMessage.COLD_WATER, null, null), TagDefinition.TITLE), WARM_WATER(Material.POTION, new TagMeta(0,
-			LocaleMessage.WARM_WATER, null, null), TagDefinition.TITLE), THERMOMETER(Material.COMPASS, new TagMeta(0,
-			LocaleMessage.THERMOMETER_DISPLAY, LocaleMessage.THERMOMETER_LORE, null), TagDefinition.TITLE);
+			LocaleMessage.STARTER_SWORD_LORE, null), TagDefinition.TITLE), CHAIN(Material.IRON_FENCE, new TagMeta(0, LocaleMessage.CHAIN,
+			null, null), TagDefinition.TITLE), GRAPPLE(Material.FISHING_ROD, new TagMeta(0, LocaleMessage.GRAPPLE_DISPLAY,
+			LocaleMessage.GRAPPLE_LORE, null), TagDefinition.TITLE), COLD_WATER(Material.POTION, new TagMeta(0, LocaleMessage.COLD_WATER,
+			null, null), TagDefinition.TITLE), WARM_WATER(Material.POTION, new TagMeta(0, LocaleMessage.WARM_WATER, null, null),
+			TagDefinition.TITLE);
 
 	private static enum TagDefinition {
 		DURABILITY, TITLE, LORE, ENCHANTS;
@@ -154,16 +141,6 @@ public enum ItemTag {
 		public short getData() {
 			return data;
 		}
-	}
-
-	private static Map<Enchantment, Integer> getMapFor(Object[][] enchantments) {
-		Map<Enchantment, Integer> map = new HashMap<Enchantment, Integer>();
-
-		for (Object[] mapping : enchantments) {
-			map.put((Enchantment) mapping[0], (Integer) mapping[1]);
-		}
-
-		return map;
 	}
 
 	public static ItemTag fromString(String string) {

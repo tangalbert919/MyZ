@@ -24,7 +24,6 @@ permissions:
       MyZ.manager.config: true
       MyZ.manager.engineer: true
       MyZ.manager.chests: true
-      MyZ.manager.chat: true
       MyZ.manager.spawn_kit: true
   MyZ.manager.spawns:
     description: Manage spawnpoints.
@@ -37,9 +36,6 @@ permissions:
     default: false
   MyZ.manager.chests:
     description: Manage chests.
-    default: false
-  MyZ.manager.chat:
-    description: Manage chat elements.
     default: false
   MyZ.manager.spawn_kit:
     description: Manage MyZ spawn kits.

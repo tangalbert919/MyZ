@@ -194,14 +194,11 @@ public class CustomEntityZombie extends EntityZombie implements SmartEntity {
 
 	@Override
 	protected void getRareDrop(int i) {
-		switch (random.nextInt(3)) {
+		switch (random.nextInt(2)) {
 		case 0:
-			a(CraftItemStack.asNMSCopy(ItemUtilities.getInstance().getTagItem(ItemTag.BANDAGE, 1)), 0.0F);
-			break;
-		case 1:
 			a(CraftItemStack.asNMSCopy(ItemUtilities.getInstance().getTagItem(ItemTag.MURKY_WATER, 1)), 0.0F);
 			break;
-		case 2:
+		case 1:
 			a(CraftItemStack.asNMSCopy(ItemUtilities.getInstance().getTagItem(ItemTag.CHAIN, 1)), 0.0F);
 			break;
 		}

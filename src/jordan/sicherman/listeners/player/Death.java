@@ -3,14 +3,9 @@
  */
 package jordan.sicherman.listeners.player;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import jordan.sicherman.MyZ;
-import jordan.sicherman.locales.LocaleMessage;
-import jordan.sicherman.sql.SQLManager;
 import jordan.sicherman.utilities.DataWrapper;
-import jordan.sicherman.utilities.ReviveManager;
 import jordan.sicherman.utilities.Utilities;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
 import jordan.sicherman.utilities.configuration.DeathCause;
@@ -22,19 +17,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author Jordan
  * 
  */
 public class Death implements Listener {
-
-	private static final List<String> overriding = new ArrayList<String>();
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	private void onDeath(PlayerDeathEvent e) {
@@ -53,125 +42,16 @@ public class Death implements Listener {
 
 		treatDeathMessage(player);
 
-		if (overriding.contains(SQLManager.primaryKeyFor(player))) {
-			overriding.remove(SQLManager.primaryKeyFor(player));
-			return;
-		}
-
-		if (MyZ.zombieFactory.isZombie(player) || player.getLastDamageCause().getCause() == DamageCause.VOID) {
-			realDeath(player, false);
-			return;
-		}
-
-		if (!ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue() && !ConfigEntries.BECOME_GHOST.<Boolean> getValue() || !MyZ.isPremium()) {
-			realDeath(player, false);
-			return;
-		}
-
-		player.setHealth(player.getMaxHealth());
-		for (PotionEffect effect : player.getActivePotionEffects()) {
-			player.removePotionEffect(effect.getType());
-		}
-
-		if (!MyZ.isPremium()) { return; }
-
-		final long ghostTime = ConfigEntries.UNDEAD_TIME.<Integer> getValue() * 20L;
-		long actualTime = ghostTime;
-
-		player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, (int) ghostTime, 2));
-
-		boolean wasZombie = false;
-
-		if (ConfigEntries.BECOME_ZOMBIE.<Boolean> getValue()
-				&& (ConfigEntries.ALWAYS_ZOMBIE.<Boolean> getValue() || DataWrapper.<Boolean> get(player, UserEntries.POISONED))) {
-			if (ConfigEntries.BECOME_GHOST.<Boolean> getValue()) {
-				actualTime /= 2L;
-			}
-			MyZ.zombieFactory.setZombie(player, true);
-			wasZombie = true;
-			player.sendMessage(LocaleMessage.BECAME_ZOMBIE.filter(actualTime / 20L).toString(player));
-			player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, (int) actualTime, 2));
-			DataWrapper.set(player, UserEntries.ZOMBIE_TIMES, DataWrapper.<Integer> get(player, UserEntries.ZOMBIE_TIMES) + 1);
-		}
-
-		final long ghostFor = actualTime;
-		final boolean zombified = wasZombie;
-
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				if (player != null && player.isOnline()) {
-					if (MyZ.zombieFactory.isZombie(player)) {
-						MyZ.zombieFactory.setZombie(player, false);
-					} else {
-						if (zombified) { return; }
-					}
-
-					if (ReviveManager.getInstance().isVulnerable(player)) {
-						realDeath(player, false);
-						return;
-					}
-
-					if (!ConfigEntries.BECOME_GHOST.<Boolean> getValue()) {
-						realDeath(player, false);
-						return;
-					}
-
-					player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, (int) ghostFor, 15));
-					MyZ.ghostFactory.setGhost(player, true);
-					player.sendMessage(LocaleMessage.BECAME_GHOST.filter(ghostFor / 20L).toString(player));
-					DataWrapper.set(player, UserEntries.GHOST_TIMES, DataWrapper.<Integer> get(player, UserEntries.GHOST_TIMES) + 1);
-
-					new BukkitRunnable() {
-						@Override
-						public void run() {
-							if (player != null && player.isOnline()) {
-								if (MyZ.ghostFactory.isGhost(player)) {
-									realDeath(player, false);
-								}
-							}
-						}
-
-						@Override
-						public void cancel() {
-							if (player != null && player.isOnline()) {
-								player.removePotionEffect(PotionEffectType.WITHER);
-								if (MyZ.ghostFactory.isGhost(player)) {
-									ReviveManager.getInstance().reportException(player);
-									realDeath(player, false);
-								}
-							}
-						}
-					}.runTaskLater(MyZ.instance, ghostFor);
-				}
-			}
-
-			@Override
-			public void cancel() {
-				MyZ.zombieFactory.setZombie(player, false);
-				MyZ.ghostFactory.setGhost(player, false);
-				player.removePotionEffect(PotionEffectType.HUNGER);
-				player.removePotionEffect(PotionEffectType.WITHER);
-			}
-		}.runTaskLater(MyZ.instance, actualTime == ghostTime ? wasZombie ? actualTime : 0L : actualTime);
+		realDeath(player, false);
 	}
 
 	public static void realDeath(Player playerFor, boolean onLogout) {
-		MyZ.zombieFactory.setZombie(playerFor, false);
-		MyZ.ghostFactory.setGhost(playerFor, false);
-
-		ReviveManager.getInstance().setVulnerable(playerFor, false);
 		DataWrapper.set(playerFor, UserEntries.DEATHS, DataWrapper.<Integer> get(playerFor, UserEntries.DEATHS) + 1);
 
 		Utilities.setBleeding(playerFor, false, true);
 		Utilities.setPoisoned(playerFor, false, true);
 
-		if (!onLogout) {
-			overriding.add(SQLManager.primaryKeyFor(playerFor));
-			if (playerFor.getHealth() > 0) {
-				playerFor.setHealth(0);
-			}
-		} else {
+		if (onLogout) {
 			Utilities.respawn(playerFor, true);
 		}
 
@@ -181,13 +61,8 @@ public class Death implements Listener {
 	private static void treatDeathMessage(Player player) {
 		if (!ConfigEntries.DEATH_MESSAGES.<Boolean> getValue()) { return; }
 
-		List<Player> to = Utilities.getPlayersInRange(player.getLocation(), ConfigEntries.CHAT_RADIUS.<Integer> getValue());
+		List<Player> to = player.getWorld().getPlayers();
 		to.remove(player);
-
-		if (!ReviveManager.getInstance().isVulnerable(player) && overriding.contains(SQLManager.primaryKeyFor(player))) {
-			DeathCause.GHOSTLY.compileAndSendAsJSON(player, to);
-			return;
-		}
 
 		switch (player.getLastDamageCause().getCause()) {
 		case BLOCK_EXPLOSION:

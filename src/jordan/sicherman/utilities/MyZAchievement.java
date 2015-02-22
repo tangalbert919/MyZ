@@ -18,8 +18,7 @@ import org.bukkit.configuration.ConfigurationSection;
 public class MyZAchievement {
 
 	private final String description, name, key;
-	private final int zKills, pKills, gKills, plKills, sRevives, oRevives, sHeals, oHeals, iHeals, drinks, deaths, friends, zombies,
-			ghosts;
+	private final int zKills, pKills, gKills, plKills, drinks, deaths, friends;
 
 	public MyZAchievement(ConfigurationSection section) {
 		key = section.getCurrentPath();
@@ -29,24 +28,15 @@ public class MyZAchievement {
 		pKills = section.getInt("requirements.kills.pigman");
 		plKills = section.getInt("requirements.kills.player");
 		gKills = section.getInt("requirements.kills.giant");
-		sHeals = section.getInt("requirements.heals.self.bleeding");
-		iHeals = section.getInt("requirements.heals.self.infection");
-		oHeals = section.getInt("requirements.heals.other");
 		drinks = section.getInt("requirements.drinks");
-		oRevives = section.getInt("requirements.revive.other");
-		sRevives = section.getInt("requirements.revive.self");
 		deaths = section.getInt("requirements.deaths");
 		friends = section.getInt("requirements.friends");
-		ghosts = section.getInt("requirements.deathstate.ghost");
-		zombies = section.getInt("requirements.deathstate.zombie");
 	}
 
 	@Override
 	public String toString() {
 		return getName() + " (" + getDescription() + "): [zombie: " + zKills + " pigmen: " + pKills + " giant: " + gKills + " player: "
-				+ plKills + " revives: " + oRevives + " revivals: " + sRevives + " heals: " + oHeals + " healed: " + sHeals
-				+ " uninfects: " + sHeals + " drinks: " + drinks + " deaths: " + deaths + " friends: " + friends + " zombie_encounters: "
-				+ zombies + " ghost encounters: " + ghosts + "]";
+				+ plKills + " drinks: " + drinks + " deaths: " + deaths + " friends: " + friends + "]";
 	}
 
 	public String getName() {
@@ -68,16 +58,9 @@ public class MyZAchievement {
 		if (DataWrapper.<Integer> get(player, UserEntries.PIGMAN_KILLS) < pKills) { return false; }
 		if (DataWrapper.<Integer> get(player, UserEntries.PLAYER_KILLS) < plKills) { return false; }
 		if (DataWrapper.<Integer> get(player, UserEntries.GIANT_KILLS) < gKills) { return false; }
-		if (DataWrapper.<Integer> get(player, UserEntries.REVIVES) < oRevives) { return false; }
-		if (DataWrapper.<Integer> get(player, UserEntries.REVIVALS) < sRevives) { return false; }
-		if (DataWrapper.<Integer> get(player, UserEntries.OTHER_HEALS) < oHeals) { return false; }
-		if (DataWrapper.<Integer> get(player, UserEntries.UNINFECTS) < iHeals) { return false; }
-		if (DataWrapper.<Integer> get(player, UserEntries.SELF_HEALS) < sHeals) { return false; }
 		if (DataWrapper.<Integer> get(player, UserEntries.DRINKS) < drinks) { return false; }
 		if (DataWrapper.<Integer> get(player, UserEntries.DEATHS) < deaths) { return false; }
 		if (DataWrapper.<Integer> get(player, UserEntries.FRIENDS) < friends) { return false; }
-		if (DataWrapper.<Integer> get(player, UserEntries.ZOMBIE_TIMES) < zombies) { return false; }
-		if (DataWrapper.<Integer> get(player, UserEntries.GHOST_TIMES) < ghosts) { return false; }
 		return true;
 	}
 

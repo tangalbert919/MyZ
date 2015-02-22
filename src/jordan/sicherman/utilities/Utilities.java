@@ -9,17 +9,13 @@ import java.util.Random;
 
 import jordan.sicherman.MyZ;
 import jordan.sicherman.api.PlayerJoinMyZEvent;
-import jordan.sicherman.listeners.player.Death;
-import jordan.sicherman.listeners.player.SpectatorMode;
 import jordan.sicherman.locales.LocaleMessage;
 import jordan.sicherman.particles.ParticleEffect;
 import jordan.sicherman.player.User;
 import jordan.sicherman.utilities.StartingKitManager.EquipmentPiece;
-import jordan.sicherman.utilities.TemperatureManager.TemperatureEffect;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
 import jordan.sicherman.utilities.configuration.UserEntries;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
@@ -59,9 +55,7 @@ public class Utilities {
 	}
 
 	public static void doLogin(Player player) {
-		MyZ.sql.add(player);
 		User.forPlayer(player);
-		MyZ.ghostFactory.addPlayer(player, false);
 		MyZ.instance.getServer().getPluginManager().callEvent(new PlayerJoinMyZEvent(player));
 		if (!player.isOp()) {
 			MyZ.giveMyZTip(player);
@@ -73,13 +67,6 @@ public class Utilities {
 	}
 
 	public static void doLogout(Player player) {
-		if (SpectatorMode.isSpectator(player)) {
-			Death.realDeath(player, true);
-		}
-
-		TemperatureManager.getInstance().doTemperatureEffects(player, TemperatureEffect.RELEASE_THERMOMETER);
-
-		MyZ.ghostFactory.removePlayer(player);
 		User.freePlayer(player);
 	}
 
@@ -92,7 +79,6 @@ public class Utilities {
 				playerFor.removePotionEffect(PotionEffectType.CONFUSION);
 				if (!force) {
 					playerFor.sendMessage(LocaleMessage.INFECTION_ENDED.toString(playerFor));
-					DataWrapper.set(playerFor, UserEntries.UNINFECTS, DataWrapper.<Integer> get(playerFor, UserEntries.UNINFECTS) + 1);
 				}
 			}
 			return;
@@ -151,7 +137,6 @@ public class Utilities {
 				playerFor.removePotionEffect(PotionEffectType.BLINDNESS);
 				if (!force) {
 					playerFor.sendMessage(LocaleMessage.BLEEDING_ENDED.toString(playerFor));
-					DataWrapper.set(playerFor, UserEntries.SELF_HEALS, DataWrapper.<Integer> get(playerFor, UserEntries.SELF_HEALS) + 1);
 				}
 			}
 			return;
@@ -264,12 +249,6 @@ public class Utilities {
 		}, 20L);
 	}
 
-	public static String getPrefixFor(Player from) {
-		String custom = DataWrapper.<String> get(from, UserEntries.PREFIX);
-		if (custom == null || custom.isEmpty()) { return ChatColor.translateAlternateColorCodes('&', getRank(from).getChatPrefix()); }
-		return ChatColor.translateAlternateColorCodes('&', custom);
-	}
-
 	public static List<Location> getSpawns() {
 		List<String> locations = ConfigEntries.SPAWN_POINTS.<List<String>> getValue();
 		List<Location> returned = new ArrayList<Location>();
@@ -303,8 +282,6 @@ public class Utilities {
 			if (home != null) {
 				player.teleport(home);
 			}
-
-			TemperatureManager.getInstance().doTemperatureEffects(player, TemperatureEffect.RELEASE_THERMOMETER);
 		}
 
 		DataWrapper.set(player, UserEntries.PLAYING, false);
@@ -312,9 +289,6 @@ public class Utilities {
 		if (!onLogout) {
 			setBleeding(player, false, true);
 			setPoisoned(player, false, true);
-
-			MyZ.zombieFactory.setZombie(player, false);
-			MyZ.ghostFactory.setGhost(player, false);
 		}
 
 		for (PotionEffect effect : player.getActivePotionEffects()) {
@@ -360,9 +334,6 @@ public class Utilities {
 
 		setBleeding(player, false, true);
 		setPoisoned(player, false, true);
-
-		MyZ.zombieFactory.setZombie(player, false);
-		MyZ.ghostFactory.setGhost(player, false);
 
 		player.setNoDamageTicks(0);
 		player.setSaturation(0.3f);

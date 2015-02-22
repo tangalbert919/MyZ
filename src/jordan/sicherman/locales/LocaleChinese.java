@@ -11,20 +11,8 @@ public class LocaleChinese {
 
 	public static String getMessage(LocaleMessage message) {
 		switch (message) {
-		case LOCAL_CHAT:
-			return "%s: %s";
-		case DID_POKE:
-			return "&8ä½ æ­£åœ¨è”ç³» $0.";
 		case NO_USER:
 			return "&4æ‰¾ä¸åˆ°æŒ‡å®šç”¨æˆ·.";
-		case PRIVATE_CHAT_FROM:
-			return "&8æ¥è‡ª&7 %s &8çš„æ¶ˆæ¯: %s";
-		case POKED:
-			return "&8$0 æ­£åœ¨è”ç³»ä½ .";
-		case PRIVATE_CHAT_TO:
-			return "&8å‘é€ç»™ %s: %s";
-		case RADIO_CHAT:
-			return "%s: &a1.$0 Hz - %s";
 		case CANNOT_COMMAND:
 			return "å½“å‰æŒ‡ä»¤æ— æ³•åœ¨æŽ§åˆ¶å°æ‰§è¡Œ.";
 		case MANAGING_OVER:
@@ -61,10 +49,6 @@ public class LocaleChinese {
 			return "&eä½ åŠ å…¥äº†å½“å‰ä¸–ç•Œ.";
 		case DEATH_AS_GHOST:
 			return "&4$0 é¢ä¸´å®¡åˆ¤.";
-		case BECAME_GHOST:
-			return "&eä½ æˆä¸ºäº†ä¸€ä¸ª &få¹½çµ&e! å¦‚æžœä½ ä¸åœ¨$0ç§’å†…å¤æ´»,ä½ å°†ä¼šæ­»äº¡.";
-		case BECAME_ZOMBIE:
-			return "&eä½ æˆä¸ºäº†&2åƒµå°¸&e! è¯·é¢å¯¹ $0 ç§’çš„å®¡åˆ¤,å¹¶ä¸”åšæŒä¸‹æ¥å§.";
 		case DEATH_SUFFOCATION:
 			return "&4$0 è®¤ä¸ºä»–èº²åœ¨ {in a wall} é‡Œå°±å¯ä»¥èº²é¿åƒµå°¸.";
 		case DEATH_CACTUS:
@@ -147,20 +131,6 @@ public class LocaleChinese {
 			return "&eä½ èŽ·å¾—æˆå°± &6$0 &8($1)&r.";
 		case HEADSHOT:
 			return "&eçˆ†å¤´ä¸€å‡»! &4ä¼¤å®³å¢žåŠ +$0 ";
-		case HEAL_CHECK:
-			return "&eæ²»ç–—: $0\n&eHealth: &6$1";
-		case HEALED:
-			return "&eä½ è¢«çŽ©å®¶ $0 æ²»ç–—äº†.";
-		case HEALED_PLAYER:
-			return "&eä½ æ²»ç–—äº† $0.";
-		case HEAL_COOLING_DOWN:
-			return "&4ä½ éœ€è¦ç­‰å¾… $0 ç§’.";
-		case HEAL_NOT_COMPLETE:
-			return "&4ä½ æ²¡èƒ½è¢«åŠæ—¶æ²»ç–—.";
-		case HEAL_NOT_COMPLETED:
-			return "&4ä½ æ²¡èƒ½åŠæ—¶æ²»ç–—,éœ€è¦é‡æ–°å¼€å§‹.";
-		case HEALING_ALREADY:
-			return "&4ä½ çŽ°åœ¨ä¸èƒ½æ²»ç–—é‚£ä¸ªçŽ©å®¶.";
 		case INFECTED:
 			return "&4ä½ å·²ç»è¢«æ„ŸæŸ“äº†.";
 		case UNABLE_TO_ACCESS_INVENTORY:
@@ -177,117 +147,19 @@ public class LocaleChinese {
 			return "çˆªé’©";
 		case GRAPPLE_LORE:
 			return "&eå³é”®ä½¿ç”¨";
-		case ANTISEPTIC_DISPLAY:
-			return "&aæŠ—ç”Ÿç´ ";
-		case ANTISEPTIC_LORE:
-			return "æ²»ç–—æ„ŸæŸ“.~~&6æŠ—æ€§ X";
 		case BANDAGE_DISPLAY:
 			return "ç»·å¸¦";
-		case MEDICINE_DISPLAY:
-			return "&eè¯";
-		case MEDICINE_LORE:
-			return "é«˜çº§çš„è¯å“.~~&6æ²»ç–— II~&6ä¼¤å®³å¸æ”¶ II~&6æŠ—æ€§ X";
-		case OINTMENT_DISPLAY:
-			return "&4è¯è†";
-		case OINTMENT_LORE:
-			return "åŸºç¡€åŒ»å­¦.~~&6æ²»æ„ˆ X~ä¼¤å®³å¸æ”¶ I";
-		case SCISSORS_DISPLAY:
-			return "å‰ªåˆ€";
-		case SCISSORS_LORE:
-			return "ç”¨æ¥å‰ªåˆ‡ç»·å¸¦.~~&eå¯¹ç€ä¼™ä¼´å·¦é”®~&eå°†ç»·å¸¦å‰ªä¸‹æ¥";
 		case MURKY_WATER:
 			return "æ±¡æ°´ç“¶";
-		case RADIO_DISPLAY:
-			return "å¹¿æ’­";
-		case RADIO_LORE:
-			return "Â§6æ‹¿ç€å®ƒå¯ä»¥èŠå¤©";
 		case SALT_WATER:
 			return "ç“¶è£…ç›æ°´";
-		case THERMOMETER_DISPLAY:
-			return "æ¸©åº¦è®¡";
-		case THERMOMETER_LORE:
-			return "&eå³é”®æŸ¥çœ‹æ¸©åº¦.";
-		case THERMOMETER_HEAT1:
-			return "&4ä¸­æš‘ I - $0 æ‘„æ°åº¦";
-		case THERMOMETER_HEAT2:
-			return "&4ä¸­æš‘ II - $0 æ‘„æ°åº¦";
-		case THERMOMETER_HEAT3:
-			return "&4ä¸­æš‘ III - $0 æ‘„æ°åº¦";
-		case THERMOMETER_HYPO1:
-			return "&bä½Žæ¸© I - $0 æ‘„æ°åº¦";
-		case THERMOMETER_HYPO2:
-			return "&bä½Žæ¸© II - $0 æ‘„æ°åº¦";
-		case THERMOMETER_HYPO3:
-			return "&bä½Žæ¸© III - $0 æ‘„æ°åº¦";
-		case THERMOMETER_NORMAL:
-			return "&aæ­£å¸¸ - $0 æ‘„æ°åº¦";
-		case THERMOMETER_SHIVERING:
-			return "&bå¯’å†· - $0 æ‘„æ°åº¦";
-		case THERMOMETER_SWEATING:
-			return "&4ç‚Žçƒ­ - $0 æ‘„æ°åº¦";
 		case WARM_WATER:
 			return "ç“¶è£…æ¸©æ°´";
-		case BANDAGE_LORE:
-			return "æ­¢è¡€.~~&eå³é”®ä½¿ç”¨~&eå·¦é”®å¯¹ä¼™ä¼´ä½¿ç”¨";
-		case REVIVER:
-			return "&eYou revived $0.";
-		case REVIVED_CANCELLED:
-			return "&4$0 was unable to revive you.";
-		case REVIVED_STARTED:
-			return "&e$0Has begun to revive you. æŠ“ç´§äº†.";
-		case REVIVER_CANCELLED:
-			return "&4You slipped and failed to revive $0.";
-		case REVIVER_STARTED:
-			return "&eYou have begun reviving $0. æŠ“ç´§äº†.";
-		case REVIVED:
-			return "&aYou were revived by $0. åœ¨æŽ¥ä¸‹æ¥çš„&eäº”åˆ†é’Ÿå†…&aä½ å°†ä¼šæ„Ÿåˆ°è™šå¼±.";
-		case SQL_CONNECTING:
-			return "æ­£åœ¨è¿žæŽ¥åˆ°æ•°æ®åº“...";
-		case SQL_NO_CONNECT:
-			return "è¿žæŽ¥å¤±è´¥.";
-		case SQL_CONNECT:
-			return "è¿žæŽ¥æˆ.";
-		case SQL_NO_DISCONNECT:
-			return "ä¸ŽMySqlæ–­å¼€è¿žæŽ¥å¤±è´¥";
-		case SQL_DISCONNECT:
-			return "ä¸ŽMySqlæ–­å¼€è¿žæŽ¥.";
-		case SQL_FAIL:
-			return "æ— æ³•æ‰§è¡ŒMySqlå‘½ä»¤";
-		case NO_SQL:
-			return "MySqlä¼šè¯æœªå¯ç”¨";
-		case SQL_MODIFICATION:
-			return "å½“è¯•å›¾ä¿®æ”¹MySqlçš„æ—¶å€™æ–­å¼€è¿žæŽ¥.";
 		case NO:
 			return "&4å¦";
 		case YES:
 			return "&aæ˜¯";
-		case ADD_ITEM_INSTRUCTIONS:
-			break;
-		case ADD_ITEM_PARSE_ERROR:
-			break;
-		case CHAT_PREFIX_MANAGER_0:
-			break;
-		case CHAT_PREFIX_MANAGER_1:
-			break;
-		case CHAT_PREFIX_MANAGER_2:
-			break;
-		case CHEST_MANAGER:
-			break;
-		case CHEST_MANAGER_COMPLETE:
-			break;
-		case CHEST_MANAGER_REMOVE:
-			break;
-		case CHEST_MANAGER_REMOVED:
-			break;
-		case CHEST_SET:
-			break;
-		case CREATE_CHEST_INSTRUCTIONS:
-			break;
-		case MANAGING_SPAWN_KIT:
-			break;
-		case NOTHING:
-			break;
-		case MANAGING_SPAWN_KIT_CREATED:
+		default:
 			break;
 		}
 		return message.getKey();

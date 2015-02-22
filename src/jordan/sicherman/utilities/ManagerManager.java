@@ -18,8 +18,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 public class ManagerManager {
 
 	public static enum ManagerType {
-		SPAWN("spawn_manager", -1), ENGINEER("engineer_manager", -1), CHESTS("chest_manager", null), SPAWN_KIT("spawnkit_manager", null), CHAT_PREFIX(
-				"chatprefix_manager", null);
+		SPAWN("spawn_manager", -1), ENGINEER("engineer_manager", -1), CHESTS("chest_manager", null), SPAWN_KIT("spawnkit_manager", null);
 
 		private final String id;
 		private final Object startValue;
@@ -60,7 +59,7 @@ public class ManagerManager {
 				break;
 			}
 
-			if (of != ManagerType.SPAWN_KIT && of != ManagerType.CHAT_PREFIX) {
+			if (of != ManagerType.SPAWN_KIT) {
 				player.getInventory().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.WAND, 1));
 			}
 		} else {

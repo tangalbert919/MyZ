@@ -3,7 +3,6 @@
  */
 package jordan.sicherman.listeners;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -14,13 +13,9 @@ import jordan.sicherman.items.ItemUtilities;
 import jordan.sicherman.locales.LocaleMessage;
 import jordan.sicherman.nms.utilities.CompatibilityManager;
 import jordan.sicherman.utilities.ChestType;
-import jordan.sicherman.utilities.DataWrapper;
-import jordan.sicherman.utilities.TemperatureManager;
-import jordan.sicherman.utilities.TemperatureManager.TemperatureState;
 import jordan.sicherman.utilities.ThirstManager;
 import jordan.sicherman.utilities.Utilities;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
-import jordan.sicherman.utilities.configuration.UserEntries;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -47,10 +42,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -103,16 +95,6 @@ public class Extras implements Listener {
 					e.setCancelled(true);
 				}
 			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-	private void onGrenadeLand(PlayerTeleportEvent e) {
-		if (!Utilities.inWorld(e.getPlayer()) || !MyZ.isPremium()) { return; }
-
-		if (ConfigEntries.EXPLOSIVE_PEARLS.<Boolean> getValue() && e.getCause() == TeleportCause.ENDER_PEARL) {
-			e.setCancelled(true);
-			e.getTo().getWorld().createExplosion(e.getTo().getX(), e.getTo().getY(), e.getTo().getZ(), 1.0f, false, false);
 		}
 	}
 
@@ -258,51 +240,6 @@ public class Extras implements Listener {
 
 		if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) { return; }
 
-		if (e.getPlayer().getItemInHand() != null && ItemUtilities.getInstance().hasTag(e.getPlayer().getItemInHand(), ItemTag.THERMOMETER)) {
-			ItemStack item = e.getPlayer().getItemInHand();
-			ItemMeta meta = item.getItemMeta();
-			List<String> lore = new ArrayList<String>(ItemTag.THERMOMETER.getLore());
-
-			TemperatureState state = TemperatureManager.getInstance().getState(e.getPlayer());
-			double temperature = Math.round(DataWrapper.<Double> get(e.getPlayer(), UserEntries.TEMPERATURE) * 100.0) / 100.0;
-
-			switch (state) {
-			case HEATSTROKE_1:
-				lore.add(LocaleMessage.THERMOMETER_HEAT1.filter(temperature).toString());
-				break;
-			case HEATSTROKE_2:
-				lore.add(LocaleMessage.THERMOMETER_HEAT2.filter(temperature).toString());
-				break;
-			case HEATSTROKE_3:
-				lore.add(LocaleMessage.THERMOMETER_HEAT3.filter(temperature).toString());
-				break;
-			case HYPOTHERMIA_1:
-				lore.add(LocaleMessage.THERMOMETER_HYPO1.filter(temperature).toString());
-				break;
-			case HYPOTHERMIA_2:
-				lore.add(LocaleMessage.THERMOMETER_HYPO1.filter(temperature).toString());
-				break;
-			case HYPOTHERMIA_3:
-				lore.add(LocaleMessage.THERMOMETER_HYPO1.filter(temperature).toString());
-				break;
-			case NORMAL:
-				lore.add(LocaleMessage.THERMOMETER_NORMAL.filter(temperature).toString());
-				break;
-			case SHIVERING:
-				lore.add(LocaleMessage.THERMOMETER_SHIVERING.filter(temperature).toString());
-				break;
-			case SWEATING:
-				lore.add(LocaleMessage.THERMOMETER_SWEATING.filter(temperature).toString());
-				break;
-			default:
-				break;
-			}
-			meta.setLore(lore);
-			item.setItemMeta(meta);
-			e.setCancelled(true);
-			return;
-		}
-
 		if (e.getAction() == Action.RIGHT_CLICK_AIR && e.getPlayer().getItemInHand() != null) {
 			switch (e.getPlayer().getItemInHand().getType()) {
 			case WOOD_SWORD:
@@ -404,12 +341,6 @@ public class Extras implements Listener {
 			}
 			if (ItemUtilities.getInstance().hasTag(item, ItemTag.MURKY_WATER)) {
 				Utilities.setPoisoned(playerFor, true, false);
-			} else if (ItemUtilities.getInstance().hasTag(item, ItemTag.WARM_WATER)) {
-				DataWrapper.set(playerFor, UserEntries.TEMPERATURE, DataWrapper.<Double> get(playerFor, UserEntries.TEMPERATURE)
-						+ ConfigEntries.WARM_WATER_TEMPERATURE.<Double> getValue());
-			} else if (ItemUtilities.getInstance().hasTag(item, ItemTag.COLD_WATER)) {
-				DataWrapper.set(playerFor, UserEntries.TEMPERATURE, DataWrapper.<Double> get(playerFor, UserEntries.TEMPERATURE)
-						+ ConfigEntries.COLD_WATER_TEMPERATURE.<Double> getValue());
 			}
 		} else if (item.getType() == Material.POTION && item.getDurability() != (short) 0
 				&& !ItemUtilities.getInstance().hasTag(item, ItemTag.MURKY_WATER) || item.getType() == Material.MILK_BUCKET) {

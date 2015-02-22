@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jordan.sicherman.MyZ;
-import jordan.sicherman.sql.SQLManager;
 import jordan.sicherman.utilities.configuration.FileUtilities;
 import jordan.sicherman.utilities.configuration.SpecificFileMember;
 
@@ -81,12 +80,12 @@ public class User {
 	public static Map<String, User> cache = new HashMap<String, User>();
 
 	public static User forPlayer(OfflinePlayer playerFor) {
-		User u = cache.get(SQLManager.primaryKeyFor(playerFor));
+		User u = cache.get(playerFor.getUniqueId().toString());
 		if (u != null) { return u; }
 
-		User user = new User(new UserFile(FileUtilities.load(playerFor, UFiles.values())), SQLManager.primaryKeyFor(playerFor));
+		User user = new User(new UserFile(FileUtilities.load(playerFor, UFiles.values())), playerFor.getUniqueId().toString());
 
-		cache.put(SQLManager.primaryKeyFor(playerFor), user);
+		cache.put(playerFor.getUniqueId().toString(), user);
 		return user;
 	}
 
@@ -110,7 +109,7 @@ public class User {
 					FileUtilities.save(user, file);
 				}
 
-				cache.remove(SQLManager.primaryKeyFor(playerFor));
+				cache.remove(playerFor.getUniqueId().toString());
 			}
 		}, 1L);
 	}

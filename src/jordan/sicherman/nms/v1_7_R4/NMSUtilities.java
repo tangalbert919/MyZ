@@ -17,7 +17,6 @@ import jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityGuard;
 import jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityPigZombie;
 import jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityZombie;
 import jordan.sicherman.nms.v1_7_R4.mobs.SmartEntity;
-import jordan.sicherman.utilities.Utilities;
 import net.minecraft.server.v1_7_R4.Container;
 import net.minecraft.server.v1_7_R4.EntityHuman;
 import net.minecraft.server.v1_7_R4.EntityInsentient;
@@ -56,8 +55,8 @@ public class NMSUtilities {
 		String str = message.toString(false);
 		if (str.indexOf("$0") < 0 || str.indexOf("$1") < 0) { return false; }
 
-		String murdered_pre = Utilities.getPrefixFor(murdered) + murdered.getName();
-		String murderer_pre = Utilities.getPrefixFor(murderer) + murderer.getName();
+		String murdered_pre = murdered.getName();
+		String murderer_pre = murderer.getName();
 
 		Map<Locale, JSONMessage> cache = new HashMap<Locale, JSONMessage>();
 
@@ -85,7 +84,7 @@ public class NMSUtilities {
 
 		Map<Locale, JSONMessage> cache = new HashMap<Locale, JSONMessage>();
 
-		String died_pre = Utilities.getPrefixFor(died) + died.getName();
+		String died_pre = died.getName();
 
 		MyZ.log(message.smartFilter("\\{", "").smartFilter("\\}", "").filter(died_pre).toString());
 		message.clearSmartFilter();

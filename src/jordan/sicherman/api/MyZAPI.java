@@ -8,11 +8,8 @@ import jordan.sicherman.items.EngineerManager;
 import jordan.sicherman.items.ItemUtilities;
 import jordan.sicherman.locales.Locale;
 import jordan.sicherman.utilities.AchievementManager;
-import jordan.sicherman.utilities.ReviveManager;
 import jordan.sicherman.utilities.StartingKitManager;
-import jordan.sicherman.utilities.TemperatureManager;
 import jordan.sicherman.utilities.ThirstManager;
-import jordan.sicherman.utilities.VisibilityManager;
 
 import org.bukkit.entity.Player;
 
@@ -47,23 +44,11 @@ public class MyZAPI {
 		return ThirstManager.getInstance();
 	}
 
-	public ReviveManager getReviveInterface() {
-		return ReviveManager.getInstance();
-	}
-
-	public VisibilityManager getVisibilityInterface() {
-		return VisibilityManager.getInstance();
-	}
-
 	public AchievementManager getAchievementInterface() {
 		return AchievementManager.getInstance();
 	}
 
 	public StartingKitManager getStartingKitManager() {
 		return StartingKitManager.getInstance();
-	}
-
-	public TemperatureManager getTemperatureManager() {
-		return TemperatureManager.getInstance();
 	}
 }

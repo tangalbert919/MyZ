@@ -10,7 +10,6 @@ import java.util.Random;
 import jordan.sicherman.MyZ;
 import jordan.sicherman.items.EngineerRecipe;
 import jordan.sicherman.locales.LocaleMessage;
-import jordan.sicherman.utilities.Utilities;
 import jordan.sicherman.utilities.configuration.DeathCause;
 
 import org.bukkit.Location;
@@ -84,8 +83,7 @@ public class CompatibilityManager {
 		LocaleMessage message = messages[random.nextInt(messages.length)];
 
 		if (displayOnVariable == null) {
-			message.smartFilter("\\{", "").smartFilter("\\}", "").filter(Utilities.getPrefixFor(died) + died.getName())
-					.sendToCrowd(audience);
+			message.smartFilter("\\{", "").smartFilter("\\}", "").filter(died.getName()).sendToCrowd(audience);
 			MyZ.log(message.toString());
 			message.clearSmartFilter();
 			return true;

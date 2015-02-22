@@ -13,64 +13,14 @@ public class LocaleEnglish {
 		switch (message) {
 		case REQUIRES_PLAYER:
 			return "&4That command requires you to provide the name of a player.";
-		case NOT_PREMIUM:
-			return "&4Some features are disabled in this version of MyZ.";
-		case NO_SQL:
-			return "Not using MySQL for this session.";
-		case SQL_MODIFICATION:
-			return "Attempting to modify MySQL while disconnected.";
-		case SQL_CONNECT:
-			return "Connection successful.";
-		case SQL_NO_CONNECT:
-			return "Unable to connect";
-		case SQL_DISCONNECT:
-			return "Disconnected from MySQL.";
-		case SQL_CONNECTING:
-			return "Connecting to MySQL...";
-		case SQL_NO_DISCONNECT:
-			return "Unable to close MySQL connection";
-		case SQL_FAIL:
-			return "Unable to execute MySQL command";
 		case MURKY_WATER:
 			return "Murky Water Bottle";
 		case INFECTED:
 			return "&4You have been infected.";
-		case RADIO_DISPLAY:
-			return "Radio";
-		case RADIO_LORE:
-			return "&eHold and chat to use";
-		case RADIO_CHAT:
-			return "%s: &a1.$0 Hz - %s";
-		case PRIVATE_CHAT_TO:
-			return "&8To %s: %s";
-		case PRIVATE_CHAT_FROM:
-			return "&8From %s: %s";
 		case NO_USER:
 			return "&4Unable to find specified user.";
 		case INCOMPATIBLE:
 			return "MyZ is incompatible with this server version.";
-		case DID_POKE:
-			return "&8You poked $0.";
-		case POKED:
-			return "&8$0 poked you.";
-		case LOCAL_CHAT:
-			return "%s: %s";
-		case REVIVER:
-			return "&eYou revived $0.";
-		case REVIVED:
-			return "&aYou were revived by $0. You are vulnerable for the next &efive minutes&a.";
-		case REVIVER_STARTED:
-			return "&eYou have begun reviving $0. Hold tight.";
-		case REVIVED_STARTED:
-			return "&e$0Has begun to revive you. Hold tight.";
-		case REVIVER_CANCELLED:
-			return "&4You slipped and failed to revive $0.";
-		case REVIVED_CANCELLED:
-			return "&4$0 was unable to revive you.";
-		case BECAME_GHOST:
-			return "&eYou are a &fghost&e! If you aren't revived within $0 seconds, you will die.";
-		case BECAME_ZOMBIE:
-			return "&eYou are a &2zombie&e! Hold out for $0 seconds to face judgement.";
 		case DEATH_ARROW:
 			return "&4$0 took an {arrow} to the knee.";
 		case DEATH_CACTUS:
@@ -141,26 +91,12 @@ public class LocaleEnglish {
 			return "&eThe bleeding subsides.";
 		case INFECTION_ENDED:
 			return "&eYour fever drops as you feel the infection leave your body.";
-		case ANTISEPTIC_DISPLAY:
-			return "&aAntiseptic";
-		case ANTISEPTIC_LORE:
-			return "Treats infection.~~&6Immunity X";
-		case BANDAGE_LORE:
-			return "Stops bleeding.~~&eRight-click to use~&eLeft-click friend to use";
-		case OINTMENT_DISPLAY:
-			return "&4Ointment";
-		case OINTMENT_LORE:
-			return "Basic medicine.~~&6Heal X~Absorption I";
 		case SALT_WATER:
 			return "Bottle of Saltwater";
 		case WARM_WATER:
 			return "Warm Bottle of Water";
 		case COLD_WATER:
 			return "Cold Bottle of Water";
-		case SCISSORS_DISPLAY:
-			return "Scissors";
-		case SCISSORS_LORE:
-			return "Used to cut bandages.~~&eLeft-click friend~&eto cut bandage";
 		case ALREADY_SPAWNED:
 			return "&4You have already spawned.";
 		case BROKEN:
@@ -219,48 +155,6 @@ public class LocaleEnglish {
 			return "&4There are no recipes to view.";
 		case VIEWING_RECIPE:
 			return "&eNow viewing recipe #$0.";
-		case MEDICINE_DISPLAY:
-			return "&eMedicine";
-		case MEDICINE_LORE:
-			return "Advanced medicine.~~&6Heal II~&6Absorption II~&6Immunity X";
-		case ACHIEVEMENT_EARNED:
-			return "&eYou earned the achievement &6$0 &8($1)&r.";
-		case THERMOMETER_DISPLAY:
-			return "Thermometer";
-		case THERMOMETER_HEAT1:
-			return "&4Heatstroke I - $0 degrees";
-		case THERMOMETER_HEAT2:
-			return "&4Heatstroke II - $0 degrees";
-		case THERMOMETER_HEAT3:
-			return "&4Heatstroke III - $0 degrees";
-		case THERMOMETER_HYPO1:
-			return "&bHypothermia I - $0 degrees";
-		case THERMOMETER_HYPO2:
-			return "&bHypothermia II - $0 degrees";
-		case THERMOMETER_HYPO3:
-			return "&bHypothermia III - $0 degrees";
-		case THERMOMETER_LORE:
-			return "&eRight click to get temperature reading.";
-		case THERMOMETER_NORMAL:
-			return "&aRoom Temperature - $0 degrees";
-		case THERMOMETER_SHIVERING:
-			return "&bShivering - $0 degrees";
-		case THERMOMETER_SWEATING:
-			return "&4Sweating - $0 degrees";
-		case HEALING_ALREADY:
-			return "&4You are unable to heal that player at this time.";
-		case HEAL_NOT_COMPLETE:
-			return "&4You were not healed in time.";
-		case HEAL_NOT_COMPLETED:
-			return "&4You did not finish healing in time and must start over.";
-		case HEAL_COOLING_DOWN:
-			return "&4You must wait $0 seconds.";
-		case HEALED:
-			return "&eYou were healed by $0.";
-		case HEALED_PLAYER:
-			return "&eYou healed $0.";
-		case HEAL_CHECK:
-			return "&eBleeding: $0\n&eHealth: &6$1";
 		case NO:
 			return "&4no";
 		case YES:
@@ -277,12 +171,6 @@ public class LocaleEnglish {
 			return "&4Unable to parse format. &ePlease enter a minimum and maximum amount for this item, followed by a probability.\n&9ie. 1, 5, 50 &e(Between 1 and 5, 50% spawn chance)";
 		case CHEST_MANAGER:
 			return "&eYou are now managing chests.\n&9o&f Click a chest to assign it a lootset\n&9o&f Left click air to create a lootset\n&9o&f Right click air to remove a lootset\n&9o&f Drop wand to end";
-		case CHAT_PREFIX_MANAGER_0:
-			return "&eEnter a chat prefix (ie. [VIP]), using ampersands (&) for chat formatting.";
-		case CHAT_PREFIX_MANAGER_1:
-			return "&eEnter a rank number (0-100), or a player name to apply this prefix to.";
-		case CHAT_PREFIX_MANAGER_2:
-			return "&aThe chat prefix has been created.";
 		case MANAGING_SPAWN_KIT:
 			return "&eYou are now managing spawn kits.\n&9o&f Enter a rank number (0-100) or a player name to save your current inventory and gear contents to.";
 		case MANAGING_SPAWN_KIT_CREATED:
@@ -293,6 +181,8 @@ public class LocaleEnglish {
 			return "&eThe lootset has been removed.";
 		case CHEST_MANAGER_REMOVE:
 			return "&ePlease enter the name of the lootset you wish to remove. Options include:";
+		case ACHIEVEMENT_EARNED:
+			return "&eYou earned the achievement &6$0 &8($1)&r.";
 		}
 		return message.getKey();
 	}

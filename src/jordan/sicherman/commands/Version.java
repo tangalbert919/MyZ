@@ -23,7 +23,7 @@ public class Version extends SimpleCommandExecutor {
 		}
 
 		sender.sendMessage(ChatColor.GRAY + "This server is running " + ChatColor.GOLD + "MyZ "
-				+ MyZ.instance.getDescription().getVersion() + (MyZ.isPremium() ? " Premium" : ""));
+				+ MyZ.instance.getDescription().getVersion());
 	}
 
 	@Override

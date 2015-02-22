@@ -13,64 +13,14 @@ public class LocalePirate {
 		switch (message) {
 		case REQUIRES_PLAYER:
 			return "&4That command requires you 'ta provide the name of a crewmate.";
-		case NOT_PREMIUM:
-			return "&4Some features are disabled in this version of MyZ.";
-		case NO_SQL:
-			return "MySQL has walked te' plank.";
-		case SQL_MODIFICATION:
-			return "Yar MySQL cannot be changed when 'tis off.";
-		case SQL_CONNECT:
-			return "Yar connected.";
-		case SQL_NO_CONNECT:
-			return "Ya couldn't connect.";
-		case SQL_DISCONNECT:
-			return "MySQL has set sail.";
-		case SQL_CONNECTING:
-			return "MySQL, ho!";
-		case SQL_NO_DISCONNECT:
-			return "MySQL has joined our crew, captain.";
-		case SQL_FAIL:
-			return "Couldn't run MySQL, capt'n.";
 		case MURKY_WATER:
 			return "Murky Bottle o' Grog";
 		case INFECTED:
 			return "&4Arrrr!";
-		case RADIO_DISPLAY:
-			return "Pearl o' Talkin'";
-		case RADIO_LORE:
-			return "&eHold to chat with ''yer shipmates";
-		case RADIO_CHAT:
-			return "%s: &aPearl o' Talkin' $0 - %s";
-		case PRIVATE_CHAT_TO:
-			return "&8To %s: %s";
-		case PRIVATE_CHAT_FROM:
-			return "&8Crewmate %s: %s";
 		case NO_USER:
 			return "&4Unable to speak to shipmate.";
 		case INCOMPATIBLE:
 			return "MyZ cannot set sail on this server version.";
-		case DID_POKE:
-			return "&8You signalled $0.";
-		case POKED:
-			return "&8$0 wants 'yer attention.";
-		case LOCAL_CHAT:
-			return "%s: %s";
-		case REVIVER:
-			return "&eYou revived $0.";
-		case REVIVED:
-			return "&aYou were revived by $0. Davy Jones is near for the next &efive minutes&a.";
-		case REVIVER_STARTED:
-			return "&eYou have begun revivin' $0.";
-		case REVIVED_STARTED:
-			return "&eAhoy! $0Has begun to revive you.";
-		case REVIVER_CANCELLED:
-			return "&4You failed to revive $0.";
-		case REVIVED_CANCELLED:
-			return "&4$0 was unable to revive you.";
-		case BECAME_GHOST:
-			return "&e'Yer in &fDavy Jones' Locker&e! If you aren't revived within $0 seconds, you will perish.";
-		case BECAME_ZOMBIE:
-			return "&e'Yer one of &2Davy Jones' undead&e! Hold out for $0 seconds to escape the Locker.";
 		case DEATH_ARROW:
 			return "&4$0 took a {cannonball} to the knee.";
 		case DEATH_CACTUS:
@@ -141,26 +91,12 @@ public class LocalePirate {
 			return "&eYou stop bleedin'.";
 		case INFECTION_ENDED:
 			return "&eYer fever drops.";
-		case ANTISEPTIC_DISPLAY:
-			return "&aAntiseptic";
-		case ANTISEPTIC_LORE:
-			return "Keeps ya in tip-top shape.~~&6Immunity X";
-		case BANDAGE_LORE:
-			return "Stops bleedin'.~~&eRight-click to use~&eLeft-click crewmate to use";
-		case OINTMENT_DISPLAY:
-			return "&4Ointment";
-		case OINTMENT_LORE:
-			return "Basic medicine.~~&6Heal X~Absorption I";
 		case SALT_WATER:
 			return "Bottle of Seawater";
 		case WARM_WATER:
 			return "Warm Bottle of Water";
 		case COLD_WATER:
 			return "Cold Bottle of Water";
-		case SCISSORS_DISPLAY:
-			return "Scissors";
-		case SCISSORS_LORE:
-			return "Used to cut old rags.~~&eLeft-click friend~&eto cut bandage";
 		case ALREADY_SPAWNED:
 			return "&4'Yer already land 'ho.";
 		case BROKEN:
@@ -219,48 +155,6 @@ public class LocalePirate {
 			return "&4There are no recipes to view.";
 		case VIEWING_RECIPE:
 			return "&eNow viewin' recipe #$0.";
-		case MEDICINE_DISPLAY:
-			return "&eMedicine";
-		case MEDICINE_LORE:
-			return "Proper medicine.~~&6Heal II~&6Absorption II~&6Immunity X";
-		case ACHIEVEMENT_EARNED:
-			return "&eAhoy! You got the achievement &6$0 &8($1)&r.";
-		case THERMOMETER_DISPLAY:
-			return "Thermometer";
-		case THERMOMETER_HEAT1:
-			return "&4Heatstroke I - $0 degrees";
-		case THERMOMETER_HEAT2:
-			return "&4Heatstroke II - $0 degrees";
-		case THERMOMETER_HEAT3:
-			return "&4Heatstroke III - $0 degrees";
-		case THERMOMETER_HYPO1:
-			return "&bHypothermia I - $0 degrees";
-		case THERMOMETER_HYPO2:
-			return "&bHypothermia II - $0 degrees";
-		case THERMOMETER_HYPO3:
-			return "&bHypothermia III - $0 degrees";
-		case THERMOMETER_LORE:
-			return "&eRight click to check 'yer temperature.";
-		case THERMOMETER_NORMAL:
-			return "&aSeafarin' - $0 degrees";
-		case THERMOMETER_SHIVERING:
-			return "&bShiverin' - $0 degrees";
-		case THERMOMETER_SWEATING:
-			return "&4Sweatin' - $0 degrees";
-		case HEALING_ALREADY:
-			return "&4'Yer unable to heal that crewmate.";
-		case HEAL_NOT_COMPLETE:
-			return "&4You were not healed in time.";
-		case HEAL_NOT_COMPLETED:
-			return "&4You did not finish healin' in time and must start over.";
-		case HEAL_COOLING_DOWN:
-			return "&4You must wait $0 seconds.";
-		case HEALED:
-			return "&eYou were healed by $0.";
-		case HEALED_PLAYER:
-			return "&eYou healed $0.";
-		case HEAL_CHECK:
-			return "&eBleedin': $0\n&eHealth: &6$1";
 		case NO:
 			return "&4neigh";
 		case YES:
@@ -283,16 +177,12 @@ public class LocalePirate {
 			return "&eThe lootset has been removed.";
 		case CHEST_MANAGER_REMOVE:
 			return "&ePlease enter the name of the lootset 'yer removin'. Options include:";
-		case CHAT_PREFIX_MANAGER_0:
-			return "&eEnter a chat prefix (ie. [PIRATE]), using ampersands (&) fer chat formatting.";
-		case CHAT_PREFIX_MANAGER_1:
-			return "&eEnter a rank number (0-100), or a crewmate's name to apply this prefix to.";
-		case CHAT_PREFIX_MANAGER_2:
-			return "&aThe chat prefix has been created.";
 		case MANAGING_SPAWN_KIT:
 			return "&eYer now managing spawn kits.\n&9o&f Enter a rank number (0-100) or a crewmate's name to save yer current inventory and gear contents to.";
 		case MANAGING_SPAWN_KIT_CREATED:
 			return "&aThe spawn kit has been created.";
+		case ACHIEVEMENT_EARNED:
+			return "&eYa earned the achievement &6$0 &8($1)&r.";
 		}
 		return message.getKey();
 	}

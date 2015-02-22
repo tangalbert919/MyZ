@@ -4,15 +4,11 @@
 package jordan.sicherman.scheduled;
 
 import jordan.sicherman.MyZ;
-import jordan.sicherman.listeners.player.SpectatorMode;
 import jordan.sicherman.utilities.ChestType;
 import jordan.sicherman.utilities.DataWrapper;
 import jordan.sicherman.utilities.SerializableLocation;
-import jordan.sicherman.utilities.TemperatureManager;
-import jordan.sicherman.utilities.TemperatureManager.TemperatureEffect;
 import jordan.sicherman.utilities.ThirstManager;
 import jordan.sicherman.utilities.Utilities;
-import jordan.sicherman.utilities.VisibilityManager;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
 import jordan.sicherman.utilities.configuration.UserEntries;
 
@@ -29,16 +25,13 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class Asynchronous extends BukkitRunnable {
 
-	private final boolean visibility, thirst, bleed, infect, temperature;
+	private final boolean thirst, bleed, infect;
 	private static int ticks = 0;
-	public static int tickCount = 0;
 
 	public Asynchronous() {
-		visibility = ConfigEntries.USE_VISIBILITY.<Boolean> getValue();
 		thirst = ConfigEntries.USE_THIRST.<Boolean> getValue();
 		bleed = ConfigEntries.USE_BLEEDING.<Boolean> getValue();
 		infect = ConfigEntries.USE_POISON.<Boolean> getValue();
-		temperature = ConfigEntries.USE_TEMP.<Boolean> getValue();
 	}
 
 	@Override
@@ -50,11 +43,6 @@ public class Asynchronous extends BukkitRunnable {
 			checkChests();
 			ticks = 0;
 		}
-
-		tickCount++;
-		if (tickCount >= ConfigEntries.SQL_TICKER.<Integer> getValue() * 20) {
-			tickCount = 0;
-		}
 	}
 
 	@Override
@@ -63,30 +51,15 @@ public class Asynchronous extends BukkitRunnable {
 	}
 
 	private void report() {
-		if (visibility || thirst || bleed || infect || temperature) {
+		if (thirst || bleed || infect) {
 			for (Player player : MyZ.instance.getServer().getOnlinePlayers()) {
 				if (player.getGameMode() != GameMode.CREATIVE && Utilities.inWorld(player)
 						&& DataWrapper.<Boolean> get(player, UserEntries.PLAYING) && !player.isDead()) {
-					if (visibility) {
-						VisibilityManager.getInstance().computeXPBarVisibility(player);
-					}
 					if (thirst) {
 						ThirstManager.getInstance().computeThirst(player);
 					}
-					if (temperature) {
-						TemperatureManager.getInstance().computeTemperature(player, TemperatureEffect.UPDATE_THERMOMETER);
-						performTemperatureDelays(player, "MyZ.temperature.damage.next",
-								ConfigEntries.TEMPERATURE_DAMAGE_DELAY.<Integer> getValue(), TemperatureEffect.DAMAGE);
-						performTemperatureDelays(player, "MyZ.temperature.potioneffects.next",
-								ConfigEntries.TEMPERATURE_POTIONS_DELAY.<Integer> getValue(), TemperatureEffect.CORNEA_FREEZING,
-								TemperatureEffect.FATIGUE, TemperatureEffect.WEAKNESS);
-						performTemperatureDelays(player, "MyZ.temperature.sweat.next",
-								ConfigEntries.TEMPERATURE_SWEAT_DELAY.<Integer> getValue(), TemperatureEffect.SWEAT);
-						performTemperatureDelays(player, "MyZ.temperature.frostbite.next",
-								ConfigEntries.TEMPERATURE_FROSTBITE_DELAY.<Integer> getValue(), TemperatureEffect.FROSTBITE);
-					}
 
-					if ((bleed || infect) && !SpectatorMode.isSpectator(player)) {
+					if (bleed || infect) {
 						if (bleed) {
 							performNegatives(player, "MyZ.bleed.next", UserEntries.BLEEDING, ConfigEntries.BLEED_DELAY.<Integer> getValue());
 						}
@@ -97,23 +70,6 @@ public class Asynchronous extends BukkitRunnable {
 					}
 				}
 			}
-		}
-	}
-
-	private void performTemperatureDelays(Player player, String key, int duration, TemperatureEffect... effects) {
-		long cur = System.currentTimeMillis();
-
-		if (player.hasMetadata(key) && player.getMetadata(key).size() >= 1) {
-			long next = player.getMetadata(key).get(0).asLong();
-
-			if (next <= cur) {
-				TemperatureManager.getInstance().doTemperatureEffects(player, effects);
-
-				player.removeMetadata(key, MyZ.instance);
-				player.setMetadata(key, new FixedMetadataValue(MyZ.instance, cur + duration * 1000L));
-			}
-		} else {
-			player.setMetadata(key, new FixedMetadataValue(MyZ.instance, cur + duration * 1000L));
 		}
 	}
 

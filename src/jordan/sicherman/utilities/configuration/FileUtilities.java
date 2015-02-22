@@ -10,7 +10,6 @@ import java.util.Random;
 import jordan.sicherman.MyZ;
 import jordan.sicherman.player.User;
 import jordan.sicherman.player.User.UFiles;
-import jordan.sicherman.sql.SQLManager;
 import jordan.sicherman.utilities.ChestType;
 import jordan.sicherman.utilities.MyZRank;
 
@@ -28,7 +27,7 @@ import org.bukkit.entity.Player;
 public class FileUtilities {
 
 	public static FileConfiguration load(OfflinePlayer playerFor, SpecificFileMember file) {
-		return load(SQLManager.primaryKeyFor(playerFor), file);
+		return load(playerFor.getUniqueId().toString(), file);
 	}
 
 	public static FileConfiguration load(User userFor, SpecificFileMember file) {
@@ -38,7 +37,7 @@ public class FileUtilities {
 	public static FileConfiguration[] load(OfflinePlayer playerFor, SpecificFileMember... files) {
 		FileConfiguration[] returned = new FileConfiguration[files.length];
 		for (int i = 0; i < files.length; i++) {
-			returned[i] = load(SQLManager.primaryKeyFor(playerFor), files[i]);
+			returned[i] = load(playerFor.getUniqueId().toString(), files[i]);
 		}
 		return returned;
 	}
@@ -107,8 +106,6 @@ public class FileUtilities {
 				} catch (Exception exc) {
 				}
 				ChestType.load();
-				MyZ.sql.disconnect();
-				MyZ.instance.registerSQL();
 				MyZRank.load();
 			}
 		});

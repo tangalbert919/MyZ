@@ -33,15 +33,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.material.DirectionalContainer;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -106,27 +102,9 @@ public class SpectatorMode implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
-	private void onPickup(PlayerPickupItemEvent e) {
-		if (!Utilities.inWorld(e.getPlayer())) { return; }
-
-		if (isSpectator(e.getPlayer())) {
-			e.setCancelled(true);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.LOWEST)
 	private void onInteract(PlayerInteractEvent e) {
 		Player player = e.getPlayer();
 		if (!Utilities.inWorld(player)) { return; }
-
-		if (isSpectator(player)) {
-			e.setCancelled(true);
-		}
-
-		if ((e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
-				&& ItemUtilities.getInstance().hasTag(e.getItem(), ItemTag.RADIO)) {
-			e.setCancelled(true);
-		}
 
 		if (ManagerManager.isManager(player, ManagerType.ENGINEER)
 				&& ItemUtilities.getInstance().hasTag(player.getItemInHand(), ItemTag.WAND)) {
@@ -253,36 +231,5 @@ public class SpectatorMode implements Listener {
 				e.getPlayer().sendMessage(LocaleMessage.MANAGING_OVER.toString(e.getPlayer()));
 			}
 		}
-	}
-
-	@EventHandler(priority = EventPriority.LOWEST)
-	private void onInteractEntity(PlayerInteractEntityEvent e) {
-		if (!Utilities.inWorld(e.getPlayer())) { return; }
-
-		if (isSpectator(e.getPlayer())) {
-			e.setCancelled(true);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.LOWEST)
-	private void onTakeDamage(EntityDamageEvent e) {
-		if (!Utilities.inWorld(e.getEntity())) { return; }
-
-		if (e.getEntity() instanceof Player && MyZ.ghostFactory.isGhost((Player) e.getEntity())) {
-			e.setCancelled(true);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.LOWEST)
-	private void onTakeEntityDamage(EntityDamageByEntityEvent e) {
-		if (!Utilities.inWorld(e.getEntity())) { return; }
-
-		if (e.getEntity() instanceof Player && MyZ.ghostFactory.isGhost((Player) e.getEntity())) {
-			e.setCancelled(true);
-		}
-	}
-
-	public static boolean isSpectator(Player player) {
-		return MyZ.ghostFactory.isGhost(player) || MyZ.zombieFactory.isZombie(player);
 	}
 }

@@ -3,8 +3,6 @@
  */
 package jordan.sicherman.utilities;
 
-import jordan.sicherman.utilities.TemperatureManager.TemperatureState;
-import jordan.sicherman.utilities.TemperatureManager.TemperatureState.Goldilocks;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
 import jordan.sicherman.utilities.configuration.UserEntries;
 
@@ -127,11 +125,6 @@ public class ThirstManager {
 		default:
 			mod = 50;
 			break;
-		}
-
-		TemperatureState state = TemperatureManager.getInstance().getState(playerFor);
-		if (state.getRaw() == Goldilocks.TOO_HOT) {
-			mod += ConfigEntries.THIRST_DECAY_THIRST.<Integer> getValue() * state.getLevel();
 		}
 
 		thirst -= 1.0 / (20.0 * mod);

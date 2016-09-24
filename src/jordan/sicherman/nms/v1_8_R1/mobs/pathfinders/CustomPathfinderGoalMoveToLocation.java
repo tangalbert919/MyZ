@@ -1,52 +1,45 @@
-/**
- * 
- */
 package jordan.sicherman.nms.v1_8_R1.mobs.pathfinders;
 
 import jordan.sicherman.nms.v1_8_R1.mobs.SmartEntity;
 import net.minecraft.server.v1_8_R1.PathfinderGoal;
-
 import org.bukkit.Location;
 
-/**
- * @author Jordan
- * 
- */
 public class CustomPathfinderGoalMoveToLocation extends PathfinderGoal {
 
-	private final SmartEntity creature;
-	private Location target;
-	private double targetX, targetY, targetZ;
-	private final double speed;
+    private final SmartEntity creature;
+    private Location target;
+    private double targetX;
+    private double targetY;
+    private double targetZ;
+    private final double speed;
 
-	public CustomPathfinderGoalMoveToLocation(SmartEntity creature, double speed) {
-		this.creature = creature;
-		this.speed = speed;
-		a(1);
-	}
+    public CustomPathfinderGoalMoveToLocation(SmartEntity creature, double speed) {
+        this.creature = creature;
+        this.speed = speed;
+        this.a(1);
+    }
 
-	@Override
-	public boolean a() {
-		target = creature.getSmartTarget();
-		if (target == null) { return false; }
-		targetX = target.getX();
-		targetY = target.getY();
-		targetZ = target.getZ();
-		return true;
-	}
+    public boolean a() {
+        this.target = this.creature.getSmartTarget();
+        if (this.target == null) {
+            return false;
+        } else {
+            this.targetX = this.target.getX();
+            this.targetY = this.target.getY();
+            this.targetZ = this.target.getZ();
+            return true;
+        }
+    }
 
-	@Override
-	public boolean b() {
-		return !creature.getEntity().getNavigation().m();
-	}
+    public boolean b() {
+        return !this.creature.getEntity().getNavigation().m();
+    }
 
-	@Override
-	public void d() {
-		target = null;
-	}
+    public void d() {
+        this.target = null;
+    }
 
-	@Override
-	public void c() {
-		creature.getEntity().getNavigation().a(targetX, targetY, targetZ, speed);
-	}
+    public void c() {
+        this.creature.getEntity().getNavigation().a(this.targetX, this.targetY, this.targetZ, this.speed);
+    }
 }

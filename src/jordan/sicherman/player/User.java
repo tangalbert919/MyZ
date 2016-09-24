@@ -1,129 +1,124 @@
-/**
- * 
- */
 package jordan.sicherman.player;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
 import jordan.sicherman.MyZ;
 import jordan.sicherman.utilities.configuration.FileUtilities;
 import jordan.sicherman.utilities.configuration.SpecificFileMember;
-
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 
-/**
- * @author Jordan
- * 
- */
 public class User {
 
-	private static final String path = File.separator + "userdata" + File.separator + "$0";
+    private static final String path = File.separator + "userdata" + File.separator + "$0";
+    private final User.UserFile files;
+    private final String storedPrimaryKey;
+    public static Map cache = new HashMap();
 
-	public static enum UFiles implements SpecificFileMember {
-		PLAYER(0, "player.yml"), ACHIEVEMENTS(1, "achievements.yml"), STATISTICS(2, "stats.yml"), TRACKED(3, "tracked.yml"), SKILLS(4,
-				"skills.yml"), KIT(5, "kit.yml");
+    public static User forPlayer(OfflinePlayer playerFor) {
+        User u = (User) User.cache.get(playerFor.getUniqueId().toString());
 
-		private final int id;
-		private final String fileID;
+        if (u != null) {
+            return u;
+        } else {
+            User user = new User(new User.UserFile(FileUtilities.load(playerFor, (SpecificFileMember[]) User.UFiles.values())), playerFor.getUniqueId().toString());
 
-		private UFiles(int id, String fileID) {
-			this.id = id;
-			this.fileID = fileID;
-		}
+            User.cache.put(playerFor.getUniqueId().toString(), user);
+            return user;
+        }
+    }
 
-		@Override
-		public String getFileID() {
-			return fileID;
-		}
+    public static User forPrimaryKey(String key) {
+        User u = (User) User.cache.get(key);
 
-		public int getID() {
-			return id;
-		}
+        if (u != null) {
+            return u;
+        } else {
+            User user = new User(new User.UserFile(new FileConfiguration[] { FileUtilities.load(key, (SpecificFileMember[]) User.UFiles.values())}), key);
 
-		@Override
-		public String getPath() {
-			return path;
-		}
+            User.cache.put(key, user);
+            return user;
+        }
+    }
 
-		@Override
-		public void setFile(FileConfiguration file) {
-		}
+    public static void freePlayer(final OfflinePlayer playerFor) {
+        final User user = forPlayer(playerFor);
 
-		@Override
-		public FileConfiguration getFile() {
-			return null;
-		}
+        MyZ.instance.getServer().getScheduler().runTaskLater(MyZ.instance, new Runnable() {
+            public void run() {
+                User.UFiles[] auser_ufiles = User.UFiles.values();
+                int i = auser_ufiles.length;
 
-		@Override
-		public boolean isLoaded() {
-			return false;
-		}
-	}
+                for (int j = 0; j < i; ++j) {
+                    User.UFiles file = auser_ufiles[j];
 
-	static class UserFile {
-		private final FileConfiguration[] configurations;
+                    FileUtilities.save(user, file);
+                }
 
-		public UserFile(FileConfiguration... configurations) {
-			this.configurations = configurations;
-		}
+                User.cache.remove(playerFor.getUniqueId().toString());
+            }
+        }, 1L);
+    }
 
-		public FileConfiguration getFile(UFiles option) {
-			return configurations[option.getID()];
-		}
-	}
+    private User(User.UserFile files, String storedPrimaryKey) {
+        this.files = files;
+        this.storedPrimaryKey = storedPrimaryKey;
+    }
 
-	private final UserFile files;
-	private final String storedPrimaryKey;
-	public static Map<String, User> cache = new HashMap<String, User>();
+    public FileConfiguration getFile(User.UFiles filesFor) {
+        return this.files.getFile(filesFor);
+    }
 
-	public static User forPlayer(OfflinePlayer playerFor) {
-		User u = cache.get(playerFor.getUniqueId().toString());
-		if (u != null) { return u; }
+    public String primaryKeyFor() {
+        return this.storedPrimaryKey;
+    }
 
-		User user = new User(new UserFile(FileUtilities.load(playerFor, UFiles.values())), playerFor.getUniqueId().toString());
+    static class UserFile {
 
-		cache.put(playerFor.getUniqueId().toString(), user);
-		return user;
-	}
+        private final FileConfiguration[] configurations;
 
-	public static User forPrimaryKey(String key) {
-		User u = cache.get(key);
-		if (u != null) { return u; }
+        public UserFile(FileConfiguration... configurations) {
+            this.configurations = configurations;
+        }
 
-		User user = new User(new UserFile(FileUtilities.load(key, UFiles.values())), key);
+        public FileConfiguration getFile(User.UFiles option) {
+            return this.configurations[option.getID()];
+        }
+    }
 
-		cache.put(key, user);
-		return user;
-	}
+    public static enum UFiles implements SpecificFileMember {
 
-	public static void freePlayer(final OfflinePlayer playerFor) {
-		final User user = forPlayer(playerFor);
+        PLAYER(0, "player.yml"), ACHIEVEMENTS(1, "achievements.yml"), STATISTICS(2, "stats.yml"), TRACKED(3, "tracked.yml"), SKILLS(4, "skills.yml"), KIT(5, "kit.yml");
 
-		MyZ.instance.getServer().getScheduler().runTaskLater(MyZ.instance, new Runnable() {
-			@Override
-			public void run() {
-				for (UFiles file : UFiles.values()) {
-					FileUtilities.save(user, file);
-				}
+        private final int id;
+        private final String fileID;
 
-				cache.remove(playerFor.getUniqueId().toString());
-			}
-		}, 1L);
-	}
+        private UFiles(int id, String fileID) {
+            this.id = id;
+            this.fileID = fileID;
+        }
 
-	private User(UserFile files, String storedPrimaryKey) {
-		this.files = files;
-		this.storedPrimaryKey = storedPrimaryKey;
-	}
+        public String getFileID() {
+            return this.fileID;
+        }
 
-	public FileConfiguration getFile(UFiles filesFor) {
-		return files.getFile(filesFor);
-	}
+        public int getID() {
+            return this.id;
+        }
 
-	public String primaryKeyFor() {
-		return storedPrimaryKey;
-	}
+        public String getPath() {
+            return User.path;
+        }
+
+        public void setFile(FileConfiguration file) {}
+
+        public FileConfiguration getFile() {
+            return null;
+        }
+
+        public boolean isLoaded() {
+            return false;
+        }
+    }
 }

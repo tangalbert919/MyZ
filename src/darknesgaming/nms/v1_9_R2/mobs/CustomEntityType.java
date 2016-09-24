@@ -7,6 +7,7 @@ import java.util.Map;
 import jordan.sicherman.nms.utilities.NMS;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
 import net.minecraft.server.v1_9_R2.BiomeBase;
+import net.minecraft.server.v1_9_R2.BiomeBase.BiomeMeta;
 import net.minecraft.server.v1_9_R2.EntityGiantZombie;
 import net.minecraft.server.v1_9_R2.EntityPigZombie;
 import net.minecraft.server.v1_9_R2.EntitySkeleton;
@@ -85,15 +86,15 @@ public enum CustomEntityType {
 
             if (biomeBase != BiomeBase.HELL) {
                 CustomEntityType.cache.put(biomeBase, new CustomEntityType.DefaultCache(biomeBase));
-                String[] list = CustomEntityType.DefaultCache.keys;
-                int k = list.length;
+                String[] list10 = CustomEntityType.DefaultCache.keys;
+                int k = list10.length;
 
                 for (int l = 0; l < k; ++l) {
-                    String key = list[l];
-                    List list1 = (List) NMS.getDeclaredField(biomeBase, key);
+                    String key = list10[l];
+                    List list11 = (List) NMS.getDeclaredField(biomeBase, key);
 
-                    if (list1 != null) {
-                        list1.clear();
+                    if (list11 != null) {
+                        list11.clear();
                     }
                 }
 
@@ -107,7 +108,7 @@ public enum CustomEntityType {
                         }
                     }
 
-                    if (CustomEntityType.ZOMBIE.meta.enabled && !list.contains(biomeBase.ah) && !((CustomEntityType.DefaultCache) CustomEntityType.cache.get(biomeBase)).at.contains(CustomEntityType.ZOMBIE.meta.toBiomeMeta())) {
+                    if (CustomEntityType.ZOMBIE.meta.enabled && !list10.contains(biomeBase.ah) && !((CustomEntityType.DefaultCache) CustomEntityType.cache.get(biomeBase)).at.contains(CustomEntityType.ZOMBIE.meta.toBiomeMeta())) {
                         list3 = (List) NMS.getDeclaredField(biomeBase, CustomEntityType.DefaultCache.keys[0]);
                         if (list3 != null) {
                             list3.add(CustomEntityType.ZOMBIE.meta.toBiomeMeta());

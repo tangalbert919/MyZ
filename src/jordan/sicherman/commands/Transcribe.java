@@ -1,71 +1,69 @@
-/**
- * 
- */
 package jordan.sicherman.commands;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.Map;
-
 import jordan.sicherman.MyZ;
 import jordan.sicherman.locales.Locale;
 import jordan.sicherman.locales.LocaleMessage;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
-/**
- * @author Jordan
- * 
- */
 public class Transcribe extends SimpleCommandExecutor {
 
-	@Override
-	public void execute(CommandSender sender, String[] args, CommandHandler handler) {
-		Map<Locale, FileConfiguration> locales = Locale.getLocales();
+    public void execute(CommandSender sender, String[] args, CommandHandler handler) {
+        Map locales = Locale.getLocales();
+        File folder = new File(MyZ.instance.getDataFolder() + File.separator + "locales" + File.separator + "transcriptions");
 
-		File folder = new File(MyZ.instance.getDataFolder() + File.separator + "locales" + File.separator + "transcriptions");
-		if (!folder.exists()) {
-			folder.mkdirs();
-		}
-		for (Locale l : locales.keySet()) {
-			try {
-				PrintWriter writer = new PrintWriter(folder + File.separator + l.getCode() + ".txt", "UTF-8");
-				FileConfiguration existing = locales.get(l);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
 
-				writer.println("/**\n *\n */");
-				writer.println("package jordan.sicherman.locales;");
-				writer.println();
-				writer.println("/**\n * @author Jordan\n *\n */");
-				writer.println("public class Locale" + l.name().substring(0, 1) + l.name().substring(1).toLowerCase() + " {");
-				writer.println();
-				writer.println("\tpublic static String getMessage(LocaleMessage message) {");
-				writer.println("\t\tswitch (message) {");
+        Iterator iterator = locales.keySet().iterator();
 
-				for (String key : existing.getKeys(true)) {
-					LocaleMessage entry = LocaleMessage.getByKey(key);
-					if (entry == null) {
-						continue;
-					}
-					writer.println("\t\tcase " + entry.name() + ":");
-					writer.println("\t\t\treturn \"" + existing.get(key) + "\";");
-				}
-				writer.println("\t\t}");
-				writer.println("\t\treturn message.getKey();");
-				writer.println("\t}");
-				writer.println("}");
-				writer.close();
-			} catch (Exception exc) {
+        while (iterator.hasNext()) {
+            Locale l = (Locale) iterator.next();
 
-			}
-		}
+            try {
+                PrintWriter exc = new PrintWriter(folder + File.separator + l.getCode() + ".txt", "UTF-8");
+                FileConfiguration existing = (FileConfiguration) locales.get(l);
 
-		sender.sendMessage(ChatColor.YELLOW + "" + locales.size() + " locales transcribed.");
-	}
+                exc.println("/**\n *\n */");
+                exc.println("package jordan.sicherman.locales;");
+                exc.println();
+                exc.println("/**\n * @author Jordan\n *\n */");
+                exc.println("public class Locale" + l.name().substring(0, 1) + l.name().substring(1).toLowerCase() + " {");
+                exc.println();
+                exc.println("\tpublic static String getMessage(LocaleMessage message) {");
+                exc.println("\t\tswitch (message) {");
+                Iterator iterator1 = existing.getKeys(true).iterator();
 
-	@Override
-	public boolean willExecute(CommandSender sender) {
-		return true;
-	}
+                while (iterator1.hasNext()) {
+                    String key = (String) iterator1.next();
+                    LocaleMessage entry = LocaleMessage.getByKey(key);
+
+                    if (entry != null) {
+                        exc.println("\t\tcase " + entry.name() + ":");
+                        exc.println("\t\t\treturn \"" + existing.get(key) + "\";");
+                    }
+                }
+
+                exc.println("\t\t}");
+                exc.println("\t\treturn message.getKey();");
+                exc.println("\t}");
+                exc.println("}");
+                exc.close();
+            } catch (Exception exception) {
+                ;
+            }
+        }
+
+        sender.sendMessage(ChatColor.YELLOW + "" + locales.size() + " locales transcribed.");
+    }
+
+    public boolean willExecute(CommandSender sender) {
+        return true;
+    }
 }

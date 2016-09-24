@@ -1,17 +1,10 @@
-/**
- * 
- */
 package jordan.sicherman.commands;
 
 import org.bukkit.command.CommandSender;
 
-/**
- * @author Jordan
- * 
- */
 public abstract class SimpleCommandExecutor {
 
-	public abstract void execute(CommandSender sender, String[] args, CommandHandler handler);
+    public abstract void execute(CommandSender commandsender, String[] astring, CommandHandler commandhandler);
 
-	public abstract boolean willExecute(CommandSender sender);
+    public abstract boolean willExecute(CommandSender commandsender);
 }

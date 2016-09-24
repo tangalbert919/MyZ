@@ -1,23 +1,16 @@
-/**
- * 
- */
 package jordan.sicherman.utilities.configuration;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-/**
- * @author Jordan
- * 
- */
 public interface FileMember {
 
-	public String getFileID();
+    String getFileID();
 
-	public String getPath();
+    String getPath();
 
-	public void setFile(FileConfiguration file);
+    void setFile(FileConfiguration fileconfiguration);
 
-	public FileConfiguration getFile();
+    FileConfiguration getFile();
 
-	public boolean isLoaded();
+    boolean isLoaded();
 }

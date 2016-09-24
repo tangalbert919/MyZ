@@ -24,6 +24,7 @@ import net.minecraft.server.v1_9_R2.EntityLiving;
 import net.minecraft.server.v1_9_R2.EntitySkeleton;
 import net.minecraft.server.v1_9_R2.GenericAttributes;
 import net.minecraft.server.v1_9_R2.GroupDataEntity;
+import net.minecraft.server.v1_9_R2.IBlockProperties;
 import net.minecraft.server.v1_9_R2.Item;
 import net.minecraft.server.v1_9_R2.ItemStack;
 import net.minecraft.server.v1_9_R2.Items;
@@ -112,7 +113,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
     }
 
     public GroupDataEntity prepare(DifficultyDamageScaler difficultydamagescaler, GroupDataEntity groupdataentity) {
-        this.getAttributeInstance(GenericAttributes.b).b(new AttributeModifier("Random spawn bonus", this.random.nextGaussian() * 0.05D, 1));
+        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).b(new AttributeModifier("Random spawn bonus", this.random.nextGaussian() * 0.05D, 1));
         this.a(difficultydamagescaler);
         this.b(difficultydamagescaler);
         this.j(this.random.nextFloat() < 0.55F * difficultydamagescaler.c());
@@ -121,7 +122,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
 
             if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31 && this.random.nextFloat() < 0.25F) {
                 this.setEquipment(4, new ItemStack(this.random.nextFloat() < 0.1F ? Blocks.LIT_PUMPKIN : Blocks.PUMPKIN));
-                this.dropChances[4] = 0.0F;
+                this.dropChanceHand[4] = 0.0F;
             }
         }
 
@@ -162,7 +163,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
         if (this.world.getType(blockposition.up()).getBlock() == Blocks.SNOW_LAYER) {
             stepsound = Blocks.SNOW_LAYER.stepSound;
             this.makeSound(stepsound.getStepSound(), stepsound.getVolume1() * 0.15F, stepsound.getVolume2());
-        } else if (!block.getMaterial().isLiquid()) {
+        } else if (!((IBlockProperties) block).getMaterial().isLiquid()) {
             this.makeSound(stepsound.getStepSound(), stepsound.getVolume1() * 0.15F, stepsound.getVolume2());
         }
 
@@ -212,12 +213,13 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
         }
     }
 
-    protected void aW() {
+    public int aW() {
         super.aW();
         this.getAttributeInstance(GenericAttributes.maxHealth).setValue(((Double) ConfigEntries.GUARD_HEALTH.getValue()).doubleValue());
         this.getAttributeInstance(GenericAttributes.c).setValue(((Double) ConfigEntries.GUARD_KNOCKBACK_RESIST.getValue()).doubleValue());
-        this.getAttributeInstance(GenericAttributes.d).setValue(((Double) ConfigEntries.GUARD_SPEED.getValue()).doubleValue());
-        this.getAttributeInstance(GenericAttributes.e).setValue(((Double) ConfigEntries.GUARD_DAMAGE.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(((Double) ConfigEntries.GUARD_SPEED.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(((Double) ConfigEntries.GUARD_DAMAGE.getValue()).doubleValue());
+		return a_;
     }
 
     static class SyntheticClass_1 {

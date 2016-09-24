@@ -20,6 +20,7 @@ import net.minecraft.server.v1_9_R2.EntityLiving;
 import net.minecraft.server.v1_9_R2.EntityPlayer;
 import net.minecraft.server.v1_9_R2.GroupDataEntity;
 import net.minecraft.server.v1_9_R2.PacketPlayOutOpenWindow;
+import net.minecraft.server.v1_9_R2.World;
 import net.minecraft.server.v1_9_R2.WorldServer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -34,6 +35,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.ItemStack;
 
 public class NMSUtilities {
+	
 	   public static void attractEntity(LivingEntity entity, Location inLoc, long duration) {
 	        EntityLiving livingEntity = ((CraftLivingEntity) entity).getHandle();
 
@@ -112,7 +114,7 @@ public class NMSUtilities {
 	        EntityHuman human = (EntityHuman) NMS.castToNMS(player);
 	        EntityPlayer ePlayer = (EntityPlayer) human;
 
-	        if (!human.world.isStatic) {
+	        if (!World.haveWeSilencedAPhysicsCrash) {
 	            CustomContainerAnvil container = new CustomContainerAnvil(human.inventory, human.world, 0, 0, 0, human, anvil != null);
 	            int count = ePlayer.nextContainerCounter();
 

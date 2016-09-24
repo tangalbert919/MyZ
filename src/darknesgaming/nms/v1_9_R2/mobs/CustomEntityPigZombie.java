@@ -78,12 +78,13 @@ public class CustomEntityPigZombie extends EntityPigZombie implements SmartEntit
         return this.world.a(this.getBoundingBox(), this) && this.world.getCubes(this, this.getBoundingBox()).isEmpty() && !this.world.containsLiquid(this.getBoundingBox());
     }
 
-    protected void aW() {
+    public int aW() {
         super.aW();
         this.getAttributeInstance(GenericAttributes.maxHealth).setValue(((Double) ConfigEntries.PIGMAN_HEALTH.getValue()).doubleValue());
         this.getAttributeInstance(GenericAttributes.c).setValue(((Double) ConfigEntries.PIGMAN_KNOCKBACK_RESIST.getValue()).doubleValue());
-        this.getAttributeInstance(GenericAttributes.d).setValue(((Double) ConfigEntries.PIGMAN_SPEED.getValue()).doubleValue());
-        this.getAttributeInstance(GenericAttributes.e).setValue(((Double) ConfigEntries.PIGMAN_DAMAGE.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(((Double) ConfigEntries.PIGMAN_SPEED.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(((Double) ConfigEntries.PIGMAN_DAMAGE.getValue()).doubleValue());
+        return a_;
     }
 
     public void die() {

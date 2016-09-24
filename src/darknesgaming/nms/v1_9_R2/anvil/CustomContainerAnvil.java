@@ -218,7 +218,7 @@ public class CustomContainerAnvil extends Container {
 
     public void b(EntityHuman entityhuman) {
         super.b(entityhuman);
-        if (!this.world.isStatic) {
+        if (!this.world.isClientSide) {
             ItemStack itemstack1;
             ItemStack itemstack;
 
@@ -242,8 +242,8 @@ public class CustomContainerAnvil extends Container {
                     entityhuman.drop(itemstack, false);
                 }
             } else {
-                for (int itemstack = 0; itemstack < this.process.getSize(); ++itemstack) {
-                    itemstack1 = this.process.splitWithoutUpdate(itemstack);
+                for (int itemstack2 = 0; itemstack2 < this.process.getSize(); ++itemstack2) {
+                    itemstack1 = this.process.splitWithoutUpdate(itemstack2);
                     if (itemstack1 != null) {
                         entityhuman.drop(itemstack1, false);
                     }
@@ -308,7 +308,7 @@ public class CustomContainerAnvil extends Container {
         if (this.bukkitEntity != null) {
             return this.bukkitEntity;
         } else {
-            CraftInventoryAnvil inventory = new CraftInventoryAnvil(this.process, this.result);
+            CraftInventoryAnvil inventory = new CraftInventoryAnvil(null, this.process, this.result);
 
             this.bukkitEntity = new CraftInventoryView(this.pInventory.player.getBukkitEntity(), inventory, this);
             return this.bukkitEntity;

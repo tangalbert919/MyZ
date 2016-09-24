@@ -42,9 +42,9 @@ public class CustomPathfinderGoalRandomStroll extends PathfinderGoal {
         if (destination == null) {
             return false;
         } else {
-            this.destX = destination.a;
-            this.destY = destination.b;
-            this.destZ = destination.c;
+            this.destX = destination.x;
+            this.destY = destination.y;
+            this.destZ = destination.z;
             this.notPathing = false;
             return true;
         }

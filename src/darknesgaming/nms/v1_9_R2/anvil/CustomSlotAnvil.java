@@ -5,7 +5,7 @@ import net.minecraft.server.v1_9_R2.IInventory;
 import net.minecraft.server.v1_9_R2.ItemStack;
 import net.minecraft.server.v1_9_R2.Slot;
 
-public class CustomSlotAnvil extends Slot{
+public class CustomSlotAnvil extends Slot {
 
     private final CustomContainerAnvil anvil;
     private final IInventory result;

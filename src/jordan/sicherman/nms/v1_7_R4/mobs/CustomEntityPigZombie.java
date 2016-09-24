@@ -1,6 +1,3 @@
-/**
- * 
- */
 package jordan.sicherman.nms.v1_7_R4.mobs;
 
 import jordan.sicherman.MyZ;
@@ -23,140 +20,119 @@ import net.minecraft.server.v1_7_R4.MathHelper;
 import net.minecraft.server.v1_7_R4.MobEffectList;
 import net.minecraft.server.v1_7_R4.PathfinderGoalFloat;
 import net.minecraft.server.v1_7_R4.PathfinderGoalMoveTowardsRestriction;
-import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
 import net.minecraft.server.v1_7_R4.World;
-
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 import org.bukkit.scheduler.BukkitRunnable;
 
-/**
- * @author Jordan
- * 
- */
 public class CustomEntityPigZombie extends EntityPigZombie implements SmartEntity {
 
-	private Location smartTarget;
+    private Location smartTarget;
 
-	@Override
-	public void setSmartTarget(Location inLoc, long duration) {
-		smartTarget = inLoc;
+    public void setSmartTarget(Location inLoc, long duration) {
+        this.smartTarget = inLoc;
+        (new BukkitRunnable() {
+            public void run() {
+                CustomEntityPigZombie.this.smartTarget = null;
+            }
+        }).runTaskLater(MyZ.instance, duration);
+    }
 
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				smartTarget = null;
-			}
-		}.runTaskLater(MyZ.instance, duration);
-	}
+    public Location getSmartTarget() {
+        return this.smartTarget;
+    }
 
-	@Override
-	public Location getSmartTarget() {
-		return smartTarget;
-	}
+    public EntityCreature getEntity() {
+        return this;
+    }
 
-	@Override
-	public EntityCreature getEntity() {
-		return this;
-	}
+    protected void bj() {
+        this.motY = 0.46D * ((Double) ConfigEntries.PIGMAN_JUMP_MULTIPLIER.getValue()).doubleValue();
+        if (this.hasEffect(MobEffectList.JUMP)) {
+            this.motY += (double) ((float) (this.getEffect(MobEffectList.JUMP).getAmplifier() + 1) * 0.1F);
+        }
 
-	@Override
-	protected void bj() {
-		motY = 0.46D * ConfigEntries.PIGMAN_JUMP_MULTIPLIER.<Double> getValue();
-		if (hasEffect(MobEffectList.JUMP)) {
-			motY += (getEffect(MobEffectList.JUMP).getAmplifier() + 1) * 0.1F;
-		}
-		if (isSprinting()) {
-			float f = yaw * 0.01745329F;
+        if (this.isSprinting()) {
+            float f = this.yaw * 0.01745329F;
 
-			motX -= MathHelper.sin(f) * 0.2F;
-			motZ += MathHelper.cos(f) * 0.2F;
-		}
-		al = true;
-	}
+            this.motX -= (double) (MathHelper.sin(f) * 0.2F);
+            this.motZ += (double) (MathHelper.cos(f) * 0.2F);
+        }
 
-	@SuppressWarnings("unchecked")
-	public CustomEntityPigZombie(World world) {
-		super(world);
+        this.al = true;
+    }
 
-		try {
-			CommonMobUtilities.bField.set(goalSelector, new UnsafeList<PathfinderGoalSelector>());
-			CommonMobUtilities.bField.set(targetSelector, new UnsafeList<PathfinderGoalSelector>());
-			CommonMobUtilities.cField.set(goalSelector, new UnsafeList<PathfinderGoalSelector>());
-			CommonMobUtilities.cField.set(targetSelector, new UnsafeList<PathfinderGoalSelector>());
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
+    public CustomEntityPigZombie(World world) {
+        super(world);
 
-		goalSelector.a(0, new PathfinderGoalFloat(this));
-		goalSelector.a(2,
-				new CustomPathfinderGoalMeleeAttack(this, EntityHuman.class, ConfigEntries.PIGMAN_SPEED_TARGET.<Double> getValue()
-						* (isBaby() ? 0.5D : 1.0D), false));
-		goalSelector.a(5, new PathfinderGoalMoveTowardsRestriction(this, 1.0D));
-		goalSelector.a(4, new CustomPathfinderGoalMoveToLocation(this, 1.2D));
-		goalSelector.a(7, new CustomPathfinderGoalRandomStroll(this, 1.0D));
-		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityGuard.class, 8.0F));
-		goalSelector.a(8, new CustomPathfinderGoalRandomLookaround(this));
-		goalSelector.a(4,
-				new CustomPathfinderGoalMeleeAttack(this, CustomEntityGuard.class, ConfigEntries.PIGMAN_SPEED_TARGET.<Double> getValue()
-						* (isBaby() ? 0.5D : 1.0D), true));
-		targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { EntityHuman.class, CustomEntityGuard.class }));
-		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, EntityHuman.class, 0, true));
-		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGuard.class, 0, false));
-	}
+        try {
+            CommonMobUtilities.bField.set(this.goalSelector, new UnsafeList());
+            CommonMobUtilities.bField.set(this.targetSelector, new UnsafeList());
+            CommonMobUtilities.cField.set(this.goalSelector, new UnsafeList());
+            CommonMobUtilities.cField.set(this.targetSelector, new UnsafeList());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
 
-	@Override
-	public boolean canSpawn() {
-		return world.a(boundingBox, this) && world.getCubes(this, boundingBox).isEmpty() && !world.containsLiquid(boundingBox);
-	}
+        this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(2, new CustomPathfinderGoalMeleeAttack(this, EntityHuman.class, ((Double) ConfigEntries.PIGMAN_SPEED_TARGET.getValue()).doubleValue() * (this.isBaby() ? 0.5D : 1.0D), false));
+        this.goalSelector.a(5, new PathfinderGoalMoveTowardsRestriction(this, 1.0D));
+        this.goalSelector.a(4, new CustomPathfinderGoalMoveToLocation(this, 1.2D));
+        this.goalSelector.a(7, new CustomPathfinderGoalRandomStroll(this, 1.0D));
+        this.goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        this.goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityGuard.class, 8.0F));
+        this.goalSelector.a(8, new CustomPathfinderGoalRandomLookaround(this));
+        this.goalSelector.a(4, new CustomPathfinderGoalMeleeAttack(this, CustomEntityGuard.class, ((Double) ConfigEntries.PIGMAN_SPEED_TARGET.getValue()).doubleValue() * (this.isBaby() ? 0.5D : 1.0D), true));
+        this.targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { EntityHuman.class, CustomEntityGuard.class}));
+        this.targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, EntityHuman.class, 0, true));
+        this.targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGuard.class, 0, false));
+    }
 
-	@Override
-	protected void aD() {
-		super.aD();
-		getAttributeInstance(GenericAttributes.maxHealth).setValue(ConfigEntries.PIGMAN_HEALTH.<Double> getValue());
-		getAttributeInstance(GenericAttributes.c).setValue(ConfigEntries.PIGMAN_KNOCKBACK_RESIST.<Double> getValue());
-		getAttributeInstance(GenericAttributes.d).setValue(ConfigEntries.PIGMAN_SPEED.<Double> getValue());
-		getAttributeInstance(GenericAttributes.e).setValue(ConfigEntries.PIGMAN_DAMAGE.<Double> getValue());
-	}
+    public boolean canSpawn() {
+        return this.world.a(this.boundingBox, this) && this.world.getCubes(this, this.boundingBox).isEmpty() && !this.world.containsLiquid(this.boundingBox);
+    }
 
-	@Override
-	public void die() {
-		if (!isBaby()) {
-			int amount = ConfigEntries.PIGMAN_MULTIPLY_DEATH.<Integer> getValue();
-			while (amount > 0) {
-				CustomEntityPigZombie zombie = new CustomEntityPigZombie(world);
-				zombie.setBaby(true);
-				zombie.setLocation(
-						locX + (random.nextInt(2) == 0 ? random.nextDouble() + 1 : -(1 + random.nextDouble())) * random.nextDouble(), locY,
-						locZ + (random.nextInt(2) == 0 ? random.nextDouble() + 1 : -(1 + random.nextDouble())) * random.nextDouble(), yaw,
-						pitch);
-				world.addEntity(zombie);
-				amount--;
-			}
-		} else {
-			float magnitude = ConfigEntries.PIGMAN_EXPLODE_DEATH.<Double> getValue().floatValue();
-			if (magnitude > 0) {
-				world.createExplosion(this, locX, locY, locZ, magnitude, false, false);
-			}
-		}
-		super.die();
-	}
+    protected void aD() {
+        super.aD();
+        this.getAttributeInstance(GenericAttributes.maxHealth).setValue(((Double) ConfigEntries.PIGMAN_HEALTH.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.c).setValue(((Double) ConfigEntries.PIGMAN_KNOCKBACK_RESIST.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.d).setValue(((Double) ConfigEntries.PIGMAN_SPEED.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.e).setValue(((Double) ConfigEntries.PIGMAN_DAMAGE.getValue()).doubleValue());
+    }
 
-	@Override
-	protected Item getLoot() {
-		return null;
-	}
+    public void die() {
+        if (!this.isBaby()) {
+            for (int magnitude = ((Integer) ConfigEntries.PIGMAN_MULTIPLY_DEATH.getValue()).intValue(); magnitude > 0; --magnitude) {
+                CustomEntityPigZombie zombie = new CustomEntityPigZombie(this.world);
 
-	@Override
-	protected void getRareDrop(int i) {
-		switch (random.nextInt(2)) {
-		case 0:
-			a(new ItemStack(Items.STICK), 0.0F);
-			break;
-		case 1:
-			a(new ItemStack(Items.GOLD_INGOT), 0.0F);
-			break;
-		}
-	}
+                zombie.setBaby(true);
+                zombie.setLocation(this.locX + (this.random.nextInt(2) == 0 ? this.random.nextDouble() + 1.0D : -(1.0D + this.random.nextDouble())) * this.random.nextDouble(), this.locY, this.locZ + (this.random.nextInt(2) == 0 ? this.random.nextDouble() + 1.0D : -(1.0D + this.random.nextDouble())) * this.random.nextDouble(), this.yaw, this.pitch);
+                this.world.addEntity(zombie);
+            }
+        } else {
+            float f = ((Double) ConfigEntries.PIGMAN_EXPLODE_DEATH.getValue()).floatValue();
+
+            if (f > 0.0F) {
+                this.world.createExplosion(this, this.locX, this.locY, this.locZ, f, false, false);
+            }
+        }
+
+        super.die();
+    }
+
+    protected Item getLoot() {
+        return null;
+    }
+
+    protected void getRareDrop(int i) {
+        switch (this.random.nextInt(2)) {
+        case 0:
+            this.a(new ItemStack(Items.STICK), 0.0F);
+            break;
+
+        case 1:
+            this.a(new ItemStack(Items.GOLD_INGOT), 0.0F);
+        }
+
+    }
 }

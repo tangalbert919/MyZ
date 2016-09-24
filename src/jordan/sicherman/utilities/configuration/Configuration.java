@@ -1,64 +1,58 @@
-/**
- * 
- */
 package jordan.sicherman.utilities.configuration;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-/**
- * @author Jordan
- * 
- */
 public class Configuration {
 
-	public Configuration() {
-		FileUtilities.load(CFiles.values());
-		CFiles.loadValues();
-	}
+    public Configuration() {
+        FileUtilities.load(Configuration.CFiles.values());
+        Configuration.CFiles.loadValues();
+    }
 
-	public static enum CFiles implements FileMember {
-		CONFIG("config.yml"), MOBS("mob_settings.yml"), EXTRAS("settings.yml"), SPAWNLOCATIONS("spawns.yml"), CHESTS("chests.yml"), ENGINEER(
-				"engineering.yml"), ACHIEVEMENTS("achievements.yml"), ADDONS("addons.yml"), RANKS("ranks.yml");
+    public static enum CFiles implements FileMember {
 
-		private final String fileID;
-		private FileConfiguration file;
+        CONFIG("config.yml"), MOBS("mob_settings.yml"), EXTRAS("settings.yml"), SPAWNLOCATIONS("spawns.yml"), CHESTS("chests.yml"), ENGINEER("engineering.yml"), ACHIEVEMENTS("achievements.yml"), ADDONS("addons.yml"), RANKS("ranks.yml");
 
-		private CFiles(String fileID) {
-			this.fileID = fileID;
-		}
+        private final String fileID;
+        private FileConfiguration file;
 
-		@Override
-		public String getFileID() {
-			return fileID;
-		}
+        private CFiles(String fileID) {
+            this.fileID = fileID;
+        }
 
-		@Override
-		public String getPath() {
-			return "";
-		}
+        public String getFileID() {
+            return this.fileID;
+        }
 
-		public static void loadValues() {
-			for (ConfigEntries entry : ConfigEntries.values()) {
-				FileUtilities.set(entry.getKey(), entry.getValue(), entry.getFile(), false);
-			}
-			ConfigEntries.loadCrackshot();
-			ConfigEntries.loadImportantDefaults();
-			FileUtilities.save(CFiles.values());
-		}
+        public String getPath() {
+            return "";
+        }
 
-		@Override
-		public void setFile(FileConfiguration file) {
-			this.file = file;
-		}
+        public static void loadValues() {
+            ConfigEntries[] aconfigentries = ConfigEntries.values();
+            int i = aconfigentries.length;
 
-		@Override
-		public FileConfiguration getFile() {
-			return file;
-		}
+            for (int j = 0; j < i; ++j) {
+                ConfigEntries entry = aconfigentries[j];
 
-		@Override
-		public boolean isLoaded() {
-			return file != null;
-		}
-	}
+                FileUtilities.set(entry.getKey(), entry.getValue(), entry.getFile(), false);
+            }
+
+            ConfigEntries.loadCrackshot();
+            ConfigEntries.loadImportantDefaults();
+            FileUtilities.save(values());
+        }
+
+        public void setFile(FileConfiguration file) {
+            this.file = file;
+        }
+
+        public FileConfiguration getFile() {
+            return this.file;
+        }
+
+        public boolean isLoaded() {
+            return this.file != null;
+        }
+    }
 }

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package jordan.sicherman.nms.v1_8_R1.mobs.pathfinders;
 
 import net.minecraft.server.v1_8_R1.EntityCreature;
@@ -8,65 +5,64 @@ import net.minecraft.server.v1_8_R1.PathfinderGoal;
 import net.minecraft.server.v1_8_R1.RandomPositionGenerator;
 import net.minecraft.server.v1_8_R1.Vec3D;
 
-/**
- * @author Jordan
- * 
- */
 public class CustomPathfinderGoalRandomStroll extends PathfinderGoal {
 
-	private final EntityCreature creature;
-	private double destX;
-	private double destY;
-	private double destZ;
-	private final double speed;
-	private int chanceToNot;
-	private boolean notPathing;
+    private final EntityCreature creature;
+    private double destX;
+    private double destY;
+    private double destZ;
+    private final double speed;
+    private int chanceToNot;
+    private boolean notPathing;
 
-	public CustomPathfinderGoalRandomStroll(EntityCreature creature, double speed) {
-		this(creature, speed, 120);
-	}
+    public CustomPathfinderGoalRandomStroll(EntityCreature creature, double speed) {
+        this(creature, speed, 120);
+    }
 
-	public CustomPathfinderGoalRandomStroll(EntityCreature creature, double speed, int chanceToNot) {
-		this.creature = creature;
-		this.speed = speed;
-		this.chanceToNot = chanceToNot;
-		a(1);
-	}
+    public CustomPathfinderGoalRandomStroll(EntityCreature creature, double speed, int chanceToNot) {
+        this.creature = creature;
+        this.speed = speed;
+        this.chanceToNot = chanceToNot;
+        this.a(1);
+    }
 
-	@Override
-	public boolean a() {
-		if (!notPathing) {
-			// bg() is ticks since last damage.
-			if (creature.bg() >= 100) { return false; }
-			if (creature.bb().nextInt(chanceToNot) != 0) { return false; }
-		}
+    public boolean a() {
+        if (!this.notPathing) {
+            if (this.creature.bg() >= 100) {
+                return false;
+            }
 
-		// x-range and z-range
-		Vec3D destination = RandomPositionGenerator.a(creature, 10, 7);
-		if (destination == null) { return false; }
+            if (this.creature.bb().nextInt(this.chanceToNot) != 0) {
+                return false;
+            }
+        }
 
-		destX = destination.a;
-		destY = destination.b;
-		destZ = destination.c;
-		notPathing = false;
-		return true;
-	}
+        Vec3D destination = RandomPositionGenerator.a(this.creature, 10, 7);
 
-	@Override
-	public boolean b() {
-		return !creature.getNavigation().m();
-	}
+        if (destination == null) {
+            return false;
+        } else {
+            this.destX = destination.a;
+            this.destY = destination.b;
+            this.destZ = destination.c;
+            this.notPathing = false;
+            return true;
+        }
+    }
 
-	@Override
-	public void c() {
-		creature.getNavigation().a(destX, destY, destZ, speed);
-	}
+    public boolean b() {
+        return !this.creature.getNavigation().m();
+    }
 
-	public void f() {
-		notPathing = true;
-	}
+    public void c() {
+        this.creature.getNavigation().a(this.destX, this.destY, this.destZ, this.speed);
+    }
 
-	public void b(int paramInt) {
-		chanceToNot = paramInt;
-	}
+    public void f() {
+        this.notPathing = true;
+    }
+
+    public void b(int paramInt) {
+        this.chanceToNot = paramInt;
+    }
 }

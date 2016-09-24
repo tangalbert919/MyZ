@@ -1,13 +1,10 @@
-/**
- * 
- */
 package jordan.sicherman.listeners.player;
 
+import java.util.Iterator;
 import jordan.sicherman.MyZ;
 import jordan.sicherman.items.EquipmentState;
 import jordan.sicherman.items.ItemTag;
 import jordan.sicherman.items.ItemUtilities;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -22,114 +19,118 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.util.Vector;
 
-/**
- * @author snowgears
- * 
- */
 public class Grappler implements Listener {
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onEntityDamageEvent(EntityDamageEvent e) {
-		if (e.getCause() == DamageCause.FALL && e.getEntity().hasMetadata("MyZ.grapple.in_air")) {
-			e.setCancelled(true);
-			e.getEntity().removeMetadata("MyZ.grapple.in_air", MyZ.instance);
-		}
-	}
+    @EventHandler(
+        priority = EventPriority.HIGHEST,
+        ignoreCancelled = true
+    )
+    public void onEntityDamageEvent(EntityDamageEvent e) {
+        if (e.getCause() == DamageCause.FALL && e.getEntity().hasMetadata("MyZ.grapple.in_air")) {
+            e.setCancelled(true);
+            e.getEntity().removeMetadata("MyZ.grapple.in_air", MyZ.instance);
+        }
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void fishEvent(PlayerFishEvent e) {
-		Player player = e.getPlayer();
+    }
 
-		if (!ItemUtilities.getInstance().hasTag(player.getItemInHand(), ItemTag.GRAPPLE)) { return; }
+    @EventHandler(
+        priority = EventPriority.HIGHEST,
+        ignoreCancelled = true
+    )
+    public void fishEvent(PlayerFishEvent e) {
+        Player player = e.getPlayer();
 
-		if (e.getState() == State.IN_GROUND) {
-			Location loc = e.getHook().getLocation();
-			for (Entity ent : e.getHook().getNearbyEntities(1.5, 1, 1.5)) {
-				if (ent instanceof Item) {
-					grapple(player, ent, player.getLocation());
-					return;
-				}
-			}
+        if (ItemUtilities.getInstance().hasTag(player.getItemInHand(), ItemTag.GRAPPLE)) {
+            if (e.getState() == State.IN_GROUND) {
+                Location hooked = e.getHook().getLocation();
+                Iterator iterator = e.getHook().getNearbyEntities(1.5D, 1.0D, 1.5D).iterator();
 
-			grapple(player, player, loc);
-		} else if (e.getState() == State.CAUGHT_ENTITY) {
-			if (e.getCaught() instanceof Player) {
-				Player hooked = (Player) e.getCaught();
-				grapple(player, hooked, player.getLocation());
-			} else {
-				grapple(player, e.getCaught(), player.getLocation());
-			}
-		}
-	}
+                while (iterator.hasNext()) {
+                    Entity ent = (Entity) iterator.next();
 
-	public void grapple(Player grappler, Entity pulled, Location to) {
-		if (grappler.equals(pulled)) {
-			if (grappler.getLocation().distance(to) < 3 || EquipmentState.getState(grappler.getItemInHand()) == EquipmentState.GRAPPLE_WEAK) {
-				pullEntitySlightly(grappler, to);
-			} else {
-				pullEntityToLocation(grappler, to, EquipmentState.getState(grappler.getItemInHand()) == EquipmentState.LIGHTWEIGHT);
-			}
-		} else {
-			if (EquipmentState.getState(grappler.getItemInHand()) == EquipmentState.GRAPPLE_WEAK) {
-				pullEntitySlightly(pulled, to);
-			} else {
-				pullEntityToLocation(pulled, to, false);
-			}
-		}
+                    if (ent instanceof Item) {
+                        this.grapple(player, ent, player.getLocation());
+                        return;
+                    }
+                }
 
-		to.getWorld().playSound(to, Sound.MAGMACUBE_JUMP, 10f, 1f);
-	}
+                this.grapple(player, player, hooked);
+            } else if (e.getState() == State.CAUGHT_ENTITY) {
+                if (e.getCaught() instanceof Player) {
+                    Player hooked1 = (Player) e.getCaught();
 
-	private void pullEntitySlightly(Entity entityFor, Location to) {
-		if (to.getY() > entityFor.getLocation().getY()) {
-			entityFor.setVelocity(new Vector(0, 0.25, 0));
-			return;
-		}
+                    this.grapple(player, hooked1, player.getLocation());
+                } else {
+                    this.grapple(player, e.getCaught(), player.getLocation());
+                }
+            }
 
-		Location from = entityFor.getLocation();
+        }
+    }
 
-		Vector vector = to.toVector().subtract(from.toVector());
-		entityFor.setVelocity(vector);
-	}
+    public void grapple(Player grappler, Entity pulled, Location to) {
+        if (grappler.equals(pulled)) {
+            if (grappler.getLocation().distance(to) >= 3.0D && EquipmentState.getState(grappler.getItemInHand()) != EquipmentState.GRAPPLE_WEAK) {
+                this.pullEntityToLocation(grappler, to, EquipmentState.getState(grappler.getItemInHand()) == EquipmentState.LIGHTWEIGHT);
+            } else {
+                this.pullEntitySlightly(grappler, to);
+            }
+        } else if (EquipmentState.getState(grappler.getItemInHand()) == EquipmentState.GRAPPLE_WEAK) {
+            this.pullEntitySlightly(pulled, to);
+        } else {
+            this.pullEntityToLocation(pulled, to, false);
+        }
 
-	private void pullEntityToLocation(Entity entityFor, Location to, boolean negate) {
-		Location from = entityFor.getLocation();
+        to.getWorld().playSound(to, Sound.ENTITY_MAGMACUBE_JUMP, 10.0F, 1.0F);
+    }
 
-		from.setY(from.getY() + 0.5);
-		entityFor.teleport(from);
+    private void pullEntitySlightly(Entity entityFor, Location to) {
+        if (to.getY() > entityFor.getLocation().getY()) {
+            entityFor.setVelocity(new Vector(0.0D, 0.25D, 0.0D));
+        } else {
+            Location from = entityFor.getLocation();
+            Vector vector = to.toVector().subtract(from.toVector());
 
-		double gravity = -0.08;
-		double distance = to.distance(from);
-		double time = distance;
-		double x = (1.0 + 0.07 * time) * (to.getX() - from.getX()) / time;
-		double y = (1.0 + 0.03 * time) * (to.getY() - from.getY()) / time - 0.5 * gravity * time;
-		double z = (1.0 + 0.07 * time) * (to.getZ() - from.getZ()) / time;
+            entityFor.setVelocity(vector);
+        }
+    }
 
-		Vector v = entityFor.getVelocity();
-		v.setX(x);
-		v.setY(y);
-		v.setZ(z);
-		entityFor.setVelocity(v);
+    private void pullEntityToLocation(Entity entityFor, Location to, boolean negate) {
+        Location from = entityFor.getLocation();
 
-		if (negate) {
-			addNoFall((Player) entityFor, 100);
-		}
-	}
+        from.setY(from.getY() + 0.5D);
+        entityFor.teleport(from);
+        double gravity = -0.08D;
+        double distance = to.distance(from);
+        double x = (1.0D + 0.07D * distance) * (to.getX() - from.getX()) / distance;
+        double y = (1.0D + 0.03D * distance) * (to.getY() - from.getY()) / distance - 0.5D * gravity * distance;
+        double z = (1.0D + 0.07D * distance) * (to.getZ() - from.getZ()) / distance;
+        Vector v = entityFor.getVelocity();
 
-	public void addNoFall(final Player playerFor, int duration) {
-		if (playerFor.hasMetadata("MyZ.grapple.in_air")) {
-			Bukkit.getServer().getScheduler().cancelTask(playerFor.getMetadata("MyZ.grapple.in_air").get(0).asInt());
-		}
+        v.setX(x);
+        v.setY(y);
+        v.setZ(z);
+        entityFor.setVelocity(v);
+        if (negate) {
+            this.addNoFall((Player) entityFor, 100);
+        }
 
-		int id = MyZ.instance.getServer().getScheduler().scheduleSyncDelayedTask(MyZ.instance, new Runnable() {
-			@Override
-			public void run() {
-				playerFor.removeMetadata("MyZ.grapple.in_air", MyZ.instance);
-			}
-		}, duration);
+    }
 
-		playerFor.setMetadata("MyZ.grapple.in_air", new FixedMetadataValue(MyZ.instance, id));
-	}
+    public void addNoFall(final Player playerFor, int duration) {
+        if (playerFor.hasMetadata("MyZ.grapple.in_air")) {
+            Bukkit.getServer().getScheduler().cancelTask(((MetadataValue) playerFor.getMetadata("MyZ.grapple.in_air").get(0)).asInt());
+        }
+
+        int id = MyZ.instance.getServer().getScheduler().scheduleSyncDelayedTask(MyZ.instance, new Runnable() {
+            public void run() {
+                playerFor.removeMetadata("MyZ.grapple.in_air", MyZ.instance);
+            }
+        }, (long) duration);
+
+        playerFor.setMetadata("MyZ.grapple.in_air", new FixedMetadataValue(MyZ.instance, Integer.valueOf(id)));
+    }
 }

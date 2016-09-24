@@ -1,69 +1,56 @@
-/**
- * 
- */
 package jordan.sicherman.nms.v1_8_R1.anvil;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import net.minecraft.server.v1_8_R1.IInventory;
 import net.minecraft.server.v1_8_R1.InventorySubcontainer;
 import net.minecraft.server.v1_8_R1.ItemStack;
-
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftHumanEntity;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 
 public class CustomContainerAnvilInventory extends InventorySubcontainer {
 
-	final CustomContainerAnvil anvil;
-	public List<HumanEntity> transaction = new ArrayList<HumanEntity>();
-	public Player player;
-	private int maxStack = 64;
+    final CustomContainerAnvil anvil;
+    public List transaction = new ArrayList();
+    public Player player;
+    private int maxStack = 64;
 
-	@Override
-	public ItemStack[] getContents() {
-		return items;
-	}
+    public ItemStack[] getContents() {
+        return this.items;
+    }
 
-	@Override
-	public void onOpen(CraftHumanEntity who) {
-		transaction.add(who);
-	}
+    public void onOpen(CraftHumanEntity who) {
+        this.transaction.add(who);
+    }
 
-	@Override
-	public void onClose(CraftHumanEntity who) {
-		transaction.remove(who);
-	}
+    public void onClose(CraftHumanEntity who) {
+        this.transaction.remove(who);
+    }
 
-	@Override
-	public List<HumanEntity> getViewers() {
-		return transaction;
-	}
+    public List getViewers() {
+        return this.transaction;
+    }
 
-	@Override
-	public InventoryHolder getOwner() {
-		return player;
-	}
+    public InventoryHolder getOwner() {
+        return this.player;
+    }
 
-	@Override
-	public void setMaxStackSize(int size) {
-		maxStack = size;
-	}
+    public void setMaxStackSize(int size) {
+        this.maxStack = size;
+    }
 
-	CustomContainerAnvilInventory(CustomContainerAnvil containeranvil, String title, boolean customName, int size) {
-		super(title, customName, size);
-		anvil = containeranvil;
-	}
+    CustomContainerAnvilInventory(CustomContainerAnvil containeranvil, String title, boolean customName, int size) {
+        super(title, customName, size);
+        this.anvil = containeranvil;
+    }
 
-	@Override
-	public void update() {
-		super.update();
-		anvil.a(this);
-	}
+    public void update() {
+        super.update();
+        this.anvil.a((IInventory) this);
+    }
 
-	@Override
-	public int getMaxStackSize() {
-		return maxStack;
-	}
+    public int getMaxStackSize() {
+        return this.maxStack;
+    }
 }

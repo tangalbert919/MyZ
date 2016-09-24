@@ -1,181 +1,225 @@
-/**
- * 
- */
 package jordan.sicherman.utilities;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import jordan.sicherman.utilities.StartingKitManager.EquipmentPiece;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
+import jordan.sicherman.utilities.configuration.FileMember;
 import jordan.sicherman.utilities.configuration.FileUtilities;
-
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-/**
- * @author Jordan
- * 
- */
 public class MyZRank {
 
-	private static Set<MyZRank> values = new HashSet<MyZRank>();
+    private static Set values = new HashSet();
+    private final int identifier;
+    private ItemStack[] inventory;
+    private ItemStack helmet;
+    private ItemStack chestplate;
+    private ItemStack leggings;
+    private ItemStack boots;
+    private String chat;
 
-	private final int identifier;
-	private ItemStack[] inventory;
-	private ItemStack helmet, chestplate, leggings, boots;
-	private String chat;
+    public MyZRank(int identifier) {
+        this.identifier = identifier;
+    }
 
-	public MyZRank(int identifier) {
-		this.identifier = identifier;
-	}
+    public MyZRank(int identifier, String chat, ItemStack[] inventory, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots) {
+        this.identifier = identifier;
+        this.chat = chat;
+        this.inventory = inventory;
+        this.helmet = helmet;
+        this.chestplate = chestplate;
+        this.leggings = leggings;
+        this.boots = boots;
+    }
 
-	public MyZRank(int identifier, String chat, ItemStack[] inventory, ItemStack helmet, ItemStack chestplate, ItemStack leggings,
-			ItemStack boots) {
-		this.identifier = identifier;
-		this.chat = chat;
-		this.inventory = inventory;
-		this.helmet = helmet;
-		this.chestplate = chestplate;
-		this.leggings = leggings;
-		this.boots = boots;
-	}
+    public void setPrefix(String prefix) {
+        ConfigurationSection ranks = (ConfigurationSection) ConfigEntries.RANKS.getValue();
 
-	public void setPrefix(String prefix) {
-		ConfigurationSection ranks = ConfigEntries.RANKS.<ConfigurationSection> getValue();
+        ranks.set(this.identifier + ".chat_prefix", prefix);
+        FileUtilities.save(new FileMember[] { ConfigEntries.RANKS.getFile()});
+        this.chat = prefix;
+    }
 
-		ranks.set(identifier + ".chat_prefix", prefix);
-		FileUtilities.save(ConfigEntries.RANKS.getFile());
+    public void setEquipment(StartingKitManager.EquipmentPiece piece, ItemStack item) {
+        ConfigurationSection ranks = (ConfigurationSection) ConfigEntries.RANKS.getValue();
+        String slug = "helmet";
 
-		chat = prefix;
-	}
+        switch (MyZRank.SyntheticClass_1.$SwitchMap$jordan$sicherman$utilities$StartingKitManager$EquipmentPiece[piece.ordinal()]) {
+        case 1:
+            slug = "boots";
+            this.boots = item;
+            break;
 
-	public void setEquipment(EquipmentPiece piece, ItemStack item) {
-		ConfigurationSection ranks = ConfigEntries.RANKS.<ConfigurationSection> getValue();
+        case 2:
+            slug = "chestplate";
+            this.chestplate = item;
+            break;
 
-		String slug = "helmet";
-		switch (piece) {
-		case BOOTS:
-			slug = "boots";
-			boots = item;
-			break;
-		case CHESTPLATE:
-			slug = "chestplate";
-			chestplate = item;
-			break;
-		case HELMET:
-			slug = "helmet";
-			helmet = item;
-			break;
-		case LEGGINGS:
-			slug = "leggings";
-			leggings = item;
-			break;
-		}
-		ranks.set(identifier + ".equipment." + slug, item);
-		FileUtilities.save(ConfigEntries.RANKS.getFile());
-	}
+        case 3:
+            slug = "helmet";
+            this.helmet = item;
+            break;
 
-	public void setInventory(List<ItemStack> inventory) {
-		ConfigurationSection ranks = ConfigEntries.RANKS.<ConfigurationSection> getValue();
+        case 4:
+            slug = "leggings";
+            this.leggings = item;
+        }
 
-		ranks.set(identifier + ".equipment.inventory", inventory);
-		FileUtilities.save(ConfigEntries.RANKS.getFile());
+        ranks.set(this.identifier + ".equipment." + slug, item);
+        FileUtilities.save(new FileMember[] { ConfigEntries.RANKS.getFile()});
+    }
 
-		this.inventory = inventory.toArray(new ItemStack[0]);
-	}
+    public void setInventory(List inventory) {
+        ConfigurationSection ranks = (ConfigurationSection) ConfigEntries.RANKS.getValue();
 
-	@SuppressWarnings("unchecked")
-	public static void load() {
-		ConfigurationSection ranks = ConfigEntries.RANKS.<ConfigurationSection> getValue();
+        ranks.set(this.identifier + ".equipment.inventory", inventory);
+        FileUtilities.save(new FileMember[] { ConfigEntries.RANKS.getFile()});
+        this.inventory = (ItemStack[]) inventory.toArray(new ItemStack[0]);
+    }
 
-		values.clear();
+    public static void load() {
+        ConfigurationSection ranks = (ConfigurationSection) ConfigEntries.RANKS.getValue();
 
-		for (String key : ranks.getKeys(false)) {
-			String chat = ranks.getString(key + ".chat_prefix");
-			ItemStack boots = ranks.getItemStack(key + ".equipment.boots");
-			ItemStack helmet = ranks.getItemStack(key + ".equipment.helmet");
-			ItemStack chestplate = ranks.getItemStack(key + ".equipment.chestplate");
-			ItemStack leggings = ranks.getItemStack(key + ".equipment.leggings");
-			List<ItemStack> inventory = (List<ItemStack>) ranks.getList(key + ".equipment.inventory");
-			ItemStack[] items = new ItemStack[0];
-			if (inventory != null) {
-				items = inventory.toArray(new ItemStack[0]);
-			}
-			values.add(new MyZRank(Integer.valueOf(key), chat, items, helmet, chestplate, leggings, boots));
-		}
-	}
+        MyZRank.values.clear();
 
-	public static MyZRank forInt(int identifier, boolean create) {
-		MyZRank nearest = null;
-		for (MyZRank rank : values) {
-			if (rank.identifier == identifier) {
-				return rank;
-			} else if (rank.identifier < identifier) {
-				if (nearest == null || rank.identifier > nearest.identifier) {
-					nearest = rank;
-				}
-			}
-		}
+        String key;
+        String chat;
+        ItemStack boots;
+        ItemStack helmet;
+        ItemStack chestplate;
+        ItemStack leggings;
+        ItemStack[] items;
 
-		if (create) {
-			nearest = new MyZRank(identifier);
-			values.add(nearest);
-		}
-		return nearest;
-	}
+        for (Iterator iterator = ranks.getKeys(false).iterator(); iterator.hasNext(); MyZRank.values.add(new MyZRank(Integer.valueOf(key).intValue(), chat, items, helmet, chestplate, leggings, boots))) {
+            key = (String) iterator.next();
+            chat = ranks.getString(key + ".chat_prefix");
+            boots = ranks.getItemStack(key + ".equipment.boots");
+            helmet = ranks.getItemStack(key + ".equipment.helmet");
+            chestplate = ranks.getItemStack(key + ".equipment.chestplate");
+            leggings = ranks.getItemStack(key + ".equipment.leggings");
+            List inventory = ranks.getList(key + ".equipment.inventory");
 
-	public static MyZRank forInt(int identifier) {
-		return forInt(identifier, false);
-	}
+            items = new ItemStack[0];
+            if (inventory != null) {
+                items = (ItemStack[]) inventory.toArray(new ItemStack[0]);
+            }
+        }
 
-	public ItemStack getEquipment(EquipmentPiece piece) {
-		ItemStack item = null;
-		switch (piece) {
-		case BOOTS:
-			item = boots;
-			break;
-		case CHESTPLATE:
-			item = chestplate;
-			break;
-		case HELMET:
-			item = helmet;
-			break;
-		case LEGGINGS:
-			item = leggings;
-			break;
-		default:
-			return null;
-		}
+    }
 
-		if (item == null && identifier > 0) { return ConfigEntries.RANK_CARRYOVER.<Boolean> getValue() ? forInt(identifier - 1)
-				.getEquipment(piece) : null; }
+    public static MyZRank forInt(int identifier, boolean create) {
+        MyZRank nearest = null;
+        Iterator iterator = MyZRank.values.iterator();
 
-		return item;
-	}
+        while (iterator.hasNext()) {
+            MyZRank rank = (MyZRank) iterator.next();
 
-	public String getChatPrefix() {
-		return ChatColor.translateAlternateColorCodes('&', chat);
-	}
+            if (rank.identifier == identifier) {
+                return rank;
+            }
 
-	public ItemStack[] getInventory() {
-		Set<ItemStack> items = new HashSet<ItemStack>();
-		items.addAll(Arrays.asList(inventory));
+            if (rank.identifier < identifier && (nearest == null || rank.identifier > nearest.identifier)) {
+                nearest = rank;
+            }
+        }
 
-		if (ConfigEntries.RANK_CARRYOVER.<Boolean> getValue()) {
-			Set<Integer> ids = new HashSet<Integer>();
-			for (int i = identifier - 1; i >= 0; i--) {
-				MyZRank rank = forInt(i);
-				if (!ids.contains(rank.identifier)) {
-					ids.add(rank.identifier);
-					items.addAll(Arrays.asList(rank.inventory));
-				}
-			}
-		}
+        if (create) {
+            nearest = new MyZRank(identifier);
+            MyZRank.values.add(nearest);
+        }
 
-		return items.toArray(new ItemStack[0]);
-	}
+        return nearest;
+    }
+
+    public static MyZRank forInt(int identifier) {
+        return forInt(identifier, false);
+    }
+
+    public ItemStack getEquipment(StartingKitManager.EquipmentPiece piece) {
+        ItemStack item = null;
+
+        switch (MyZRank.SyntheticClass_1.$SwitchMap$jordan$sicherman$utilities$StartingKitManager$EquipmentPiece[piece.ordinal()]) {
+        case 1:
+            item = this.boots;
+            break;
+
+        case 2:
+            item = this.chestplate;
+            break;
+
+        case 3:
+            item = this.helmet;
+            break;
+
+        case 4:
+            item = this.leggings;
+            break;
+
+        default:
+            return null;
+        }
+
+        return item == null && this.identifier > 0 ? (((Boolean) ConfigEntries.RANK_CARRYOVER.getValue()).booleanValue() ? forInt(this.identifier - 1).getEquipment(piece) : null) : item;
+    }
+
+    public String getChatPrefix() {
+        return ChatColor.translateAlternateColorCodes('&', this.chat);
+    }
+
+    public ItemStack[] getInventory() {
+        HashSet items = new HashSet();
+
+        items.addAll(Arrays.asList(this.inventory));
+        if (((Boolean) ConfigEntries.RANK_CARRYOVER.getValue()).booleanValue()) {
+            HashSet ids = new HashSet();
+
+            for (int i = this.identifier - 1; i >= 0; --i) {
+                MyZRank rank = forInt(i);
+
+                if (!ids.contains(Integer.valueOf(rank.identifier))) {
+                    ids.add(Integer.valueOf(rank.identifier));
+                    items.addAll(Arrays.asList(rank.inventory));
+                }
+            }
+        }
+
+        return (ItemStack[]) items.toArray(new ItemStack[0]);
+    }
+
+    static class SyntheticClass_1 {
+
+        static final int[] $SwitchMap$jordan$sicherman$utilities$StartingKitManager$EquipmentPiece = new int[StartingKitManager.EquipmentPiece.values().length];
+
+        static {
+            try {
+                MyZRank.SyntheticClass_1.$SwitchMap$jordan$sicherman$utilities$StartingKitManager$EquipmentPiece[StartingKitManager.EquipmentPiece.BOOTS.ordinal()] = 1;
+            } catch (NoSuchFieldError nosuchfielderror) {
+                ;
+            }
+
+            try {
+                MyZRank.SyntheticClass_1.$SwitchMap$jordan$sicherman$utilities$StartingKitManager$EquipmentPiece[StartingKitManager.EquipmentPiece.CHESTPLATE.ordinal()] = 2;
+            } catch (NoSuchFieldError nosuchfielderror1) {
+                ;
+            }
+
+            try {
+                MyZRank.SyntheticClass_1.$SwitchMap$jordan$sicherman$utilities$StartingKitManager$EquipmentPiece[StartingKitManager.EquipmentPiece.HELMET.ordinal()] = 3;
+            } catch (NoSuchFieldError nosuchfielderror2) {
+                ;
+            }
+
+            try {
+                MyZRank.SyntheticClass_1.$SwitchMap$jordan$sicherman$utilities$StartingKitManager$EquipmentPiece[StartingKitManager.EquipmentPiece.LEGGINGS.ordinal()] = 4;
+            } catch (NoSuchFieldError nosuchfielderror3) {
+                ;
+            }
+
+        }
+    }
 }

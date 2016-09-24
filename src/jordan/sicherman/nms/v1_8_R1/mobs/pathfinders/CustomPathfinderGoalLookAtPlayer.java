@@ -1,104 +1,92 @@
-/**
- * 
- */
 package jordan.sicherman.nms.v1_8_R1.mobs.pathfinders;
 
+import java.util.Iterator;
 import java.util.List;
-
 import net.minecraft.server.v1_8_R1.Entity;
 import net.minecraft.server.v1_8_R1.EntityHuman;
 import net.minecraft.server.v1_8_R1.EntityInsentient;
-import net.minecraft.server.v1_8_R1.EntityLiving;
 import net.minecraft.server.v1_8_R1.EntityPlayer;
 import net.minecraft.server.v1_8_R1.MobEffectList;
 import net.minecraft.server.v1_8_R1.PathfinderGoal;
 import net.minecraft.server.v1_8_R1.World;
 
-/**
- * @author Jordan
- * 
- */
 public class CustomPathfinderGoalLookAtPlayer extends PathfinderGoal {
 
-	protected EntityInsentient creature;
-	protected Entity target;
-	protected float range;
-	private int lookAway;
-	protected Class<? extends EntityLiving> classToLookAt;
+    protected EntityInsentient creature;
+    protected Entity target;
+    protected float range;
+    private int lookAway;
+    protected Class classToLookAt;
 
-	public CustomPathfinderGoalLookAtPlayer(EntityInsentient creature, Class<? extends EntityLiving> classToLookAt, float range) {
-		this(creature, classToLookAt, range, 0.02f);
-	}
+    public CustomPathfinderGoalLookAtPlayer(EntityInsentient creature, Class classToLookAt, float range) {
+        this(creature, classToLookAt, range, 0.02F);
+    }
 
-	public CustomPathfinderGoalLookAtPlayer(EntityInsentient creature, Class<? extends EntityLiving> classToLookAt, float range,
-			float chanceToNot) {
-		this.creature = creature;
-		this.classToLookAt = classToLookAt;
-		this.range = range;
-		a(2);
-	}
+    public CustomPathfinderGoalLookAtPlayer(EntityInsentient creature, Class classToLookAt, float range, float chanceToNot) {
+        this.creature = creature;
+        this.classToLookAt = classToLookAt;
+        this.range = range;
+        this.a(2);
+    }
 
-	public EntityHuman findNearbyPlayer(World world, double iX, double iY, double iZ) {
-		double nearestSquared = -1.0D;
-		EntityHuman nearest = null;
+    public EntityHuman findNearbyPlayer(World world, double iX, double iY, double iZ) {
+        double nearestSquared = -1.0D;
+        EntityHuman nearest = null;
+        List players = world.players;
+        Iterator iterator = players.iterator();
 
-		@SuppressWarnings("unchecked")
-		List<EntityHuman> players = world.players;
+        while (iterator.hasNext()) {
+            EntityHuman found = (EntityHuman) iterator.next();
+            double range = (double) (found.exp * 32.0F);
 
-		for (EntityHuman found : players) {
-			double range = found.exp * 32;
-			if (found != null && found.isAlive() && !((EntityPlayer) found).playerInteractManager.isCreative()
-					&& !found.hasEffect(MobEffectList.INVISIBILITY) && !found.hasEffect(MobEffectList.WITHER)) {
-				double fX = found.locX, fY = found.locY, fZ = found.locZ;
+            if (found != null && found.isAlive() && !((EntityPlayer) found).playerInteractManager.isCreative() && !found.hasEffect(MobEffectList.INVISIBILITY) && !found.hasEffect(MobEffectList.WITHER)) {
+                double fX = found.locX;
+                double fY = found.locY;
+                double fZ = found.locZ;
+                double distSquared = (fX - iX) * (fX - iX) + (fY - iY) * (fY - iY) * (fZ - iZ) * (fZ - iZ);
 
-				double distSquared = (fX - iX) * (fX - iX) + (fY - iY) * (fY - iY) * +(fZ - iZ) * (fZ - iZ);
-				if (distSquared < range * range && (nearestSquared == -1.0D || distSquared < nearestSquared)) {
-					nearestSquared = distSquared;
-					nearest = found;
-				}
-			}
-		}
-		return nearest;
-	}
+                if (distSquared < range * range && (nearestSquared == -1.0D || distSquared < nearestSquared)) {
+                    nearestSquared = distSquared;
+                    nearest = found;
+                }
+            }
+        }
 
-	@Override
-	public boolean a() {
-		if (creature.getGoalTarget() != null) {
-			target = creature.getGoalTarget();
-		}
-		if (target == null) {
-			if (classToLookAt == EntityHuman.class) {
-				if (creature.bb().nextFloat() <= 0.5) {
-					target = findNearbyPlayer(creature.world, creature.locX, creature.locY, creature.locZ);
-				}
-			} else {
-				target = creature.world.a(classToLookAt, creature.getBoundingBox().grow(range, 3.0D, range), creature);
-			}
-		}
-		return target != null;
-	}
+        return nearest;
+    }
 
-	@Override
-	public boolean b() {
-		if (!target.isAlive()) { return false; }
-		if (creature.h(target) > range * range) { return false; }
+    public boolean a() {
+        if (this.creature.getGoalTarget() != null) {
+            this.target = this.creature.getGoalTarget();
+        }
 
-		return lookAway > 0;
-	}
+        if (this.target == null) {
+            if (this.classToLookAt == EntityHuman.class) {
+                if ((double) this.creature.bb().nextFloat() <= 0.5D) {
+                    this.target = this.findNearbyPlayer(this.creature.world, this.creature.locX, this.creature.locY, this.creature.locZ);
+                }
+            } else {
+                this.target = this.creature.world.a(this.classToLookAt, this.creature.getBoundingBox().grow((double) this.range, 3.0D, (double) this.range), this.creature);
+            }
+        }
 
-	@Override
-	public void c() {
-		lookAway = 40 + creature.bb().nextInt(40);
-	}
+        return this.target != null;
+    }
 
-	@Override
-	public void d() {
-		target = null;
-	}
+    public boolean b() {
+        return !this.target.isAlive() ? false : (this.creature.h(this.target) > (double) (this.range * this.range) ? false : this.lookAway > 0);
+    }
 
-	@Override
-	public void e() {
-		creature.getControllerLook().a(target.locX, target.locY + target.getHeadHeight(), target.locZ, 10.0F, creature.bP());
-		lookAway -= 1;
-	}
+    public void c() {
+        this.lookAway = 40 + this.creature.bb().nextInt(40);
+    }
+
+    public void d() {
+        this.target = null;
+    }
+
+    public void e() {
+        this.creature.getControllerLook().a(this.target.locX, this.target.locY + (double) this.target.getHeadHeight(), this.target.locZ, 10.0F, (float) this.creature.bP());
+        --this.lookAway;
+    }
 }

@@ -1,49 +1,38 @@
-/**
- * 
- */
 package jordan.sicherman.nms.v1_7_R4.mobs.pathfinders;
 
 import net.minecraft.server.v1_7_R4.EntityInsentient;
 import net.minecraft.server.v1_7_R4.PathfinderGoal;
 
-/**
- * @author Jordan
- * 
- */
 public class CustomPathfinderGoalRandomLookaround extends PathfinderGoal {
 
-	private final EntityInsentient creature;
-	private double xOffset;
-	private double zOffset;
-	private int lookAway;
+    private final EntityInsentient creature;
+    private double xOffset;
+    private double zOffset;
+    private int lookAway;
 
-	public CustomPathfinderGoalRandomLookaround(EntityInsentient creature) {
-		this.creature = creature;
-		a(3);
-	}
+    public CustomPathfinderGoalRandomLookaround(EntityInsentient creature) {
+        this.creature = creature;
+        this.a(3);
+    }
 
-	@Override
-	public boolean a() {
-		return creature.aI().nextFloat() < 0.02F;
-	}
+    public boolean a() {
+        return this.creature.aI().nextFloat() < 0.02F;
+    }
 
-	@Override
-	public boolean b() {
-		return lookAway >= 0;
-	}
+    public boolean b() {
+        return this.lookAway >= 0;
+    }
 
-	@Override
-	public void c() {
-		double d1 = 6.283185307179586D * creature.aI().nextDouble();
-		xOffset = Math.cos(d1);
-		zOffset = Math.sin(d1);
-		lookAway = 20 + creature.aI().nextInt(20);
-	}
+    public void c() {
+        double d1 = 6.283185307179586D * this.creature.aI().nextDouble();
 
-	@Override
-	public void e() {
-		lookAway -= 1;
-		creature.getControllerLook().a(creature.locX + xOffset, creature.locY + creature.getHeadHeight(), creature.locZ + zOffset, 10.0F,
-				creature.x());
-	}
+        this.xOffset = Math.cos(d1);
+        this.zOffset = Math.sin(d1);
+        this.lookAway = 20 + this.creature.aI().nextInt(20);
+    }
+
+    public void e() {
+        --this.lookAway;
+        this.creature.getControllerLook().a(this.creature.locX + this.xOffset, this.creature.locY + (double) this.creature.getHeadHeight(), this.creature.locZ + this.zOffset, 10.0F, (float) this.creature.x());
+    }
 }

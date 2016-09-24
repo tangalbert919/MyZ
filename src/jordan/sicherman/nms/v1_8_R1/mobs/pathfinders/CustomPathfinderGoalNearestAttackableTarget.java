@@ -1,85 +1,67 @@
-/**
- * 
- */
 package jordan.sicherman.nms.v1_8_R1.mobs.pathfinders;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import java.util.Collections;
 import java.util.List;
-
 import net.minecraft.server.v1_8_R1.DistanceComparator;
 import net.minecraft.server.v1_8_R1.Entity;
 import net.minecraft.server.v1_8_R1.EntityCreature;
 import net.minecraft.server.v1_8_R1.EntityLiving;
 import net.minecraft.server.v1_8_R1.IEntitySelector;
 import net.minecraft.server.v1_8_R1.PathfinderGoalTarget;
-
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-
-/**
- * @author Jordan
- * 
- */
 public class CustomPathfinderGoalNearestAttackableTarget extends PathfinderGoalTarget {
 
-	protected final Class<? extends EntityLiving> classToTarget;
-	protected final DistanceComparator distanceComparator;
-	protected Predicate<EntityLiving> entitySelector;
-	protected EntityLiving target;
+    protected final Class classToTarget;
+    protected final DistanceComparator distanceComparator;
+    protected Predicate entitySelector;
+    protected EntityLiving target;
 
-	public CustomPathfinderGoalNearestAttackableTarget(EntityCreature entitycreature, Class<? extends EntityLiving> targetClass,
-			boolean flag) {
-		this(entitycreature, targetClass, flag, false);
-	}
+    public CustomPathfinderGoalNearestAttackableTarget(EntityCreature entitycreature, Class targetClass, boolean flag) {
+        this(entitycreature, targetClass, flag, false);
+    }
 
-	public CustomPathfinderGoalNearestAttackableTarget(EntityCreature entitycreature, Class<? extends EntityLiving> targetClass,
-			boolean flag, boolean flag1) {
-		this(entitycreature, targetClass, 10, flag, flag1, (Predicate<EntityLiving>) null);
-	}
+    public CustomPathfinderGoalNearestAttackableTarget(EntityCreature entitycreature, Class targetClass, boolean flag, boolean flag1) {
+        this(entitycreature, targetClass, 10, flag, flag1, (Predicate) null);
+    }
 
-	public CustomPathfinderGoalNearestAttackableTarget(EntityCreature entitycreature, Class<? extends EntityLiving> targetClass,
-			int chanceToCancel, boolean flag, boolean flag1, Predicate<EntityLiving> predicate) {
-		super(entitycreature, flag, flag1);
-		classToTarget = targetClass;
-		distanceComparator = new DistanceComparator(entitycreature);
-		a(1);
-		entitySelector = new CustomEntitySelectorNearestAttackableTarget(this, predicate);
-	}
+    public CustomPathfinderGoalNearestAttackableTarget(EntityCreature entitycreature, Class targetClass, int chanceToCancel, boolean flag, boolean flag1, Predicate predicate) {
+        super(entitycreature, flag, flag1);
+        this.classToTarget = targetClass;
+        this.distanceComparator = new DistanceComparator(entitycreature);
+        this.a(1);
+        this.entitySelector = new CustomEntitySelectorNearestAttackableTarget(this, predicate);
+    }
 
-	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public boolean a() {
-		double range = f();
-		List list = e.world
-				.a(classToTarget, e.getBoundingBox().grow(range, 4.0D, range), Predicates.and(entitySelector, IEntitySelector.d));
+    public boolean a() {
+        double range = this.f();
+        List list = this.e.world.a(this.classToTarget, this.e.getBoundingBox().grow(range, 4.0D, range), Predicates.and(this.entitySelector, IEntitySelector.d));
 
-		Collections.sort(list, distanceComparator);
+        Collections.sort(list, this.distanceComparator);
+        if (list.isEmpty()) {
+            return false;
+        } else {
+            this.target = (EntityLiving) list.get(0);
+            return true;
+        }
+    }
 
-		if (list.isEmpty()) { return false; }
+    public void c() {
+        this.e.setGoalTarget(this.target, TargetReason.CLOSEST_PLAYER, true);
+        super.c();
+    }
 
-		target = (EntityLiving) list.get(0);
-		return true;
-	}
+    protected boolean a(EntityLiving creature, boolean bool) {
+        return super.a(creature, bool);
+    }
 
-	@Override
-	public void c() {
-		e.setGoalTarget(target, TargetReason.CLOSEST_PLAYER, true);
-		super.c();
-	}
+    protected double f() {
+        return super.f();
+    }
 
-	@Override
-	protected boolean a(EntityLiving creature, boolean bool) {
-		return super.a(creature, bool);
-	}
-
-	@Override
-	protected double f() {
-		return super.f();
-	}
-
-	public Entity getE() {
-		return e;
-	}
+    public Entity getE() {
+        return this.e;
+    }
 }

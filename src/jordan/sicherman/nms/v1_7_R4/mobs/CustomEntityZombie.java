@@ -1,6 +1,3 @@
-/**
- * 
- */
 package jordan.sicherman.nms.v1_7_R4.mobs;
 
 import jordan.sicherman.MyZ;
@@ -25,182 +22,198 @@ import net.minecraft.server.v1_7_R4.MathHelper;
 import net.minecraft.server.v1_7_R4.MobEffectList;
 import net.minecraft.server.v1_7_R4.PathfinderGoalFloat;
 import net.minecraft.server.v1_7_R4.PathfinderGoalMoveTowardsRestriction;
-import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
 import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_9_R2.WorldServer;
 
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 import org.bukkit.scheduler.BukkitRunnable;
 
-/**
- * @author Jordan
- * 
- */
 public class CustomEntityZombie extends EntityZombie implements SmartEntity {
 
-	private Location smartTarget;
+    private Location smartTarget;
+    private final CustomEntityZombie.ZombieType type;
+    private final boolean crawler;
 
-	@Override
-	public void setSmartTarget(Location inLoc, long duration) {
-		smartTarget = inLoc;
+    public void setSmartTarget(Location inLoc, long duration) {
+        this.smartTarget = inLoc;
+        (new BukkitRunnable() {
+            public void run() {
+                CustomEntityZombie.this.smartTarget = null;
+            }
+        }).runTaskLater(MyZ.instance, duration);
+    }
 
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				smartTarget = null;
-			}
-		}.runTaskLater(MyZ.instance, duration);
-	}
+    public Location getSmartTarget() {
+        return this.smartTarget;
+    }
 
-	@Override
-	public Location getSmartTarget() {
-		return smartTarget;
-	}
+    public EntityCreature getEntity() {
+        return this;
+    }
 
-	@Override
-	public EntityCreature getEntity() {
-		return this;
-	}
+    protected void bj() {
+        this.motY = 0.46D * ((Double) ConfigEntries.ZOMBIE_JUMP_MULTIPLIER.getValue()).doubleValue();
+        if (this.hasEffect(MobEffectList.JUMP)) {
+            this.motY += (double) ((float) (this.getEffect(MobEffectList.JUMP).getAmplifier() + 1) * 0.1F);
+        }
 
-	private final ZombieType type;
-	private final boolean crawler;
+        if (this.isSprinting()) {
+            float f = this.yaw * 0.01745329F;
 
-	private static enum ZombieType {
-		NORMAL(ConfigEntries.ZOMBIE_NORMAL_CHANCE.<Integer> getValue()), LEATHER(ConfigEntries.ZOMBIE_LEATHER_CHANCE.<Integer> getValue()), CHAIN(
-				ConfigEntries.ZOMBIE_CHAIN_CHANCE.<Integer> getValue()), GOLD(ConfigEntries.ZOMBIE_GOLD_CHANCE.<Integer> getValue()), IRON(
-				ConfigEntries.ZOMBIE_IRON_CHANCE.<Integer> getValue());
+            this.motX -= (double) (MathHelper.sin(f) * 0.2F);
+            this.motZ += (double) (MathHelper.cos(f) * 0.2F);
+        }
 
-		private final int chance;
+        this.al = true;
+    }
 
-		private ZombieType(int chance) {
-			this.chance = chance;
-		}
-	}
+    public CustomEntityZombie(World world) {
+        super(world);
+        int choices = CustomEntityZombie.ZombieType.values().length;
 
-	@Override
-	protected void bj() {
-		motY = 0.46D * ConfigEntries.ZOMBIE_JUMP_MULTIPLIER.<Double> getValue();
-		if (hasEffect(MobEffectList.JUMP)) {
-			motY += (getEffect(MobEffectList.JUMP).getAmplifier() + 1) * 0.1F;
-		}
-		if (isSprinting()) {
-			float f = yaw * 0.01745329F;
+        CustomEntityZombie.ZombieType exc;
 
-			motX -= MathHelper.sin(f) * 0.2F;
-			motZ += MathHelper.cos(f) * 0.2F;
-		}
-		al = true;
-	}
+        do {
+            exc = CustomEntityZombie.ZombieType.values()[this.random.nextInt(choices)];
+        } while (this.random.nextInt(100) + 1 > exc.chance);
 
-	@SuppressWarnings("unchecked")
-	public CustomEntityZombie(World world) {
-		super(world);
+        this.type = exc;
+        this.crawler = this.random.nextInt(100) + 1 <= ((Integer) ConfigEntries.ZOMBIE_CRAWLER_CHANCE.getValue()).intValue();
 
-		int choices = ZombieType.values().length;
-		while (true) {
-			ZombieType option = ZombieType.values()[random.nextInt(choices)];
-			if (random.nextInt(100) + 1 <= option.chance) {
-				type = option;
-				break;
-			}
-		}
+        try {
+            CommonMobUtilities.bField.set(this.goalSelector, new UnsafeList());
+            CommonMobUtilities.bField.set(this.targetSelector, new UnsafeList());
+            CommonMobUtilities.cField.set(this.goalSelector, new UnsafeList());
+            CommonMobUtilities.cField.set(this.targetSelector, new UnsafeList());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
 
-		crawler = random.nextInt(100) + 1 <= ConfigEntries.ZOMBIE_CRAWLER_CHANCE.<Integer> getValue();
+        this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(2, new CustomPathfinderGoalMeleeAttack(this, EntityHuman.class, this.crawler ? (this.isBaby() ? 0.25D : 0.5D) : ((Double) ConfigEntries.ZOMBIE_SPEED_TARGET.getValue()).doubleValue() * (this.isBaby() ? 0.5D : 1.0D), false));
+        this.goalSelector.a(5, new PathfinderGoalMoveTowardsRestriction(this, 1.0D));
+        this.goalSelector.a(7, new CustomPathfinderGoalRandomStroll(this, 1.0D));
+        this.goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        this.goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityGuard.class, 8.0F));
+        this.goalSelector.a(8, new CustomPathfinderGoalRandomLookaround(this));
+        this.goalSelector.a(4, new CustomPathfinderGoalMoveToLocation(this, 1.2D));
+        this.goalSelector.a(4, new CustomPathfinderGoalMeleeAttack(this, CustomEntityGuard.class, this.crawler ? (this.isBaby() ? 0.25D : 0.5D) : ((Double) ConfigEntries.ZOMBIE_SPEED_TARGET.getValue()).doubleValue() * (this.isBaby() ? 0.5D : 1.0D), true));
+        this.targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { EntityHuman.class, CustomEntityGuard.class}));
+        this.targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, EntityHuman.class, 0, true));
+        this.targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGuard.class, 0, false));
+    }
 
-		try {
-			CommonMobUtilities.bField.set(goalSelector, new UnsafeList<PathfinderGoalSelector>());
-			CommonMobUtilities.bField.set(targetSelector, new UnsafeList<PathfinderGoalSelector>());
-			CommonMobUtilities.cField.set(goalSelector, new UnsafeList<PathfinderGoalSelector>());
-			CommonMobUtilities.cField.set(targetSelector, new UnsafeList<PathfinderGoalSelector>());
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
+    public boolean canSpawn() {
+        return this.world.a(this.boundingBox, this) && this.world.getCubes(this, this.boundingBox).isEmpty() && !this.world.containsLiquid(this.boundingBox);
+    }
 
-		goalSelector.a(0, new PathfinderGoalFloat(this));
-		goalSelector.a(2, new CustomPathfinderGoalMeleeAttack(this, EntityHuman.class, crawler ? isBaby() ? 0.25D : 0.5D
-				: ConfigEntries.ZOMBIE_SPEED_TARGET.<Double> getValue() * (isBaby() ? 0.5D : 1.0D), false));
-		goalSelector.a(5, new PathfinderGoalMoveTowardsRestriction(this, 1.0D));
-		goalSelector.a(7, new CustomPathfinderGoalRandomStroll(this, 1.0D));
-		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityGuard.class, 8.0F));
-		goalSelector.a(8, new CustomPathfinderGoalRandomLookaround(this));
-		goalSelector.a(4, new CustomPathfinderGoalMoveToLocation(this, 1.2D));
-		goalSelector.a(4, new CustomPathfinderGoalMeleeAttack(this, CustomEntityGuard.class, crawler ? isBaby() ? 0.25D : 0.5D
-				: ConfigEntries.ZOMBIE_SPEED_TARGET.<Double> getValue() * (isBaby() ? 0.5D : 1.0D), true));
-		targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { EntityHuman.class, CustomEntityGuard.class }));
-		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, EntityHuman.class, 0, true));
-		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGuard.class, 0, false));
-	}
+    protected void aD() {
+        super.aD();
+        this.getAttributeInstance(GenericAttributes.maxHealth).setValue(((Double) ConfigEntries.ZOMBIE_HEALTH.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.c).setValue(((Double) ConfigEntries.ZOMBIE_KNOCKBACK_RESIST.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.d).setValue(((Double) ConfigEntries.ZOMBIE_SPEED.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.e).setValue(((Double) ConfigEntries.ZOMBIE_DAMAGE.getValue()).doubleValue());
+    }
 
-	@Override
-	public boolean canSpawn() {
-		return world.a(boundingBox, this) && world.getCubes(this, boundingBox).isEmpty() && !world.containsLiquid(boundingBox);
-	}
+    protected void bC() {
+        switch (CustomEntityZombie.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_7_R4$mobs$CustomEntityZombie$ZombieType[this.type.ordinal()]) {
+        case 1:
+            this.setEquipment(1, new ItemStack(Items.CHAINMAIL_BOOTS));
+            this.setEquipment(2, new ItemStack(Items.CHAINMAIL_LEGGINGS));
+            this.setEquipment(3, new ItemStack(Items.CHAINMAIL_CHESTPLATE));
+            this.setEquipment(4, new ItemStack(Items.CHAINMAIL_HELMET));
+            break;
 
-	@Override
-	protected void aD() {
-		super.aD();
-		getAttributeInstance(GenericAttributes.maxHealth).setValue(ConfigEntries.ZOMBIE_HEALTH.<Double> getValue());
-		getAttributeInstance(GenericAttributes.c).setValue(ConfigEntries.ZOMBIE_KNOCKBACK_RESIST.<Double> getValue());
-		getAttributeInstance(GenericAttributes.d).setValue(ConfigEntries.ZOMBIE_SPEED.<Double> getValue());
-		getAttributeInstance(GenericAttributes.e).setValue(ConfigEntries.ZOMBIE_DAMAGE.<Double> getValue());
-	}
+        case 2:
+            this.setEquipment(1, new ItemStack(Items.GOLD_BOOTS));
+            this.setEquipment(2, new ItemStack(Items.GOLD_LEGGINGS));
+            this.setEquipment(3, new ItemStack(Items.GOLD_CHESTPLATE));
+            this.setEquipment(4, new ItemStack(Items.GOLD_HELMET));
+            break;
 
-	@Override
-	protected void bC() {
-		switch (type) {
-		case CHAIN:
-			setEquipment(1, new ItemStack(Items.CHAINMAIL_BOOTS));
-			setEquipment(2, new ItemStack(Items.CHAINMAIL_LEGGINGS));
-			setEquipment(3, new ItemStack(Items.CHAINMAIL_CHESTPLATE));
-			setEquipment(4, new ItemStack(Items.CHAINMAIL_HELMET));
-			break;
-		case GOLD:
-			setEquipment(1, new ItemStack(Items.GOLD_BOOTS));
-			setEquipment(2, new ItemStack(Items.GOLD_LEGGINGS));
-			setEquipment(3, new ItemStack(Items.GOLD_CHESTPLATE));
-			setEquipment(4, new ItemStack(Items.GOLD_HELMET));
-			break;
-		case IRON:
-			setEquipment(1, new ItemStack(Items.IRON_BOOTS));
-			setEquipment(2, new ItemStack(Items.IRON_LEGGINGS));
-			setEquipment(3, new ItemStack(Items.IRON_CHESTPLATE));
-			setEquipment(4, new ItemStack(Items.IRON_HELMET));
-			break;
-		case LEATHER:
-			setEquipment(1, new ItemStack(Items.LEATHER_BOOTS));
-			setEquipment(2, new ItemStack(Items.LEATHER_LEGGINGS));
-			setEquipment(3, new ItemStack(Items.LEATHER_CHESTPLATE));
-			setEquipment(4, new ItemStack(Items.LEATHER_HELMET));
-			break;
-		default:
-			break;
-		}
-	}
+        case 3:
+            this.setEquipment(1, new ItemStack(Items.IRON_BOOTS));
+            this.setEquipment(2, new ItemStack(Items.IRON_LEGGINGS));
+            this.setEquipment(3, new ItemStack(Items.IRON_CHESTPLATE));
+            this.setEquipment(4, new ItemStack(Items.IRON_HELMET));
+            break;
 
-	@Override
-	protected Item getLoot() {
-		return null;
-	}
+        case 4:
+            this.setEquipment(1, new ItemStack(Items.LEATHER_BOOTS));
+            this.setEquipment(2, new ItemStack(Items.LEATHER_LEGGINGS));
+            this.setEquipment(3, new ItemStack(Items.LEATHER_CHESTPLATE));
+            this.setEquipment(4, new ItemStack(Items.LEATHER_HELMET));
+        }
 
-	@Override
-	protected void dropDeathLoot(boolean killedByPlayer, int enchantmentLevel) {
-		int amount = random.nextInt(4) == 0 ? random.nextInt(2) + 1 : 0;
-		for (int dropped = 0; dropped <= amount; dropped++) {
-			a(Items.ROTTEN_FLESH, 1);
-		}
-	}
+    }
 
-	@Override
-	protected void getRareDrop(int i) {
-		switch (random.nextInt(2)) {
-		case 0:
-			a(CraftItemStack.asNMSCopy(ItemUtilities.getInstance().getTagItem(ItemTag.MURKY_WATER, 1)), 0.0F);
-			break;
-		case 1:
-			a(CraftItemStack.asNMSCopy(ItemUtilities.getInstance().getTagItem(ItemTag.CHAIN, 1)), 0.0F);
-			break;
-		}
-	}
+    protected Item getLoot() {
+        return null;
+    }
+
+    protected void dropDeathLoot(boolean killedByPlayer, int enchantmentLevel) {
+        int amount = this.random.nextInt(4) == 0 ? this.random.nextInt(2) + 1 : 0;
+
+        for (int dropped = 0; dropped <= amount; ++dropped) {
+            this.a(Items.ROTTEN_FLESH, 1);
+        }
+
+    }
+
+    protected void getRareDrop(int i) {
+        switch (this.random.nextInt(2)) {
+        case 0:
+            this.a(CraftItemStack.asNMSCopy(ItemUtilities.getInstance().getTagItem(ItemTag.MURKY_WATER, 1)), 0.0F);
+            break;
+
+        case 1:
+            this.a(CraftItemStack.asNMSCopy(ItemUtilities.getInstance().getTagItem(ItemTag.CHAIN, 1)), 0.0F);
+        }
+
+    }
+
+    static class SyntheticClass_1 {
+
+        static final int[] $SwitchMap$jordan$sicherman$nms$v1_7_R4$mobs$CustomEntityZombie$ZombieType = new int[CustomEntityZombie.ZombieType.values().length];
+
+        static {
+            try {
+                CustomEntityZombie.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_7_R4$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.CHAIN.ordinal()] = 1;
+            } catch (NoSuchFieldError nosuchfielderror) {
+                ;
+            }
+
+            try {
+                CustomEntityZombie.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_7_R4$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.GOLD.ordinal()] = 2;
+            } catch (NoSuchFieldError nosuchfielderror1) {
+                ;
+            }
+
+            try {
+                CustomEntityZombie.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_7_R4$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.IRON.ordinal()] = 3;
+            } catch (NoSuchFieldError nosuchfielderror2) {
+                ;
+            }
+
+            try {
+                CustomEntityZombie.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_7_R4$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.LEATHER.ordinal()] = 4;
+            } catch (NoSuchFieldError nosuchfielderror3) {
+                ;
+            }
+
+        }
+    }
+
+    private static enum ZombieType {
+
+        NORMAL(((Integer) ConfigEntries.ZOMBIE_NORMAL_CHANCE.getValue()).intValue()), LEATHER(((Integer) ConfigEntries.ZOMBIE_LEATHER_CHANCE.getValue()).intValue()), CHAIN(((Integer) ConfigEntries.ZOMBIE_CHAIN_CHANCE.getValue()).intValue()), GOLD(((Integer) ConfigEntries.ZOMBIE_GOLD_CHANCE.getValue()).intValue()), IRON(((Integer) ConfigEntries.ZOMBIE_IRON_CHANCE.getValue()).intValue());
+
+        private final int chance;
+
+        private ZombieType(int chance) {
+            this.chance = chance;
+        }
+    }
 }

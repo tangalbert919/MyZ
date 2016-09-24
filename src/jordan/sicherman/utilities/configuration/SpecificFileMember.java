@@ -1,11 +1,3 @@
-/**
- * 
- */
 package jordan.sicherman.utilities.configuration;
 
-/**
- * @author Jordan
- * 
- */
-public interface SpecificFileMember extends FileMember {
-}
+public interface SpecificFileMember extends FileMember {}

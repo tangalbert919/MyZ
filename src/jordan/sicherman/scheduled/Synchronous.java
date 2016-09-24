@@ -1,83 +1,87 @@
-/**
- * 
- */
 package jordan.sicherman.scheduled;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
-
 import jordan.sicherman.MyZ;
 import jordan.sicherman.player.User;
-import jordan.sicherman.player.User.UFiles;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
 import jordan.sicherman.utilities.configuration.FileUtilities;
-
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
-/**
- * @author Jordan
- * 
- */
 public class Synchronous extends BukkitRunnable {
 
-	@Override
-	public void run() {
-		report();
-	}
+    public void run() {
+        report();
+    }
 
-	@Override
-	public void cancel() {
-		report();
-	}
+    public void cancel() {
+        report();
+    }
 
-	public static void report() {
-		if (ConfigEntries.NOTIFY_SAVE.<Boolean> getValue()) {
-			MyZ.log(ChatColor.YELLOW + "Performing save. Expect lag.");
-		}
+    public static void report() {
+        if (((Boolean) ConfigEntries.NOTIFY_SAVE.getValue()).booleanValue()) {
+            MyZ.log(ChatColor.YELLOW + "Performing save. Expect lag.");
+        }
 
-		doSave(new HashSet<User>(User.cache.values()));
-	}
+        doSave(new HashSet(User.cache.values()));
+    }
 
-	public static void save() {
-		if (ConfigEntries.NOTIFY_SAVE.<Boolean> getValue()) {
-			MyZ.log(ChatColor.YELLOW + "Performing save. Expect lag.");
-		}
+    public static void save() {
+        if (((Boolean) ConfigEntries.NOTIFY_SAVE.getValue()).booleanValue()) {
+            MyZ.log(ChatColor.YELLOW + "Performing save. Expect lag.");
+        }
 
-		for (User user : User.cache.values()) {
-			for (UFiles file : UFiles.values()) {
-				FileUtilities.save(user, file);
-			}
-		}
+        Iterator iterator = User.cache.values().iterator();
 
-		if (ConfigEntries.NOTIFY_SAVE.<Boolean> getValue()) {
-			MyZ.log(ChatColor.YELLOW + "Save completed.");
-		}
-	}
+        while (iterator.hasNext()) {
+            User user = (User) iterator.next();
+            User.UFiles[] auser_ufiles = User.UFiles.values();
+            int i = auser_ufiles.length;
 
-	private static void doSave(Set<User> users) {
-		long start = System.currentTimeMillis();
-		final Set<User> workingUsers = new HashSet<User>(users);
+            for (int j = 0; j < i; ++j) {
+                User.UFiles file = auser_ufiles[j];
 
-		for (User user : users) {
-			for (UFiles file : UFiles.values()) {
-				FileUtilities.save(user, file);
-				workingUsers.remove(user);
+                FileUtilities.save(user, file);
+            }
+        }
 
-				if (!workingUsers.isEmpty() && System.currentTimeMillis() - start >= 1000) {
-					MyZ.instance.getServer().getScheduler().runTask(MyZ.instance, new Runnable() {
-						@Override
-						public void run() {
-							doSave(workingUsers);
-						}
-					});
-					return;
-				}
-			}
-		}
+        if (((Boolean) ConfigEntries.NOTIFY_SAVE.getValue()).booleanValue()) {
+            MyZ.log(ChatColor.YELLOW + "Save completed.");
+        }
 
-		if (ConfigEntries.NOTIFY_SAVE.<Boolean> getValue()) {
-			MyZ.log(ChatColor.YELLOW + "Save completed.");
-		}
-	}
+    }
+
+    private static void doSave(Set users) {
+        long start = System.currentTimeMillis();
+        final HashSet workingUsers = new HashSet(users);
+        Iterator iterator = users.iterator();
+
+        while (iterator.hasNext()) {
+            User user = (User) iterator.next();
+            User.UFiles[] auser_ufiles = User.UFiles.values();
+            int i = auser_ufiles.length;
+
+            for (int j = 0; j < i; ++j) {
+                User.UFiles file = auser_ufiles[j];
+
+                FileUtilities.save(user, file);
+                workingUsers.remove(user);
+                if (!workingUsers.isEmpty() && System.currentTimeMillis() - start >= 1000L) {
+                    MyZ.instance.getServer().getScheduler().runTask(MyZ.instance, new Runnable() {
+                        public void run() {
+                            Synchronous.doSave(workingUsers);
+                        }
+                    });
+                    return;
+                }
+            }
+        }
+
+        if (((Boolean) ConfigEntries.NOTIFY_SAVE.getValue()).booleanValue()) {
+            MyZ.log(ChatColor.YELLOW + "Save completed.");
+        }
+
+    }
 }

@@ -1,246 +1,260 @@
-/**
- * 
- */
 package jordan.sicherman.nms.v1_7_R4.mobs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import jordan.sicherman.nms.utilities.NMS;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
 import net.minecraft.server.v1_7_R4.BiomeBase;
 import net.minecraft.server.v1_7_R4.BiomeMeta;
 import net.minecraft.server.v1_7_R4.EntityGiantZombie;
-import net.minecraft.server.v1_7_R4.EntityInsentient;
 import net.minecraft.server.v1_7_R4.EntityPigZombie;
 import net.minecraft.server.v1_7_R4.EntitySkeleton;
 import net.minecraft.server.v1_7_R4.EntityTypes;
 import net.minecraft.server.v1_7_R4.EntityZombie;
-
 import org.bukkit.entity.EntityType;
 
-/**
- * @author Jordan
- * 
- */
 public enum CustomEntityType {
 
-	PIG_ZOMBIE("PigZombie", 57, EntityType.PIG_ZOMBIE, new CustomBiomeMeta(EntityPigZombie.class, CustomEntityPigZombie.class,
-			ConfigEntries.PIGMAN_PACK_SPAWN.<Integer> getValue(), ConfigEntries.PIGMAN_PACK_MIN.<Integer> getValue(),
-			ConfigEntries.PIGMAN_PACK_MAX.<Integer> getValue())), GUARD("Skeleton", 51, EntityType.SKELETON, new CustomBiomeMeta(
-			EntitySkeleton.class, CustomEntityGuard.class, ConfigEntries.GUARD_PACK_SPAWN.<Integer> getValue(),
-			ConfigEntries.GUARD_PACK_MIN.<Integer> getValue(), ConfigEntries.GUARD_PACK_MAX.<Integer> getValue())), ZOMBIE("Zombie", 54,
-			EntityType.ZOMBIE, new CustomBiomeMeta(EntityZombie.class, CustomEntityZombie.class,
-					ConfigEntries.ZOMBIE_PACK_SPAWN.<Integer> getValue(), ConfigEntries.ZOMBIE_PACK_MIN.<Integer> getValue(),
-					ConfigEntries.ZOMBIE_PACK_MAX.<Integer> getValue())), GIANT_ZOMBIE("Giant", 53, EntityType.GIANT, new CustomBiomeMeta(
-			EntityGiantZombie.class, CustomEntityGiantZombie.class, ConfigEntries.GIANT_PACK_SPAWN.<Integer> getValue(),
-			ConfigEntries.GIANT_PACK_MIN.<Integer> getValue(), ConfigEntries.GIANT_PACK_MAX.<Integer> getValue()));
+    PIG_ZOMBIE("PigZombie", 57, EntityType.PIG_ZOMBIE, new CustomEntityType.CustomBiomeMeta(EntityPigZombie.class, CustomEntityPigZombie.class, ((Integer) ConfigEntries.PIGMAN_PACK_SPAWN.getValue()).intValue(), ((Integer) ConfigEntries.PIGMAN_PACK_MIN.getValue()).intValue(), ((Integer) ConfigEntries.PIGMAN_PACK_MAX.getValue()).intValue())), GUARD("Skeleton", 51, EntityType.SKELETON, new CustomEntityType.CustomBiomeMeta(EntitySkeleton.class, CustomEntityGuard.class, ((Integer) ConfigEntries.GUARD_PACK_SPAWN.getValue()).intValue(), ((Integer) ConfigEntries.GUARD_PACK_MIN.getValue()).intValue(), ((Integer) ConfigEntries.GUARD_PACK_MAX.getValue()).intValue())), ZOMBIE("Zombie", 54, EntityType.ZOMBIE, new CustomEntityType.CustomBiomeMeta(EntityZombie.class, CustomEntityZombie.class, ((Integer) ConfigEntries.ZOMBIE_PACK_SPAWN.getValue()).intValue(), ((Integer) ConfigEntries.ZOMBIE_PACK_MIN.getValue()).intValue(), ((Integer) ConfigEntries.ZOMBIE_PACK_MAX.getValue()).intValue())), GIANT_ZOMBIE("Giant", 53, EntityType.GIANT, new CustomEntityType.CustomBiomeMeta(EntityGiantZombie.class, CustomEntityGiantZombie.class, ((Integer) ConfigEntries.GIANT_PACK_SPAWN.getValue()).intValue(), ((Integer) ConfigEntries.GIANT_PACK_MIN.getValue()).intValue(), ((Integer) ConfigEntries.GIANT_PACK_MAX.getValue()).intValue()));
 
-	private static final Map<BiomeBase, DefaultCache> cache = new HashMap<BiomeBase, DefaultCache>();
+    private static final Map cache = new HashMap();
+    private String name;
+    private int id;
+    private EntityType entityType;
+    private CustomEntityType.CustomBiomeMeta meta;
 
-	private static class CustomBiomeMeta {
+    private CustomEntityType(String name, int id, EntityType entityType, CustomEntityType.CustomBiomeMeta meta) {
+        this.name = name;
+        this.id = id;
+        this.entityType = entityType;
+        this.meta = meta;
+    }
 
-		private final Class<? extends EntityInsentient> nms, custom;
-		private final BiomeMeta meta;
-		private final boolean enabled;
+    public String getName() {
+        return this.name;
+    }
 
-		public CustomBiomeMeta(Class<? extends EntityInsentient> nms, Class<? extends EntityInsentient> custom, int spawn_chance,
-				int range_min, int range_max) {
-			this.nms = nms;
-			this.custom = custom;
-			enabled = spawn_chance > 0;
-			meta = new BiomeMeta(custom, spawn_chance, range_min, range_max);
-		}
+    public int getID() {
+        return this.id;
+    }
 
-		public BiomeMeta toBiomeMeta() {
-			return meta;
-		}
-	}
+    public EntityType getEntityType() {
+        return this.entityType;
+    }
 
-	private static class DefaultCache {
+    public Class getNMSClass() {
+        return this.meta.nms;
+    }
 
-		List<BiomeMeta> as, at, au, av;
+    public Class getCustomClass() {
+        return this.meta.custom;
+    }
 
-		private static final String[] keys = new String[] { "as", "at", "au", "av" };
+    public static void registerEntities() {
+        CustomEntityType[] biomes = values();
+        int zombieExcluded = biomes.length;
 
-		@SuppressWarnings("unchecked")
-		public DefaultCache(BiomeBase baseFor) {
-			for (int i = 0; i < keys.length; i++) {
-				switch (i) {
-				case 0:
-					as = new ArrayList<BiomeMeta>((List<BiomeMeta>) NMS.getDeclaredField(baseFor, keys[i]));
-					break;
-				case 1:
-					at = new ArrayList<BiomeMeta>((List<BiomeMeta>) NMS.getDeclaredField(baseFor, keys[i]));
-					break;
-				case 2:
-					au = new ArrayList<BiomeMeta>((List<BiomeMeta>) NMS.getDeclaredField(baseFor, keys[i]));
-					break;
-				case 3:
-					av = new ArrayList<BiomeMeta>((List<BiomeMeta>) NMS.getDeclaredField(baseFor, keys[i]));
-					break;
-				}
-			}
-		}
-	}
+        for (int pigmanExcluded = 0; pigmanExcluded < zombieExcluded; ++pigmanExcluded) {
+            CustomEntityType guardExcluded = biomes[pigmanExcluded];
 
-	private String name;
-	private int id;
-	private EntityType entityType;
-	private CustomBiomeMeta meta;
+            a(guardExcluded.getCustomClass(), guardExcluded.getName(), guardExcluded.getID());
+        }
 
-	private CustomEntityType(String name, int id, EntityType entityType, CustomBiomeMeta meta) {
-		this.name = name;
-		this.id = id;
-		this.entityType = entityType;
-		this.meta = meta;
-	}
+        BiomeBase[] abiomebase;
 
-	public String getName() {
-		return name;
-	}
+        try {
+            abiomebase = (BiomeBase[]) ((BiomeBase[]) NMS.getPrivateStatic(BiomeBase.class, "biomes"));
+        } catch (Exception exception) {
+            return;
+        }
 
-	public int getID() {
-		return id;
-	}
+        List list = (List) ConfigEntries.ZOMBIE_EXCLUDES.getValue();
+        List list1 = (List) ConfigEntries.PIGMAN_EXCLUDES.getValue();
+        List list2 = (List) ConfigEntries.GUARD_EXCLUDES.getValue();
+        List generalExcluded = (List) ConfigEntries.GENERAL_EXCLUDES.getValue();
+        BiomeBase[] abiomebase1 = abiomebase;
+        int i = abiomebase.length;
 
-	public EntityType getEntityType() {
-		return entityType;
-	}
+        for (int j = 0; j < i; ++j) {
+            BiomeBase biomeBase = abiomebase1[j];
 
-	public Class<? extends EntityInsentient> getNMSClass() {
-		return meta.nms;
-	}
+            if (biomeBase == null) {
+                break;
+            }
 
-	public Class<? extends EntityInsentient> getCustomClass() {
-		return meta.custom;
-	}
+            if (biomeBase != BiomeBase.HELL) {
+                CustomEntityType.cache.put(biomeBase, new CustomEntityType.DefaultCache(biomeBase));
+                String[] list10 = CustomEntityType.DefaultCache.keys;
+                int k = list10.length;
 
-	@SuppressWarnings("unchecked")
-	public static void registerEntities() {
-		for (CustomEntityType entity : values()) {
-			a(entity.getCustomClass(), entity.getName(), entity.getID());
-		}
+                for (int l = 0; l < k; ++l) {
+                    String key = list10[l];
+                    List list11 = (List) NMS.getDeclaredField(biomeBase, key);
 
-		BiomeBase[] biomes;
-		try {
-			biomes = (BiomeBase[]) NMS.getPrivateStatic(BiomeBase.class, "biomes");
-		} catch (Exception exc) {
-			return;
-		}
+                    if (list11 != null) {
+                        list11.clear();
+                    }
+                }
 
-		List<String> zombieExcluded = ConfigEntries.ZOMBIE_EXCLUDES.<List<String>> getValue();
-		List<String> pigmanExcluded = ConfigEntries.PIGMAN_EXCLUDES.<List<String>> getValue();
-		List<String> guardExcluded = ConfigEntries.GUARD_EXCLUDES.<List<String>> getValue();
-		List<String> generalExcluded = ConfigEntries.GENERAL_EXCLUDES.<List<String>> getValue();
+                List list3;
 
-		for (BiomeBase biomeBase : biomes) {
-			if (biomeBase == null) {
-				break;
-			}
-			if (biomeBase == BiomeBase.HELL) {
-				continue;
-			}
+                if (!generalExcluded.contains(Integer.valueOf(biomeBase.ah))) {
+                    if (CustomEntityType.PIG_ZOMBIE.meta.enabled && !list1.contains(Integer.valueOf(biomeBase.ah)) && !((CustomEntityType.DefaultCache) CustomEntityType.cache.get(biomeBase)).as.contains(CustomEntityType.PIG_ZOMBIE.meta.toBiomeMeta())) {
+                        list3 = (List) NMS.getDeclaredField(biomeBase, CustomEntityType.DefaultCache.keys[0]);
+                        if (list3 != null) {
+                            list3.add(CustomEntityType.PIG_ZOMBIE.meta.toBiomeMeta());
+                        }
+                    }
 
-			cache.put(biomeBase, new DefaultCache(biomeBase));
+                    if (CustomEntityType.ZOMBIE.meta.enabled && !list10.contains(Integer.valueOf(biomeBase.ah)) && !((CustomEntityType.DefaultCache) CustomEntityType.cache.get(biomeBase)).as.contains(CustomEntityType.ZOMBIE.meta.toBiomeMeta())) {
+                        list3 = (List) NMS.getDeclaredField(biomeBase, CustomEntityType.DefaultCache.keys[0]);
+                        if (list3 != null) {
+                            list3.add(CustomEntityType.ZOMBIE.meta.toBiomeMeta());
+                        }
+                    }
 
-			for (String key : DefaultCache.keys) {
-				List<BiomeMeta> list = (List<BiomeMeta>) NMS.getDeclaredField(biomeBase, key);
-				if (list != null) {
-					list.clear();
-				}
-			}
+                    if (CustomEntityType.GUARD.meta.enabled && !list2.contains(Integer.valueOf(biomeBase.ah)) && !((CustomEntityType.DefaultCache) CustomEntityType.cache.get(biomeBase)).as.contains(CustomEntityType.GUARD.meta.toBiomeMeta())) {
+                        list3 = (List) NMS.getDeclaredField(biomeBase, CustomEntityType.DefaultCache.keys[0]);
+                        if (list3 != null) {
+                            list3.add(CustomEntityType.GUARD.meta.toBiomeMeta());
+                        }
+                    }
+                }
 
-			if (!generalExcluded.contains(biomeBase.ah)) {
-				if (PIG_ZOMBIE.meta.enabled && !pigmanExcluded.contains(biomeBase.ah)
-						&& !cache.get(biomeBase).as.contains(PIG_ZOMBIE.meta.toBiomeMeta())) {
-					List<BiomeMeta> list = (List<BiomeMeta>) NMS.getDeclaredField(biomeBase, DefaultCache.keys[0]);
-					if (list != null) {
-						list.add(PIG_ZOMBIE.meta.toBiomeMeta());
-					}
-				}
-				if (ZOMBIE.meta.enabled && !zombieExcluded.contains(biomeBase.ah)
-						&& !cache.get(biomeBase).as.contains(ZOMBIE.meta.toBiomeMeta())) {
-					List<BiomeMeta> list = (List<BiomeMeta>) NMS.getDeclaredField(biomeBase, DefaultCache.keys[0]);
-					if (list != null) {
-						list.add(ZOMBIE.meta.toBiomeMeta());
-					}
-				}
-				if (GUARD.meta.enabled && !guardExcluded.contains(biomeBase.ah)
-						&& !cache.get(biomeBase).as.contains(GUARD.meta.toBiomeMeta())) {
-					List<BiomeMeta> list = (List<BiomeMeta>) NMS.getDeclaredField(biomeBase, DefaultCache.keys[0]);
-					if (list != null) {
-						list.add(GUARD.meta.toBiomeMeta());
-					}
-				}
-			}
+                if (CustomEntityType.GIANT_ZOMBIE.meta.enabled && ((List) ConfigEntries.GIANT_INCLUDES.getValue()).contains(Integer.valueOf(biomeBase.ah)) && !((CustomEntityType.DefaultCache) CustomEntityType.cache.get(biomeBase)).as.contains(CustomEntityType.GIANT_ZOMBIE.meta.toBiomeMeta())) {
+                    list3 = (List) NMS.getDeclaredField(biomeBase, CustomEntityType.DefaultCache.keys[0]);
+                    if (list3 != null) {
+                        list3.add(CustomEntityType.GIANT_ZOMBIE.meta.toBiomeMeta());
+                    }
+                }
+            }
+        }
 
-			if (GIANT_ZOMBIE.meta.enabled && ConfigEntries.GIANT_INCLUDES.<List<String>> getValue().contains(biomeBase.ah)
-					&& !cache.get(biomeBase).as.contains(GIANT_ZOMBIE.meta.toBiomeMeta())) {
-				List<BiomeMeta> list = (List<BiomeMeta>) NMS.getDeclaredField(biomeBase, DefaultCache.keys[0]);
-				if (list != null) {
-					list.add(GIANT_ZOMBIE.meta.toBiomeMeta());
-				}
-			}
-		}
-	}
+    }
 
-	@SuppressWarnings("unchecked")
-	public static void unregisterEntities() {
-		for (CustomEntityType entity : values()) {
-			try {
-				((Map<Class<?>, String>) NMS.getPrivateStatic(EntityTypes.class, "c")).remove(entity.getCustomClass());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+    public static void unregisterEntities() {
+        CustomEntityType[] biomes = values();
+        int exc = biomes.length;
 
-			try {
-				((Map<Class<?>, String>) NMS.getPrivateStatic(EntityTypes.class, "e")).remove(entity.getCustomClass());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+        int i;
+        CustomEntityType entity;
 
-		for (CustomEntityType entity : values()) {
-			a(entity.getNMSClass(), entity.getName(), entity.getID());
-		}
+        for (i = 0; i < exc; ++i) {
+            entity = biomes[i];
 
-		BiomeBase[] biomes;
-		try {
-			biomes = (BiomeBase[]) NMS.getPrivateStatic(BiomeBase.class, "biomes");
-		} catch (Exception exc) {
-			return;
-		}
+            try {
+                ((Map) NMS.getPrivateStatic(EntityTypes.class, "c")).remove(entity.getCustomClass());
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
 
-		for (BiomeBase biomeBase : biomes) {
-			if (biomeBase == null) {
-				break;
-			}
-			if (biomeBase == BiomeBase.HELL) {
-				continue;
-			}
+            try {
+                ((Map) NMS.getPrivateStatic(EntityTypes.class, "e")).remove(entity.getCustomClass());
+            } catch (Exception exception1) {
+                exception1.printStackTrace();
+            }
+        }
 
-			NMS.setDeclaredField(biomeBase, DefaultCache.keys[0], cache.get(biomeBase).as);
-			NMS.setDeclaredField(biomeBase, DefaultCache.keys[1], cache.get(biomeBase).at);
-			NMS.setDeclaredField(biomeBase, DefaultCache.keys[2], cache.get(biomeBase).au);
-			NMS.setDeclaredField(biomeBase, DefaultCache.keys[3], cache.get(biomeBase).av);
-		}
+        biomes = values();
+        exc = biomes.length;
 
-		cache.clear();
-	}
+        for (i = 0; i < exc; ++i) {
+            entity = biomes[i];
+            a(entity.getNMSClass(), entity.getName(), entity.getID());
+        }
 
-	@SuppressWarnings("unchecked")
-	private static void a(Class<?> paramClass, String paramString, int paramInt) {
-		try {
-			((Map<String, Class<?>>) NMS.getPrivateStatic(EntityTypes.class, "c")).put(paramString, paramClass);
-			((Map<Class<?>, String>) NMS.getPrivateStatic(EntityTypes.class, "d")).put(paramClass, paramString);
-			((Map<Integer, Class<?>>) NMS.getPrivateStatic(EntityTypes.class, "e")).put(Integer.valueOf(paramInt), paramClass);
-			((Map<Class<?>, Integer>) NMS.getPrivateStatic(EntityTypes.class, "f")).put(paramClass, Integer.valueOf(paramInt));
-			((Map<String, Integer>) NMS.getPrivateStatic(EntityTypes.class, "g")).put(paramString, Integer.valueOf(paramInt));
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
-	}
+        BiomeBase[] abiomebase;
+
+        try {
+            abiomebase = (BiomeBase[]) ((BiomeBase[]) NMS.getPrivateStatic(BiomeBase.class, "biomes"));
+        } catch (Exception exception2) {
+            return;
+        }
+
+        BiomeBase[] abiomebase1 = abiomebase;
+
+        i = abiomebase.length;
+
+        for (int j = 0; j < i; ++j) {
+            BiomeBase biomeBase = abiomebase1[j];
+
+            if (biomeBase == null) {
+                break;
+            }
+
+            if (biomeBase != BiomeBase.HELL) {
+                NMS.setDeclaredField(biomeBase, CustomEntityType.DefaultCache.keys[0], ((CustomEntityType.DefaultCache) CustomEntityType.cache.get(biomeBase)).as);
+                NMS.setDeclaredField(biomeBase, CustomEntityType.DefaultCache.keys[1], ((CustomEntityType.DefaultCache) CustomEntityType.cache.get(biomeBase)).at);
+                NMS.setDeclaredField(biomeBase, CustomEntityType.DefaultCache.keys[2], ((CustomEntityType.DefaultCache) CustomEntityType.cache.get(biomeBase)).au);
+                NMS.setDeclaredField(biomeBase, CustomEntityType.DefaultCache.keys[3], ((CustomEntityType.DefaultCache) CustomEntityType.cache.get(biomeBase)).av);
+            }
+        }
+
+        CustomEntityType.cache.clear();
+    }
+
+    private static void a(Class paramClass, String paramString, int paramInt) {
+        try {
+            ((Map) NMS.getPrivateStatic(EntityTypes.class, "c")).put(paramString, paramClass);
+            ((Map) NMS.getPrivateStatic(EntityTypes.class, "d")).put(paramClass, paramString);
+            ((Map) NMS.getPrivateStatic(EntityTypes.class, "e")).put(Integer.valueOf(paramInt), paramClass);
+            ((Map) NMS.getPrivateStatic(EntityTypes.class, "f")).put(paramClass, Integer.valueOf(paramInt));
+            ((Map) NMS.getPrivateStatic(EntityTypes.class, "g")).put(paramString, Integer.valueOf(paramInt));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+    }
+
+    private static class DefaultCache {
+
+        List as;
+        List at;
+        List au;
+        List av;
+        private static final String[] keys = new String[] { "as", "at", "au", "av"};
+
+        public DefaultCache(BiomeBase baseFor) {
+            for (int i = 0; i < CustomEntityType.DefaultCache.keys.length; ++i) {
+                switch (i) {
+                case 0:
+                    this.as = new ArrayList((List) NMS.getDeclaredField(baseFor, CustomEntityType.DefaultCache.keys[i]));
+                    break;
+
+                case 1:
+                    this.at = new ArrayList((List) NMS.getDeclaredField(baseFor, CustomEntityType.DefaultCache.keys[i]));
+                    break;
+
+                case 2:
+                    this.au = new ArrayList((List) NMS.getDeclaredField(baseFor, CustomEntityType.DefaultCache.keys[i]));
+                    break;
+
+                case 3:
+                    this.av = new ArrayList((List) NMS.getDeclaredField(baseFor, CustomEntityType.DefaultCache.keys[i]));
+                }
+            }
+
+        }
+    }
+
+    private static class CustomBiomeMeta {
+
+        private final Class nms;
+        private final Class custom;
+        private final BiomeMeta meta;
+        private final boolean enabled;
+
+        public CustomBiomeMeta(Class nms, Class custom, int spawn_chance, int range_min, int range_max) {
+            this.nms = nms;
+            this.custom = custom;
+            this.enabled = spawn_chance > 0;
+            this.meta = new BiomeMeta(custom, spawn_chance, range_min, range_max);
+        }
+
+        public BiomeMeta toBiomeMeta() {
+            return this.meta;
+        }
+    }
 }

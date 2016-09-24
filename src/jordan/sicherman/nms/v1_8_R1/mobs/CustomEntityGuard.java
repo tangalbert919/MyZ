@@ -1,10 +1,6 @@
-/**
- * 
- */
 package jordan.sicherman.nms.v1_8_R1.mobs;
 
 import java.util.Calendar;
-
 import jordan.sicherman.MyZ;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalArrowAttack;
 import jordan.sicherman.nms.v1_8_R1.mobs.pathfinders.CustomPathfinderGoalHurtByTarget;
@@ -33,10 +29,8 @@ import net.minecraft.server.v1_8_R1.ItemStack;
 import net.minecraft.server.v1_8_R1.Items;
 import net.minecraft.server.v1_8_R1.PathfinderGoalFloat;
 import net.minecraft.server.v1_8_R1.PathfinderGoalMoveTowardsRestriction;
-import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_8_R1.StepSound;
 import net.minecraft.server.v1_8_R1.World;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -44,227 +38,212 @@ import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_8_R1.util.UnsafeList;
 import org.bukkit.scheduler.BukkitRunnable;
 
-/**
- * @author Jordan
- * 
- */
 public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
 
-	private Location smartTarget;
+    private Location smartTarget;
+    private final CustomEntityGuard.GuardType type;
+    private final CustomPathfinderGoalMeleeAttack humanAttack;
+    private final CustomPathfinderGoalMeleeAttack zombieAttack;
+    private final CustomPathfinderGoalMeleeAttack giantAttack;
+    private final CustomPathfinderGoalMeleeAttack pigmanAttack;
+    private final CustomPathfinderGoalArrowAttack rangedAttack;
 
-	@Override
-	public void setSmartTarget(Location inLoc, long duration) {
-		smartTarget = inLoc;
+    public void setSmartTarget(Location inLoc, long duration) {
+        this.smartTarget = inLoc;
+        (new BukkitRunnable() {
+            public void run() {
+                CustomEntityGuard.this.smartTarget = null;
+            }
+        }).runTaskLater(MyZ.instance, duration);
+    }
 
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				smartTarget = null;
-			}
-		}.runTaskLater(MyZ.instance, duration);
-	}
+    public Location getSmartTarget() {
+        return this.smartTarget;
+    }
 
-	@Override
-	public Location getSmartTarget() {
-		return smartTarget;
-	}
+    public EntityCreature getEntity() {
+        return this;
+    }
 
-	@Override
-	public EntityCreature getEntity() {
-		return this;
-	}
+    protected float bD() {
+        return (float) ((double) super.bD() * ((Double) ConfigEntries.GUARD_JUMP_MULTIPLIER.getValue()).doubleValue());
+    }
 
-	private static enum GuardType {
-		MELEE, RANGED;
-	}
+    public CustomEntityGuard(World world) {
+        super(world);
+        this.humanAttack = new CustomPathfinderGoalMeleeAttack(this, EntityHuman.class, ((Double) ConfigEntries.GUARD_SPEED_TARGET.getValue()).doubleValue(), false);
+        this.zombieAttack = new CustomPathfinderGoalMeleeAttack(this, CustomEntityZombie.class, ((Double) ConfigEntries.GUARD_SPEED_TARGET.getValue()).doubleValue(), true);
+        this.giantAttack = new CustomPathfinderGoalMeleeAttack(this, CustomEntityGiantZombie.class, ((Double) ConfigEntries.GUARD_SPEED_TARGET.getValue()).doubleValue(), true);
+        this.pigmanAttack = new CustomPathfinderGoalMeleeAttack(this, CustomEntityPigZombie.class, ((Double) ConfigEntries.GUARD_SPEED_TARGET.getValue()).doubleValue(), true);
+        this.rangedAttack = new CustomPathfinderGoalArrowAttack(this, ((Double) ConfigEntries.GUARD_SPEED_TARGET.getValue()).doubleValue(), 20, 50, 15.0F);
+        this.type = CustomEntityGuard.GuardType.values()[this.bb().nextInt(CustomEntityGuard.GuardType.values().length)];
+        DisguiseAPI.disguiseToAll(this.getBukkitEntity(), new PlayerDisguise(ChatColor.translateAlternateColorCodes('&', (String) ConfigEntries.GUARD_NAME.getValue())));
 
-	private final GuardType type;
+        try {
+            CommonMobUtilities.bField.set(this.goalSelector, new UnsafeList());
+            CommonMobUtilities.bField.set(this.targetSelector, new UnsafeList());
+            CommonMobUtilities.cField.set(this.goalSelector, new UnsafeList());
+            CommonMobUtilities.cField.set(this.targetSelector, new UnsafeList());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
 
-	private final CustomPathfinderGoalMeleeAttack humanAttack = new CustomPathfinderGoalMeleeAttack(this, EntityHuman.class,
-			ConfigEntries.GUARD_SPEED_TARGET.<Double> getValue(), false);
-	private final CustomPathfinderGoalMeleeAttack zombieAttack = new CustomPathfinderGoalMeleeAttack(this, CustomEntityZombie.class,
-			ConfigEntries.GUARD_SPEED_TARGET.<Double> getValue(), true);
-	private final CustomPathfinderGoalMeleeAttack giantAttack = new CustomPathfinderGoalMeleeAttack(this, CustomEntityGiantZombie.class,
-			ConfigEntries.GUARD_SPEED_TARGET.<Double> getValue(), true);
-	private final CustomPathfinderGoalMeleeAttack pigmanAttack = new CustomPathfinderGoalMeleeAttack(this, CustomEntityPigZombie.class,
-			ConfigEntries.GUARD_SPEED_TARGET.<Double> getValue(), true);
+        this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(5, new PathfinderGoalMoveTowardsRestriction(this, 1.0D));
+        this.goalSelector.a(7, new CustomPathfinderGoalRandomStroll(this, 1.0D));
+        this.goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        this.goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityZombie.class, 8.0F));
+        this.goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityPigZombie.class, 8.0F));
+        this.goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityGiantZombie.class, 8.0F));
+        this.goalSelector.a(4, new CustomPathfinderGoalMoveToLocation(this, 1.2D));
+        this.goalSelector.a(8, new CustomPathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { CustomEntityZombie.class, CustomEntityPigZombie.class, CustomEntityGiantZombie.class, EntityHuman.class}));
+        this.targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityZombie.class, false));
+        this.targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityPigZombie.class, true));
+        this.targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGiantZombie.class, true));
+    }
 
-	private final CustomPathfinderGoalArrowAttack rangedAttack = new CustomPathfinderGoalArrowAttack(this,
-			ConfigEntries.GUARD_SPEED_TARGET.<Double> getValue(), 20, 50, 15.0F);
+    public boolean canSpawn() {
+        return this.world.a(this.getBoundingBox(), this) && this.world.getCubes(this, this.getBoundingBox()).isEmpty() && !this.world.containsLiquid(this.getBoundingBox());
+    }
 
-	@Override
-	protected float bD() {
-		return (float) (super.bD() * ConfigEntries.GUARD_JUMP_MULTIPLIER.<Double> getValue());
-	}
+    public void a(EntityLiving entityliving, float f) {
+        if (this.type == CustomEntityGuard.GuardType.RANGED) {
+            super.a(entityliving, f);
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	public CustomEntityGuard(World world) {
-		super(world);
+    public GroupDataEntity prepare(DifficultyDamageScaler difficultydamagescaler, GroupDataEntity groupdataentity) {
+        this.getAttributeInstance(GenericAttributes.b).b(new AttributeModifier("Random spawn bonus", this.random.nextGaussian() * 0.05D, 1));
+        this.a(difficultydamagescaler);
+        this.b(difficultydamagescaler);
+        this.j(this.random.nextFloat() < 0.55F * difficultydamagescaler.c());
+        if (this.getEquipment(4) == null) {
+            Calendar calendar = this.world.Y();
 
-		type = GuardType.values()[bb().nextInt(GuardType.values().length)];
+            if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31 && this.random.nextFloat() < 0.25F) {
+                this.setEquipment(4, new ItemStack(this.random.nextFloat() < 0.1F ? Blocks.LIT_PUMPKIN : Blocks.PUMPKIN));
+                this.dropChances[4] = 0.0F;
+            }
+        }
 
-		DisguiseAPI.disguiseToAll(getBukkitEntity(),
-				new PlayerDisguise(ChatColor.translateAlternateColorCodes('&', ConfigEntries.GUARD_NAME.<String> getValue())));
+        return groupdataentity;
+    }
 
-		try {
-			CommonMobUtilities.bField.set(goalSelector, new UnsafeList<PathfinderGoalSelector>());
-			CommonMobUtilities.bField.set(targetSelector, new UnsafeList<PathfinderGoalSelector>());
-			CommonMobUtilities.cField.set(goalSelector, new UnsafeList<PathfinderGoalSelector>());
-			CommonMobUtilities.cField.set(targetSelector, new UnsafeList<PathfinderGoalSelector>());
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
+    protected void a(DifficultyDamageScaler difficultydamagescaler) {
+        switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R1$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
+        case 1:
+            this.setEquipment(0, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_MELEE_ITEM.getValue()))));
+            break;
 
-		goalSelector.a(0, new PathfinderGoalFloat(this));
-		goalSelector.a(5, new PathfinderGoalMoveTowardsRestriction(this, 1.0D));
-		goalSelector.a(7, new CustomPathfinderGoalRandomStroll(this, 1.0D));
-		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityZombie.class, 8.0F));
-		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityPigZombie.class, 8.0F));
-		goalSelector.a(8, new CustomPathfinderGoalLookAtPlayer(this, CustomEntityGiantZombie.class, 8.0F));
-		goalSelector.a(4, new CustomPathfinderGoalMoveToLocation(this, 1.2D));
-		goalSelector.a(8, new CustomPathfinderGoalRandomLookaround(this));
-		targetSelector.a(1, new CustomPathfinderGoalHurtByTarget(this, true, new Class[] { CustomEntityZombie.class,
-				CustomEntityPigZombie.class, CustomEntityGiantZombie.class, EntityHuman.class }));
-		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityZombie.class, false));
-		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityPigZombie.class, true));
-		targetSelector.a(2, new CustomPathfinderGoalNearestAttackableTarget(this, CustomEntityGiantZombie.class, true));
-	}
+        case 2:
+            this.setEquipment(0, new ItemStack(Items.BOW));
+        }
 
-	@Override
-	public boolean canSpawn() {
-		return world.a(getBoundingBox(), this) && world.getCubes(this, getBoundingBox()).isEmpty()
-				&& !world.containsLiquid(getBoundingBox());
-	}
+        this.setEquipment(1, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_BOOTS_ITEM.getValue()))));
+        this.setEquipment(2, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_LEGGINGS_ITEM.getValue()))));
+        this.setEquipment(3, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_CHESTPLATE_ITEM.getValue()))));
+        this.setEquipment(4, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_HELMET_ITEM.getValue()))));
+    }
 
-	@Override
-	public void a(EntityLiving entityliving, float f) {
-		if (type != GuardType.RANGED) { return; }
+    protected String z() {
+        return "mob.villager.idle";
+    }
 
-		super.a(entityliving, f);
-	}
+    protected String bn() {
+        return "game.player.hurt";
+    }
 
-	@Override
-	public GroupDataEntity prepare(DifficultyDamageScaler difficultydamagescaler, GroupDataEntity groupdataentity) {
-		getAttributeInstance(GenericAttributes.b).b(new AttributeModifier("Random spawn bonus", random.nextGaussian() * 0.05D, 1));
+    protected String bo() {
+        return "game.player.die";
+    }
 
-		a(difficultydamagescaler);
-		b(difficultydamagescaler);
+    protected void a(BlockPosition blockposition, Block block) {
+        StepSound stepsound = block.stepSound;
 
-		j(random.nextFloat() < 0.55F * difficultydamagescaler.c());
-		if (getEquipment(4) == null) {
-			Calendar calendar = world.Y();
-			if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31 && random.nextFloat() < 0.25F) {
-				setEquipment(4, new ItemStack(random.nextFloat() < 0.1F ? Blocks.LIT_PUMPKIN : Blocks.PUMPKIN));
-				dropChances[4] = 0.0F;
-			}
-		}
-		return groupdataentity;
-	}
+        if (this.world.getType(blockposition.up()).getBlock() == Blocks.SNOW_LAYER) {
+            stepsound = Blocks.SNOW_LAYER.stepSound;
+            this.makeSound(stepsound.getStepSound(), stepsound.getVolume1() * 0.15F, stepsound.getVolume2());
+        } else if (!block.getMaterial().isLiquid()) {
+            this.makeSound(stepsound.getStepSound(), stepsound.getVolume1() * 0.15F, stepsound.getVolume2());
+        }
 
-	@Override
-	protected void a(DifficultyDamageScaler difficultydamagescaler) {
-		// super.a(difficultydamagescaler);
+    }
 
-		switch (type) {
-		case MELEE:
-			setEquipment(0, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial(ConfigEntries.GUARD_MELEE_ITEM
-					.<String> getValue()))));
-			break;
-		case RANGED:
-			setEquipment(0, new ItemStack(Items.BOW));
-			break;
-		}
+    public void die() {
+        if (((Boolean) ConfigEntries.GUARD_ZOMBIE_DEATH.getValue()).booleanValue()) {
+            CustomEntityZombie zombie = new CustomEntityZombie(this.world);
 
-		setEquipment(1, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial(ConfigEntries.GUARD_BOOTS_ITEM
-				.<String> getValue()))));
-		setEquipment(2, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial(ConfigEntries.GUARD_LEGGINGS_ITEM
-				.<String> getValue()))));
-		setEquipment(3, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material
-				.getMaterial(ConfigEntries.GUARD_CHESTPLATE_ITEM.<String> getValue()))));
-		setEquipment(4, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial(ConfigEntries.GUARD_HELMET_ITEM
-				.<String> getValue()))));
-	}
+            zombie.setEquipment(0, this.getEquipment(0));
+            zombie.setEquipment(1, this.getEquipment(1));
+            zombie.setEquipment(2, this.getEquipment(2));
+            zombie.setEquipment(3, this.getEquipment(3));
+            zombie.setEquipment(4, this.getEquipment(4));
+            zombie.setLocation(this.locX, this.locY, this.locZ, this.yaw, this.pitch);
+            this.world.addEntity(zombie);
+        }
 
-	@Override
-	protected String z() {
-		return "mob.villager.idle";
-	}
+        super.die();
+    }
 
-	@Override
-	protected String bn() {
-		return "game.player.hurt";
-	}
+    protected Item getLoot() {
+        return null;
+    }
 
-	@Override
-	protected String bo() {
-		return "game.player.die";
-	}
+    protected void getRareDrop() {}
 
-	@Override
-	protected void a(BlockPosition blockposition, Block block) {
-		StepSound stepsound = block.stepSound;
-		if (world.getType(blockposition.up()).getBlock() == Blocks.SNOW_LAYER) {
-			stepsound = Blocks.SNOW_LAYER.stepSound;
-			makeSound(stepsound.getStepSound(), stepsound.getVolume1() * 0.15F, stepsound.getVolume2());
-		} else if (!block.getMaterial().isLiquid()) {
-			makeSound(stepsound.getStepSound(), stepsound.getVolume1() * 0.15F, stepsound.getVolume2());
-		}
-	}
+    public void n() {
+        if (this.type != null) {
+            this.goalSelector.a(this.humanAttack);
+            this.goalSelector.a(this.zombieAttack);
+            this.goalSelector.a(this.giantAttack);
+            this.goalSelector.a(this.pigmanAttack);
+            this.goalSelector.a(this.rangedAttack);
+            switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R1$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
+            case 1:
+                this.goalSelector.a(4, this.humanAttack);
+                this.goalSelector.a(4, this.zombieAttack);
+                this.goalSelector.a(2, this.zombieAttack);
+                this.goalSelector.a(4, this.pigmanAttack);
+                break;
 
-	@Override
-	public void die() {
-		if (ConfigEntries.GUARD_ZOMBIE_DEATH.<Boolean> getValue()) {
-			CustomEntityZombie zombie = new CustomEntityZombie(world);
-			zombie.setEquipment(0, getEquipment(0));
-			zombie.setEquipment(1, getEquipment(1));
-			zombie.setEquipment(2, getEquipment(2));
-			zombie.setEquipment(3, getEquipment(3));
-			zombie.setEquipment(4, getEquipment(4));
-			zombie.setLocation(locX, locY, locZ, yaw, pitch);
-			world.addEntity(zombie);
-		}
-		super.die();
-	}
+            case 2:
+                this.goalSelector.a(4, this.rangedAttack);
+            }
 
-	@Override
-	protected Item getLoot() {
-		return null;
-	}
+        }
+    }
 
-	@Override
-	protected void getRareDrop() {
-	}
+    protected void aW() {
+        super.aW();
+        this.getAttributeInstance(GenericAttributes.maxHealth).setValue(((Double) ConfigEntries.GUARD_HEALTH.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.c).setValue(((Double) ConfigEntries.GUARD_KNOCKBACK_RESIST.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.d).setValue(((Double) ConfigEntries.GUARD_SPEED.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.e).setValue(((Double) ConfigEntries.GUARD_DAMAGE.getValue()).doubleValue());
+    }
 
-	@Override
-	public void n() {
-		if (type == null) { return; }
+    static class SyntheticClass_1 {
 
-		goalSelector.a(humanAttack);
-		goalSelector.a(zombieAttack);
-		goalSelector.a(giantAttack);
-		goalSelector.a(pigmanAttack);
-		goalSelector.a(rangedAttack);
+        static final int[] $SwitchMap$jordan$sicherman$nms$v1_8_R1$mobs$CustomEntityGuard$GuardType = new int[CustomEntityGuard.GuardType.values().length];
 
-		switch (type) {
-		case RANGED:
-			goalSelector.a(4, rangedAttack);
-			break;
-		case MELEE:
-			goalSelector.a(4, humanAttack);
-			goalSelector.a(4, zombieAttack);
-			goalSelector.a(2, zombieAttack);
-			goalSelector.a(4, pigmanAttack);
-			break;
-		}
-	}
+        static {
+            try {
+                CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R1$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.MELEE.ordinal()] = 1;
+            } catch (NoSuchFieldError nosuchfielderror) {
+                ;
+            }
 
-	@Override
-	protected void aW() {
-		super.aW();
-		getAttributeInstance(GenericAttributes.maxHealth).setValue(ConfigEntries.GUARD_HEALTH.<Double> getValue());
-		getAttributeInstance(GenericAttributes.c).setValue(ConfigEntries.GUARD_KNOCKBACK_RESIST.<Double> getValue());
-		getAttributeInstance(GenericAttributes.d).setValue(ConfigEntries.GUARD_SPEED.<Double> getValue());
-		getAttributeInstance(GenericAttributes.e).setValue(ConfigEntries.GUARD_DAMAGE.<Double> getValue());
-	}
+            try {
+                CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R1$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.RANGED.ordinal()] = 2;
+            } catch (NoSuchFieldError nosuchfielderror1) {
+                ;
+            }
+
+        }
+    }
+
+    private static enum GuardType {
+
+        MELEE, RANGED;
+    }
 }

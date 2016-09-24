@@ -1,10 +1,9 @@
-author: ${project.authors}
-main: ${project.main}
-version: ${version}
-name: ${project.name}
-description: ${project.description}
-depend: ${project.depends}
-softdepend: ${project.softdepends}
+authors: [Jordan Sicherman, Albert Tang]
+main: jordan.sicherman.MyZ
+version: 4.1.21001-ALPHA
+name: MyZ
+description: The best post-apocalyptic plugin in existance.
+depend: [LibsDisguises, CrackShot]
 
 commands:
   MyZ:

@@ -20,6 +20,8 @@ import net.minecraft.server.v1_8_R2.EntityInsentient;
 import net.minecraft.server.v1_8_R2.EntityLiving;
 import net.minecraft.server.v1_8_R2.EntityPlayer;
 import net.minecraft.server.v1_8_R2.GroupDataEntity;
+import net.minecraft.server.v1_8_R2.ITileEntityContainer;
+import net.minecraft.server.v1_8_R2.World;
 import net.minecraft.server.v1_8_R2.WorldServer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -123,10 +125,10 @@ public class NMSUtilities {
 
         BlockPosition position = new BlockPosition(x, y, z);
 
-        if (!human.world.isStatic) {
+        if (!World.haveWeSilencedAPhysicsCrash) {
             TileEntityCustomContainerAnvil itileentitycontainer = new TileEntityCustomContainerAnvil(human.world, position, anvil != null);
 
-            human.openTileEntity(itileentitycontainer);
+            human.openTileEntity((ITileEntityContainer) itileentitycontainer);
             if (recipe != null && recipe.length == 1) {
                 ((CustomContainerAnvil) human.activeContainer).activeRecipe = recipe[0];
                 ((CustomContainerAnvil) human.activeContainer).result.setItem(0, CraftItemStack.asNMSCopy(recipe[0].getOutput()));

@@ -86,10 +86,10 @@ public class SpectatorMode implements Listener {
                             int i = aint.length;
 
                             for (int j = 0; j < i; ++j) {
-                                int i = aint[j];
+                                int i1 = aint[j];
 
-                                if (e.getInventory().getItem(i) != null && e.getInventory().getItem(i).getType() != Material.AIR) {
-                                    ChestType.fromName(((MetadataValue) e.getWhoClicked().getMetadata(ManagerManager.ManagerType.CHESTS.getID()).get(0)).asString()).addItem(e.getInventory().getItem(i));
+                                if (e.getInventory().getItem(i1) != null && e.getInventory().getItem(i1).getType() != Material.AIR) {
+                                    ChestType.fromName(((MetadataValue) e.getWhoClicked().getMetadata(ManagerManager.ManagerType.CHESTS.getID()).get(0)).asString()).addItem(e.getInventory().getItem(i1));
                                     e.getWhoClicked().setMetadata("MyZ.bypassCheck", new FixedMetadataValue(MyZ.instance, Boolean.valueOf(true)));
                                     e.getWhoClicked().closeInventory();
                                     ((Player) e.getWhoClicked()).sendMessage(LocaleMessage.ADD_ITEM_INSTRUCTIONS.toString((CommandSender) ((Player) e.getWhoClicked())));

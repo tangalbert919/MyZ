@@ -1,4 +1,4 @@
-package darknesgaming.nms.v1_8_R2.anvil;
+package darknesgaming.nms.v1_9_R1.anvil;
 
 import java.util.Iterator;
 import jordan.sicherman.MyZ;
@@ -6,21 +6,21 @@ import jordan.sicherman.items.EngineerManager;
 import jordan.sicherman.items.EngineerRecipe;
 import jordan.sicherman.items.EquipmentState;
 import jordan.sicherman.items.ReverseEngineer;
-import net.minecraft.server.v1_8_R2.BlockPosition;
-import net.minecraft.server.v1_8_R2.Container;
-import net.minecraft.server.v1_8_R2.EntityHuman;
-import net.minecraft.server.v1_8_R2.EntityPlayer;
-import net.minecraft.server.v1_8_R2.ICrafting;
-import net.minecraft.server.v1_8_R2.IInventory;
-import net.minecraft.server.v1_8_R2.InventoryCraftResult;
-import net.minecraft.server.v1_8_R2.ItemStack;
-import net.minecraft.server.v1_8_R2.PlayerInventory;
-import net.minecraft.server.v1_8_R2.Slot;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_9_R1.BlockPosition;
+import net.minecraft.server.v1_9_R1.Container;
+import net.minecraft.server.v1_9_R1.EntityHuman;
+import net.minecraft.server.v1_9_R1.EntityPlayer;
+import net.minecraft.server.v1_9_R1.ICrafting;
+import net.minecraft.server.v1_9_R1.IInventory;
+import net.minecraft.server.v1_9_R1.InventoryCraftResult;
+import net.minecraft.server.v1_9_R1.ItemStack;
+import net.minecraft.server.v1_9_R1.PlayerInventory;
+import net.minecraft.server.v1_9_R1.Slot;
+import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftInventoryAnvil;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftInventoryView;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftInventoryAnvil;
+import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftInventoryView;
+import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 public class CustomContainerAnvil extends Container {
@@ -308,7 +308,7 @@ public class CustomContainerAnvil extends Container {
         if (this.bukkitEntity != null) {
             return this.bukkitEntity;
         } else {
-            CraftInventoryAnvil inventory = new CraftInventoryAnvil(this.process, this.result);
+            CraftInventoryAnvil inventory = new CraftInventoryAnvil(null, this.process, this.result);
 
             this.bukkitEntity = new CraftInventoryView(this.pInventory.player.getBukkitEntity(), inventory, this);
             return this.bukkitEntity;

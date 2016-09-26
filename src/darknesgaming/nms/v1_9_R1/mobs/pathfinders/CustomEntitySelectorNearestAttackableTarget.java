@@ -1,12 +1,13 @@
-package darknesgaming.nms.v1_8_R2.mobs.pathfinders;
+package darknesgaming.nms.v1_9_R1.mobs.pathfinders;
 
 import com.google.common.base.Predicate;
-import net.minecraft.server.v1_8_R2.EntityHuman;
-import net.minecraft.server.v1_8_R2.EntityLiving;
-import net.minecraft.server.v1_8_R2.EntityPlayer;
-import net.minecraft.server.v1_8_R2.MobEffectList;
 
-public class CustomEntitySelectorNearestAttackableTarget implements Predicate {
+import net.minecraft.server.v1_9_R1.EntityHuman;
+import net.minecraft.server.v1_9_R1.EntityLiving;
+import net.minecraft.server.v1_9_R1.EntityPlayer;
+import net.minecraft.server.v1_9_R1.MobEffects;
+
+public class CustomEntitySelectorNearestAttackableTarget implements Predicate{
 
     private final Predicate predicate;
     private final CustomPathfinderGoalNearestAttackableTarget pathfinder;
@@ -21,7 +22,7 @@ public class CustomEntitySelectorNearestAttackableTarget implements Predicate {
             return false;
         } else {
             if (entity instanceof EntityHuman) {
-                if (((EntityPlayer) entity).playerInteractManager.isCreative() || entity.hasEffect(MobEffectList.WITHER) || entity.hasEffect(MobEffectList.INVISIBILITY)) {
+                if (((EntityPlayer) entity).playerInteractManager.isCreative() || entity.hasEffect(MobEffects.WITHER) || entity.hasEffect(MobEffects.INVISIBILITY)) {
                     return false;
                 }
 

@@ -1,45 +1,44 @@
-package darknesgaming.nms.v1_8_R2.mobs;
+package darknesgaming.nms.v1_9_R1.mobs;
 
 import java.util.Calendar;
 import jordan.sicherman.MyZ;
-import darknesgaming.nms.v1_8_R2.mobs.pathfinders.CustomPathfinderGoalArrowAttack;
-import darknesgaming.nms.v1_8_R2.mobs.pathfinders.CustomPathfinderGoalHurtByTarget;
-import darknesgaming.nms.v1_8_R2.mobs.pathfinders.CustomPathfinderGoalLookAtPlayer;
-import darknesgaming.nms.v1_8_R2.mobs.pathfinders.CustomPathfinderGoalMeleeAttack;
-import darknesgaming.nms.v1_8_R2.mobs.pathfinders.CustomPathfinderGoalMoveToLocation;
-import darknesgaming.nms.v1_8_R2.mobs.pathfinders.CustomPathfinderGoalNearestAttackableTarget;
-import darknesgaming.nms.v1_8_R2.mobs.pathfinders.CustomPathfinderGoalRandomLookaround;
-import darknesgaming.nms.v1_8_R2.mobs.pathfinders.CustomPathfinderGoalRandomStroll;
+import darknesgaming.nms.v1_9_R1.mobs.pathfinders.CustomPathfinderGoalArrowAttack;
+import darknesgaming.nms.v1_9_R1.mobs.pathfinders.CustomPathfinderGoalHurtByTarget;
+import darknesgaming.nms.v1_9_R1.mobs.pathfinders.CustomPathfinderGoalLookAtPlayer;
+import darknesgaming.nms.v1_9_R1.mobs.pathfinders.CustomPathfinderGoalMeleeAttack;
+import darknesgaming.nms.v1_9_R1.mobs.pathfinders.CustomPathfinderGoalMoveToLocation;
+import darknesgaming.nms.v1_9_R1.mobs.pathfinders.CustomPathfinderGoalNearestAttackableTarget;
+import darknesgaming.nms.v1_9_R1.mobs.pathfinders.CustomPathfinderGoalRandomLookaround;
+import darknesgaming.nms.v1_9_R1.mobs.pathfinders.CustomPathfinderGoalRandomStroll;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
-import net.minecraft.server.v1_8_R2.AttributeModifier;
-import net.minecraft.server.v1_8_R2.Block;
-import net.minecraft.server.v1_8_R2.Block.StepSound;
-import net.minecraft.server.v1_8_R2.BlockPosition;
-import net.minecraft.server.v1_8_R2.Blocks;
-import net.minecraft.server.v1_8_R2.DifficultyDamageScaler;
-import net.minecraft.server.v1_8_R2.EntityCreature;
-import net.minecraft.server.v1_8_R2.EntityHuman;
-import net.minecraft.server.v1_8_R2.EntityLiving;
-import net.minecraft.server.v1_8_R2.EntitySkeleton;
-import net.minecraft.server.v1_8_R2.GenericAttributes;
-import net.minecraft.server.v1_8_R2.GroupDataEntity;
-import net.minecraft.server.v1_8_R2.Item;
-import net.minecraft.server.v1_8_R2.ItemStack;
-import net.minecraft.server.v1_8_R2.Items;
-import net.minecraft.server.v1_8_R2.PathfinderGoalFloat;
-import net.minecraft.server.v1_8_R2.PathfinderGoalMoveTowardsRestriction;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_9_R1.AttributeModifier;
+import net.minecraft.server.v1_9_R1.Block;
+import net.minecraft.server.v1_9_R1.BlockPosition;
+import net.minecraft.server.v1_9_R1.Blocks;
+import net.minecraft.server.v1_9_R1.DifficultyDamageScaler;
+import net.minecraft.server.v1_9_R1.EntityCreature;
+import net.minecraft.server.v1_9_R1.EntityHuman;
+import net.minecraft.server.v1_9_R1.EntityLiving;
+import net.minecraft.server.v1_9_R1.EntitySkeleton;
+import net.minecraft.server.v1_9_R1.GenericAttributes;
+import net.minecraft.server.v1_9_R1.GroupDataEntity;
+import net.minecraft.server.v1_9_R1.IBlockProperties;
+import net.minecraft.server.v1_9_R1.Item;
+import net.minecraft.server.v1_9_R1.ItemStack;
+import net.minecraft.server.v1_9_R1.Items;
+import net.minecraft.server.v1_9_R1.PathfinderGoalFloat;
+import net.minecraft.server.v1_9_R1.PathfinderGoalMoveTowardsRestriction;
+import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_8_R2.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_9_R1.util.UnsafeList;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
-
     private Location smartTarget;
     private final CustomEntityGuard.GuardType type;
     private final CustomPathfinderGoalMeleeAttack humanAttack;
@@ -114,7 +113,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
     }
 
     public GroupDataEntity prepare(DifficultyDamageScaler difficultydamagescaler, GroupDataEntity groupdataentity) {
-        this.getAttributeInstance(GenericAttributes.b).b(new AttributeModifier("Random spawn bonus", this.random.nextGaussian() * 0.05D, 1));
+        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).b(new AttributeModifier("Random spawn bonus", this.random.nextGaussian() * 0.05D, 1));
         this.a(difficultydamagescaler);
         this.b(difficultydamagescaler);
         this.j(this.random.nextFloat() < 0.55F * difficultydamagescaler.c());
@@ -123,7 +122,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
 
             if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31 && this.random.nextFloat() < 0.25F) {
                 this.setEquipment(4, new ItemStack(this.random.nextFloat() < 0.1F ? Blocks.LIT_PUMPKIN : Blocks.PUMPKIN));
-                this.dropChances[4] = 0.0F;
+                this.dropChanceHand[4] = 0.0F;
             }
         }
 
@@ -131,7 +130,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
     }
 
     protected void a(DifficultyDamageScaler difficultydamagescaler) {
-        switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
+        switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_9_R1$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
         case 1:
             this.setEquipment(0, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_MELEE_ITEM.getValue()))));
             break;
@@ -164,7 +163,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
         if (this.world.getType(blockposition.up()).getBlock() == Blocks.SNOW_LAYER) {
             stepsound = Blocks.SNOW_LAYER.stepSound;
             this.makeSound(stepsound.getStepSound(), stepsound.getVolume1() * 0.15F, stepsound.getVolume2());
-        } else if (!block.getMaterial().isLiquid()) {
+        } else if (!((IBlockProperties) block).getMaterial().isLiquid()) {
             this.makeSound(stepsound.getStepSound(), stepsound.getVolume1() * 0.15F, stepsound.getVolume2());
         }
 
@@ -199,7 +198,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
             this.goalSelector.a(this.giantAttack);
             this.goalSelector.a(this.pigmanAttack);
             this.goalSelector.a(this.rangedAttack);
-            switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
+            switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_9_R1$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
             case 1:
                 this.goalSelector.a(4, this.humanAttack);
                 this.goalSelector.a(4, this.zombieAttack);
@@ -214,27 +213,28 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
         }
     }
 
-    protected void aW() {
+    public int aW() {
         super.aW();
         this.getAttributeInstance(GenericAttributes.maxHealth).setValue(((Double) ConfigEntries.GUARD_HEALTH.getValue()).doubleValue());
         this.getAttributeInstance(GenericAttributes.c).setValue(((Double) ConfigEntries.GUARD_KNOCKBACK_RESIST.getValue()).doubleValue());
-        this.getAttributeInstance(GenericAttributes.d).setValue(((Double) ConfigEntries.GUARD_SPEED.getValue()).doubleValue());
-        this.getAttributeInstance(GenericAttributes.e).setValue(((Double) ConfigEntries.GUARD_DAMAGE.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(((Double) ConfigEntries.GUARD_SPEED.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(((Double) ConfigEntries.GUARD_DAMAGE.getValue()).doubleValue());
+		return a_;
     }
 
     static class SyntheticClass_1 {
 
-        static final int[] $SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType = new int[CustomEntityGuard.GuardType.values().length];
+        static final int[] $SwitchMap$jordan$sicherman$nms$v1_9_R1$mobs$CustomEntityGuard$GuardType = new int[CustomEntityGuard.GuardType.values().length];
 
         static {
             try {
-                CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.MELEE.ordinal()] = 1;
+                CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_9_R1$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.MELEE.ordinal()] = 1;
             } catch (NoSuchFieldError nosuchfielderror) {
                 ;
             }
 
             try {
-                CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.RANGED.ordinal()] = 2;
+                CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_9_R1$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.RANGED.ordinal()] = 2;
             } catch (NoSuchFieldError nosuchfielderror1) {
                 ;
             }
@@ -246,5 +246,4 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
 
         MELEE, RANGED;
     }
-
 }

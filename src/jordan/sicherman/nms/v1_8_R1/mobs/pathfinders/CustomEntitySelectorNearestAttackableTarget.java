@@ -35,4 +35,10 @@ public class CustomEntitySelectorNearestAttackableTarget implements Predicate {
             return this.pathfinder.a(entity, false);
         }
     }
+
+	@Override
+	public boolean apply(Object arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

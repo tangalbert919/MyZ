@@ -5,6 +5,8 @@ import jordan.sicherman.MyZ;
 import jordan.sicherman.items.EquipmentState;
 import jordan.sicherman.items.ItemTag;
 import jordan.sicherman.items.ItemUtilities;
+import jordan.sicherman.nms.utilities.NMS;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -83,8 +85,20 @@ public class Grappler implements Listener {
         } else {
             this.pullEntityToLocation(pulled, to, false);
         }
-
-        to.getWorld().playSound(to, Sound.ENTITY_MAGMACUBE_JUMP, 10.0F, 1.0F);
+        if (NMS.Version.v1_7_R4 != null)
+            to.getWorld().playSound(to, Sound.MAGMACUBE_JUMP, 10.0F, 1.0F);
+        else if (NMS.Version.v1_8_R1 != null)
+        	to.getWorld().playSound(to, Sound.MAGMACUBE_JUMP, 10.0F, 1.0F);
+        else if (NMS.Version.v1_8_R2 != null)
+        	to.getWorld().playSound(to, Sound.MAGMACUBE_JUMP, 10.0F, 1.0F);
+        else if (NMS.Version.v1_8_R3 != null)
+        	to.getWorld().playSound(to, Sound.MAGMACUBE_JUMP, 10.0F, 1.0F);
+        else if (NMS.Version.v1_9_R1 != null)
+        	to.getWorld().playSound(to, Sound.ENTITY_MAGMACUBE_JUMP, 10.0F, 1.0F);
+        else if (NMS.Version.v1_9_R2 != null)
+        	to.getWorld().playSound(to, Sound.ENTITY_MAGMACUBE_JUMP, 10.0F, 1.0F);
+        else if (NMS.Version.v1_10_R1 != null)
+        	to.getWorld().playSound(to, Sound.ENTITY_MAGMACUBE_JUMP, 10.0F, 1.0F);
     }
 
     private void pullEntitySlightly(Entity entityFor, Location to) {

@@ -6,6 +6,7 @@ import net.minecraft.server.v1_9_R2.EntityHuman;
 import net.minecraft.server.v1_9_R2.EntityLiving;
 import net.minecraft.server.v1_9_R2.EntityPlayer;
 import net.minecraft.server.v1_9_R2.MobEffectList;
+import net.minecraft.server.v1_9_R2.MobEffects;
 
 public class CustomEntitySelectorNearestAttackableTarget implements Predicate{
 
@@ -22,7 +23,7 @@ public class CustomEntitySelectorNearestAttackableTarget implements Predicate{
             return false;
         } else {
             if (entity instanceof EntityHuman) {
-                if (((EntityPlayer) entity).playerInteractManager.isCreative() || entity.hasEffect(MobEffectList.WITHER) || entity.hasEffect(MobEffectList.INVISIBILITY)) {
+                if (((EntityPlayer) entity).playerInteractManager.isCreative() || entity.hasEffect(MobEffects.WITHER) || entity.hasEffect(MobEffects.INVISIBILITY)) {
                     return false;
                 }
 

@@ -8,11 +8,7 @@ import jordan.sicherman.locales.LocaleMessage;
 import jordan.sicherman.nms.utilities.NMS;
 import darknesgaming.nms.v1_9_R2.anvil.CustomContainerAnvil;
 import darknesgaming.nms.v1_9_R2.anvil.TileEntityCustomContainerAnvil;
-import jordan.sicherman.nms.v1_8_R1.mobs.CustomEntityGiantZombie;
-import jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityGuard;
-import jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityPigZombie;
-import jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityZombie;
-import jordan.sicherman.nms.v1_7_R4.mobs.SmartEntity;
+import darknesgaming.nms.v1_9_R2.mobs.*;
 import net.minecraft.server.v1_9_R2.Entity;
 import net.minecraft.server.v1_9_R2.EntityHuman;
 import net.minecraft.server.v1_9_R2.EntityInsentient;
@@ -164,7 +160,7 @@ public class NMSUtilities {
 	        }
 
 	        ((EntityInsentient) entity).setLocation(inLoc.getX(), inLoc.getY(), inLoc.getZ(), inLoc.getYaw(), inLoc.getPitch());
-	        ((EntityInsentient) entity).prepare((GroupDataEntity) null);
+	        ((EntityInsentient) entity).prepare(null, (GroupDataEntity) null);
 	        world.addEntity((Entity) entity, SpawnReason.CUSTOM);
 	    }
 

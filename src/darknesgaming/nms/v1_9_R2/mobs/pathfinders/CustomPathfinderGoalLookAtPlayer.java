@@ -7,6 +7,7 @@ import net.minecraft.server.v1_9_R2.EntityHuman;
 import net.minecraft.server.v1_9_R2.EntityInsentient;
 import net.minecraft.server.v1_9_R2.EntityPlayer;
 import net.minecraft.server.v1_9_R2.MobEffectList;
+import net.minecraft.server.v1_9_R2.MobEffects;
 import net.minecraft.server.v1_9_R2.PathfinderGoal;
 import net.minecraft.server.v1_9_R2.World;
 
@@ -39,7 +40,7 @@ public class CustomPathfinderGoalLookAtPlayer extends PathfinderGoal {
             EntityHuman found = (EntityHuman) iterator.next();
             double range = (double) (found.exp * 32.0F);
 
-            if (found != null && found.isAlive() && !((EntityPlayer) found).playerInteractManager.isCreative() && !found.hasEffect(MobEffectList.INVISIBILITY) && !found.hasEffect(MobEffectList.WITHER)) {
+            if (found != null && found.isAlive() && !((EntityPlayer) found).playerInteractManager.isCreative() && !found.hasEffect(MobEffects.INVISIBILITY) && !found.hasEffect(MobEffects.WITHER)) {
                 double fX = found.locX;
                 double fY = found.locY;
                 double fZ = found.locZ;

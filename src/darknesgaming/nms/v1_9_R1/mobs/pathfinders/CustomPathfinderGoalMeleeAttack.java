@@ -5,6 +5,7 @@ import net.minecraft.server.v1_9_R1.EntityCreature;
 import net.minecraft.server.v1_9_R1.EntityHuman;
 import net.minecraft.server.v1_9_R1.EntityLiving;
 import net.minecraft.server.v1_9_R1.MobEffectList;
+import net.minecraft.server.v1_9_R1.MobEffects;
 import net.minecraft.server.v1_9_R1.PathEntity;
 import net.minecraft.server.v1_9_R1.PathfinderGoal;
 import net.minecraft.server.v1_9_R1.World;
@@ -71,7 +72,7 @@ public class CustomPathfinderGoalMeleeAttack extends PathfinderGoal {
     public void e() {
         EntityLiving target = this.creature.getGoalTarget();
 
-        if (target != null && (target.hasEffect(MobEffectList.WITHER) || target.hasEffect(MobEffectList.INVISIBILITY))) {
+        if (target != null && (target.hasEffect(MobEffects.WITHER) || target.hasEffect(MobEffects.INVISIBILITY))) {
             this.creature.setGoalTarget((EntityLiving) null);
         } else {
             this.creature.getControllerLook().a(target, 30.0F, 30.0F);

@@ -12,3 +12,4 @@ public interface SmartEntity {
 
     EntityCreature getEntity();
 }
+

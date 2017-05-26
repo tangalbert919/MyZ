@@ -107,7 +107,7 @@ public enum CustomEntityType {
                         }
                     }
 
-                    if (CustomEntityType.ZOMBIE.meta.enabled && !list10.contains(biomeBase.ah) && !((CustomEntityType.DefaultCache) CustomEntityType.cache.get(biomeBase)).at.contains(CustomEntityType.ZOMBIE.meta.toBiomeMeta())) {
+                    if (CustomEntityType.ZOMBIE.meta.enabled && !list.contains(biomeBase.ah) && !((CustomEntityType.DefaultCache) CustomEntityType.cache.get(biomeBase)).at.contains(CustomEntityType.ZOMBIE.meta.toBiomeMeta())) {
                         list3 = (List) NMS.getDeclaredField(biomeBase, CustomEntityType.DefaultCache.keys[0]);
                         if (list3 != null) {
                             list3.add(CustomEntityType.ZOMBIE.meta.toBiomeMeta());

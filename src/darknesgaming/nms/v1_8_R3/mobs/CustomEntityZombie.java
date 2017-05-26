@@ -50,8 +50,8 @@ public class CustomEntityZombie extends EntityZombie implements SmartEntity {
         return this;
     }
 
-    protected float bD() {
-        return (float) ((double) super.bD() * ((Double) ConfigEntries.ZOMBIE_JUMP_MULTIPLIER.getValue()).doubleValue());
+    protected float bE() {
+        return (float) ((double) super.bE() * ((Double) ConfigEntries.ZOMBIE_JUMP_MULTIPLIER.getValue()).doubleValue());
     }
 
     public CustomEntityZombie(World world) {
@@ -94,16 +94,16 @@ public class CustomEntityZombie extends EntityZombie implements SmartEntity {
         return this.world.a(this.getBoundingBox(), this) && this.world.getCubes(this, this.getBoundingBox()).isEmpty() && !this.world.containsLiquid(this.getBoundingBox());
     }
 
-    protected void aW() {
-        super.aW();
+    protected void initAttributes() {
+        super.initAttributes();
         this.getAttributeInstance(GenericAttributes.maxHealth).setValue(((Double) ConfigEntries.ZOMBIE_HEALTH.getValue()).doubleValue());
         this.getAttributeInstance(GenericAttributes.c).setValue(((Double) ConfigEntries.ZOMBIE_KNOCKBACK_RESIST.getValue()).doubleValue());
-        this.getAttributeInstance(GenericAttributes.d).setValue(((Double) ConfigEntries.ZOMBIE_SPEED.getValue()).doubleValue());
-        this.getAttributeInstance(GenericAttributes.e).setValue(((Double) ConfigEntries.ZOMBIE_DAMAGE.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(((Double) ConfigEntries.ZOMBIE_SPEED.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(((Double) ConfigEntries.ZOMBIE_DAMAGE.getValue()).doubleValue());
     }
 
     protected void a(DifficultyDamageScaler difficultydamagescaler) {
-        switch (CustomEntityZombie.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityZombie$ZombieType[this.type.ordinal()]) {
+        switch (CustomEntityZombie.SyntheticClass_1.$SwitchMap$darknesgaming$nms$v1_8_R3$mobs$CustomEntityZombie$ZombieType[this.type.ordinal()]) {
         case 1:
             this.setEquipment(1, new ItemStack(Items.CHAINMAIL_BOOTS));
             this.setEquipment(2, new ItemStack(Items.CHAINMAIL_LEGGINGS));
@@ -161,29 +161,29 @@ public class CustomEntityZombie extends EntityZombie implements SmartEntity {
 
     static class SyntheticClass_1 {
 
-        static final int[] $SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityZombie$ZombieType = new int[CustomEntityZombie.ZombieType.values().length];
+        static final int[] $SwitchMap$darknesgaming$nms$v1_8_R3$mobs$CustomEntityZombie$ZombieType = new int[CustomEntityZombie.ZombieType.values().length];
 
         static {
             try {
-                CustomEntityZombie.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.CHAIN.ordinal()] = 1;
+                CustomEntityZombie.SyntheticClass_1.$SwitchMap$darknesgaming$nms$v1_8_R3$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.CHAIN.ordinal()] = 1;
             } catch (NoSuchFieldError nosuchfielderror) {
                 ;
             }
 
             try {
-                CustomEntityZombie.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.GOLD.ordinal()] = 2;
+                CustomEntityZombie.SyntheticClass_1.$SwitchMap$darknesgaming$nms$v1_8_R3$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.GOLD.ordinal()] = 2;
             } catch (NoSuchFieldError nosuchfielderror1) {
                 ;
             }
 
             try {
-                CustomEntityZombie.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.IRON.ordinal()] = 3;
+                CustomEntityZombie.SyntheticClass_1.$SwitchMap$darknesgaming$nms$v1_8_R3$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.IRON.ordinal()] = 3;
             } catch (NoSuchFieldError nosuchfielderror2) {
                 ;
             }
 
             try {
-                CustomEntityZombie.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.LEATHER.ordinal()] = 4;
+                CustomEntityZombie.SyntheticClass_1.$SwitchMap$darknesgaming$nms$v1_8_R3$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.LEATHER.ordinal()] = 4;
             } catch (NoSuchFieldError nosuchfielderror3) {
                 ;
             }

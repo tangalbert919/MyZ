@@ -32,7 +32,7 @@ public class CustomPathfinderGoalRandomStroll extends PathfinderGoal {
                 return false;
             }
 
-            if (this.creature.bb().nextInt(this.chanceToNot) != 0) {
+            if (this.creature.bc().nextInt(this.chanceToNot) != 0) {
                 return false;
             }
         }

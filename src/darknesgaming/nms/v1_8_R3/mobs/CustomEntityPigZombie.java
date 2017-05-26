@@ -44,8 +44,8 @@ public class CustomEntityPigZombie extends EntityPigZombie implements SmartEntit
         return this;
     }
 
-    protected float bD() {
-        return (float) ((double) super.bD() * ((Double) ConfigEntries.PIGMAN_JUMP_MULTIPLIER.getValue()).doubleValue());
+    protected float bE() {
+        return (float) ((double) super.bE() * ((Double) ConfigEntries.PIGMAN_JUMP_MULTIPLIER.getValue()).doubleValue());
     }
 
     public CustomEntityPigZombie(World world) {
@@ -78,13 +78,12 @@ public class CustomEntityPigZombie extends EntityPigZombie implements SmartEntit
         return this.world.a(this.getBoundingBox(), this) && this.world.getCubes(this, this.getBoundingBox()).isEmpty() && !this.world.containsLiquid(this.getBoundingBox());
     }
 
-    public int aW() {
-        super.aW();
+    public void initAttributes() {
+        super.initAttributes();
         this.getAttributeInstance(GenericAttributes.maxHealth).setValue(((Double) ConfigEntries.PIGMAN_HEALTH.getValue()).doubleValue());
         this.getAttributeInstance(GenericAttributes.c).setValue(((Double) ConfigEntries.PIGMAN_KNOCKBACK_RESIST.getValue()).doubleValue());
-        this.getAttributeInstance(GenericAttributes.d).setValue(((Double) ConfigEntries.PIGMAN_SPEED.getValue()).doubleValue());
-        this.getAttributeInstance(GenericAttributes.e).setValue(((Double) ConfigEntries.PIGMAN_DAMAGE.getValue()).doubleValue());
-        return a_;
+        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(((Double) ConfigEntries.PIGMAN_SPEED.getValue()).doubleValue());
+        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(((Double) ConfigEntries.PIGMAN_DAMAGE.getValue()).doubleValue());
     }
 
     public void die() {

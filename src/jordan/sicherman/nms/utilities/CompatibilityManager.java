@@ -220,15 +220,24 @@ public class CompatibilityManager {
 
         static {
             try {
-                CompatibilityManager.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_8_R1.ordinal()] = 1;
+                SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_8_R1.ordinal()] = 1;
             } catch (NoSuchFieldError nosuchfielderror) {
                 ;
             }
-
             try {
-                CompatibilityManager.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_7_R4.ordinal()] = 2;
+                SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_8_R2.ordinal()] = 2;
             } catch (NoSuchFieldError nosuchfielderror1) {
                 ;
+            }
+            try {
+                SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_8_R3.ordinal()] = 3;
+            } catch (NoSuchFieldError nosuchfielderror2) {
+                ;
+            }
+            try {
+                SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_7_R4.ordinal()] = 4;
+            } catch (NoSuchFieldError nosuchfielderror3) {
+
             }
 
             $SwitchMap$jordan$sicherman$utilities$configuration$DeathCause = new int[DeathCause.values().length];

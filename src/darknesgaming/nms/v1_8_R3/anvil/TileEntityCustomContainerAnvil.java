@@ -1,16 +1,8 @@
 package darknesgaming.nms.v1_8_R3.anvil;
 
-import net.minecraft.server.v1_8_R3.BlockPosition;
-import net.minecraft.server.v1_8_R3.Blocks;
-import net.minecraft.server.v1_8_R3.ChatMessage;
-import net.minecraft.server.v1_8_R3.Container;
-import net.minecraft.server.v1_8_R3.EntityHuman;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.PlayerInventory;
-import net.minecraft.server.v1_8_R3.TileEntity;
-import net.minecraft.server.v1_8_R3.World;
+import net.minecraft.server.v1_8_R3.*;
 
-public class TileEntityCustomContainerAnvil extends TileEntity {
+public class TileEntityCustomContainerAnvil extends BlockAnvil.TileEntityContainerAnvil {
 
 	   private final World world;
 	    private final BlockPosition position;

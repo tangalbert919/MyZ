@@ -185,19 +185,16 @@ public class ThirstManager {
             try {
                 ThirstManager.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.BIRCH_FOREST_HILLS_MOUNTAINS.ordinal()] = 6;
             } catch (NoSuchFieldError nosuchfielderror5) {
-                ;
             }
 
             try {
                 ThirstManager.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.BIRCH_FOREST_MOUNTAINS.ordinal()] = 7;
             } catch (NoSuchFieldError nosuchfielderror6) {
-                ;
             }
 
             try {
                 ThirstManager.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.FLOWER_FOREST.ordinal()] = 8;
             } catch (NoSuchFieldError nosuchfielderror7) {
-                ;
             }
 
             try {

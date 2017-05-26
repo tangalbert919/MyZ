@@ -125,7 +125,7 @@ public class NMSUtilities {
 
         BlockPosition position = new BlockPosition(x, y, z);
 
-        if (!World.haveWeSilencedAPhysicsCrash) {
+        if (!human.world.isClientSide) {
             TileEntityCustomContainerAnvil itileentitycontainer = new TileEntityCustomContainerAnvil(human.world, position, anvil != null);
 
             human.openTileEntity((ITileEntityContainer) itileentitycontainer);
@@ -183,25 +183,25 @@ public class NMSUtilities {
             try {
                 NMSUtilities.SyntheticClass_1.$SwitchMap$org$bukkit$entity$EntityType[EntityType.ZOMBIE.ordinal()] = 1;
             } catch (NoSuchFieldError nosuchfielderror) {
-                ;
+
             }
 
             try {
                 NMSUtilities.SyntheticClass_1.$SwitchMap$org$bukkit$entity$EntityType[EntityType.GIANT.ordinal()] = 2;
             } catch (NoSuchFieldError nosuchfielderror1) {
-                ;
+
             }
 
             try {
                 NMSUtilities.SyntheticClass_1.$SwitchMap$org$bukkit$entity$EntityType[EntityType.PIG_ZOMBIE.ordinal()] = 3;
             } catch (NoSuchFieldError nosuchfielderror2) {
-                ;
+
             }
 
             try {
                 NMSUtilities.SyntheticClass_1.$SwitchMap$org$bukkit$entity$EntityType[EntityType.SKELETON.ordinal()] = 4;
             } catch (NoSuchFieldError nosuchfielderror3) {
-                ;
+
             }
 
         }

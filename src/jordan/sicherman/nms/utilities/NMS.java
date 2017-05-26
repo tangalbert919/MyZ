@@ -143,13 +143,13 @@ public class NMS {
         return value;
     }
 
-    public static enum Version {
+    public enum Version {
 
-        v1_8_R1("v1_8_R1"), v1_8_R2("v1_8_R2"), v1_8_R3("v1_8_R3"), v1_7_R4("v1_7_R4"), v1_9_R1("v1_9_R1"), v1_9_R2("v1_9_R2"), v1_10_R1("v1_10_R1");
+        v1_8_R1("v1_8_R1"), v1_8_R2("v1_8_R2"), v1_8_R3("v1_8_R3"), v1_7_R4("v1_7_R4"), v1_9_R1("v1_9_R1"), v1_9_R2("v1_9_R2"), v1_10_R1("v1_10_R1"), v1_11_R1("v_11_R1"), v1_12_R1("v1_12_R1");
 
         private final String identifier;
 
-        private Version(String identifier) {
+        Version(String identifier) {
             this.identifier = identifier;
         }
 

@@ -62,7 +62,7 @@ public class CustomPathfinderGoalLookAtPlayer extends PathfinderGoal {
 
         if (this.target == null) {
             if (this.classToLookAt == EntityHuman.class) {
-                if ((double) this.creature.bb().nextFloat() <= 0.5D) {
+                if ((double) this.creature.bc().nextFloat() <= 0.5D) {
                     this.target = this.findNearbyPlayer(this.creature.world, this.creature.locX, this.creature.locY, this.creature.locZ);
                 }
             } else {
@@ -78,7 +78,7 @@ public class CustomPathfinderGoalLookAtPlayer extends PathfinderGoal {
     }
 
     public void c() {
-        this.lookAway = 40 + this.creature.bb().nextInt(40);
+        this.lookAway = 40 + this.creature.bc().nextInt(40);
     }
 
     public void d() {
@@ -86,7 +86,7 @@ public class CustomPathfinderGoalLookAtPlayer extends PathfinderGoal {
     }
 
     public void e() {
-        this.creature.getControllerLook().a(this.target.locX, this.target.locY + (double) this.target.getHeadHeight(), this.target.locZ, 10.0F, (float) this.creature.bP());
+        this.creature.getControllerLook().a(this.target.locX, this.target.locY + (double) this.target.getHeadHeight(), this.target.locZ, 10.0F, (float) this.creature.bQ());
         --this.lookAway;
     }
 }

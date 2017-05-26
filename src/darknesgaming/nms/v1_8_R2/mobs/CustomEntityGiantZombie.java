@@ -44,8 +44,8 @@ public class CustomEntityGiantZombie extends EntityGiantZombie implements SmartE
 	        return this;
 	    }
 
-	    protected float bD() {
-	        return (float) ((double) super.bD() * ((Double) ConfigEntries.GIANT_JUMP_MULTIPLIER.getValue()).doubleValue());
+	    protected float bE() {
+	        return (float) ((double) super.bE() * ((Double) ConfigEntries.GIANT_JUMP_MULTIPLIER.getValue()).doubleValue());
 	    }
 
 	    public CustomEntityGiantZombie(World world) {
@@ -68,8 +68,8 @@ public class CustomEntityGiantZombie extends EntityGiantZombie implements SmartE
 	        return this.world.a(this.getBoundingBox(), this) && this.world.getCubes(this, this.getBoundingBox()).isEmpty() && !this.world.containsLiquid(this.getBoundingBox());
 	    }
 
-	    protected void aW() {
-	        super.aW();
+	    protected void initAttributes() {
+	        super.initAttributes();
 	        this.getAttributeInstance(GenericAttributes.maxHealth).setValue(((Double) ConfigEntries.GIANT_HEALTH.getValue()).doubleValue());
 	        this.getAttributeInstance(GenericAttributes.c).setValue(((Double) ConfigEntries.GIANT_KNOCKBACK_RESIST.getValue()).doubleValue());
 	        this.getAttributeInstance(GenericAttributes.d).setValue(((Double) ConfigEntries.GIANT_SPEED.getValue()).doubleValue());

@@ -56,7 +56,7 @@ public class CustomPathfinderGoalMeleeAttack extends PathfinderGoal {
     public boolean b() {
         EntityLiving target = this.creature.getGoalTarget();
 
-        return target == null ? false : (!target.isAlive() ? false : (!this.bypassVision ? !this.creature.getNavigation().m() : this.creature.d(new BlockPosition(target))));
+        return target == null ? false : (!target.isAlive() ? false : (!this.bypassVision ? !this.creature.getNavigation().m() : this.creature.e(new BlockPosition(target))));
     }
 
     public void c() {
@@ -79,11 +79,11 @@ public class CustomPathfinderGoalMeleeAttack extends PathfinderGoal {
             double sizeOfEntities = this.a(target);
 
             --this.delay;
-            if ((this.bypassVision || this.creature.getEntitySenses().a(target)) && this.delay <= 0 && (this.targetX == 0.0D && this.targetY == 0.0D && this.targetZ == 0.0D || target.e(this.targetX, this.targetY, this.targetZ) >= 1.0D || this.creature.bb().nextFloat() < 0.05F)) {
+            if ((this.bypassVision || this.creature.getEntitySenses().a(target)) && this.delay <= 0 && (this.targetX == 0.0D && this.targetY == 0.0D && this.targetZ == 0.0D || target.e(this.targetX, this.targetY, this.targetZ) >= 1.0D || this.creature.bc().nextFloat() < 0.05F)) {
                 this.targetX = target.locX;
                 this.targetY = target.getBoundingBox().b;
                 this.targetZ = target.locZ;
-                this.delay = 4 + this.creature.bb().nextInt(7);
+                this.delay = 4 + this.creature.bc().nextInt(7);
                 if (distance > 1024.0D) {
                     this.delay += 10;
                 } else if (distance > 256.0D) {
@@ -102,7 +102,7 @@ public class CustomPathfinderGoalMeleeAttack extends PathfinderGoal {
                 }
 
                 this.attackDelay = 20;
-                if (this.creature.bz() != null) {
+                if (this.creature.bA() != null) {
                     this.creature.bv();
                 }
 

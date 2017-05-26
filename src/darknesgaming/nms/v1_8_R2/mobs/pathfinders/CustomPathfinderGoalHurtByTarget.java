@@ -22,14 +22,14 @@ public class CustomPathfinderGoalHurtByTarget extends PathfinderGoalTarget {
     }
 
     public boolean a() {
-        int hurtTimestamp = this.e.bd();
+        int hurtTimestamp = this.e.be();
 
         return hurtTimestamp != this.hurtTimestamp && this.a(this.e.getLastDamager(), false);
     }
 
     public void c() {
         this.e.setGoalTarget(this.e.getLastDamager(), TargetReason.TARGET_ATTACKED_NEARBY_ENTITY, true);
-        this.hurtTimestamp = this.e.bd();
+        this.hurtTimestamp = this.e.be();
         if (this.favorTargets) {
             double range = this.f();
             List list = this.e.world.a(this.e.getClass(), (new AxisAlignedBB(this.e.locX, this.e.locY, this.e.locZ, this.e.locX + 1.0D, this.e.locY + 1.0D, this.e.locZ + 1.0D)).grow(range, 10.0D, range));

@@ -16,7 +16,7 @@ public class CustomPathfinderGoalRandomLookaround extends PathfinderGoal {
     }
 
     public boolean a() {
-        return this.creature.bb().nextFloat() < 0.02F;
+        return this.creature.bc().nextFloat() < 0.02F;
     }
 
     public boolean b() {
@@ -24,15 +24,15 @@ public class CustomPathfinderGoalRandomLookaround extends PathfinderGoal {
     }
 
     public void c() {
-        double d1 = 6.283185307179586D * this.creature.bb().nextDouble();
+        double d1 = 6.283185307179586D * this.creature.bc().nextDouble();
 
         this.xOffset = Math.cos(d1);
         this.zOffset = Math.sin(d1);
-        this.lookAway = 20 + this.creature.bb().nextInt(20);
+        this.lookAway = 20 + this.creature.bc().nextInt(20);
     }
 
     public void e() {
         --this.lookAway;
-        this.creature.getControllerLook().a(this.creature.locX + this.xOffset, this.creature.locY + (double) this.creature.getHeadHeight(), this.creature.locZ + this.zOffset, 10.0F, (float) this.creature.bP());
+        this.creature.getControllerLook().a(this.creature.locX + this.xOffset, this.creature.locY + (double) this.creature.getHeadHeight(), this.creature.locZ + this.zOffset, 10.0F, (float) this.creature.bQ());
     }
 }

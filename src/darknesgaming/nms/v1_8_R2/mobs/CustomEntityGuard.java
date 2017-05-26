@@ -65,8 +65,8 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
         return this;
     }
 
-    protected float bD() {
-        return (float) ((double) super.bD() * ((Double) ConfigEntries.GUARD_JUMP_MULTIPLIER.getValue()).doubleValue());
+    protected float bE() {
+        return (float) ((double) super.bE() * ((Double) ConfigEntries.GUARD_JUMP_MULTIPLIER.getValue()).doubleValue());
     }
 
     public CustomEntityGuard(World world) {
@@ -76,7 +76,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
         this.giantAttack = new CustomPathfinderGoalMeleeAttack(this, CustomEntityGiantZombie.class, ((Double) ConfigEntries.GUARD_SPEED_TARGET.getValue()).doubleValue(), true);
         this.pigmanAttack = new CustomPathfinderGoalMeleeAttack(this, CustomEntityPigZombie.class, ((Double) ConfigEntries.GUARD_SPEED_TARGET.getValue()).doubleValue(), true);
         this.rangedAttack = new CustomPathfinderGoalArrowAttack(this, ((Double) ConfigEntries.GUARD_SPEED_TARGET.getValue()).doubleValue(), 20, 50, 15.0F);
-        this.type = CustomEntityGuard.GuardType.values()[this.bb().nextInt(CustomEntityGuard.GuardType.values().length)];
+        this.type = CustomEntityGuard.GuardType.values()[this.bc().nextInt(CustomEntityGuard.GuardType.values().length)];
         DisguiseAPI.disguiseToAll(this.getBukkitEntity(), new PlayerDisguise(ChatColor.translateAlternateColorCodes('&', (String) ConfigEntries.GUARD_NAME.getValue())));
 
         try {
@@ -131,7 +131,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
     }
 
     protected void a(DifficultyDamageScaler difficultydamagescaler) {
-        switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
+        switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$darknesgaming$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
         case 1:
             this.setEquipment(0, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_MELEE_ITEM.getValue()))));
             break;
@@ -199,7 +199,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
             this.goalSelector.a(this.giantAttack);
             this.goalSelector.a(this.pigmanAttack);
             this.goalSelector.a(this.rangedAttack);
-            switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
+            switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$darknesgaming$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
             case 1:
                 this.goalSelector.a(4, this.humanAttack);
                 this.goalSelector.a(4, this.zombieAttack);
@@ -214,8 +214,8 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
         }
     }
 
-    protected void aW() {
-        super.aW();
+    protected void initAttributes() {
+        super.initAttributes();
         this.getAttributeInstance(GenericAttributes.maxHealth).setValue(((Double) ConfigEntries.GUARD_HEALTH.getValue()).doubleValue());
         this.getAttributeInstance(GenericAttributes.c).setValue(((Double) ConfigEntries.GUARD_KNOCKBACK_RESIST.getValue()).doubleValue());
         this.getAttributeInstance(GenericAttributes.d).setValue(((Double) ConfigEntries.GUARD_SPEED.getValue()).doubleValue());
@@ -224,17 +224,17 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
 
     static class SyntheticClass_1 {
 
-        static final int[] $SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType = new int[CustomEntityGuard.GuardType.values().length];
+        static final int[] $SwitchMap$darknesgaming$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType = new int[CustomEntityGuard.GuardType.values().length];
 
         static {
             try {
-                CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.MELEE.ordinal()] = 1;
+                CustomEntityGuard.SyntheticClass_1.$SwitchMap$darknesgaming$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.MELEE.ordinal()] = 1;
             } catch (NoSuchFieldError nosuchfielderror) {
                 ;
             }
 
             try {
-                CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.RANGED.ordinal()] = 2;
+                CustomEntityGuard.SyntheticClass_1.$SwitchMap$darknesgaming$nms$v1_8_R2$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.RANGED.ordinal()] = 2;
             } catch (NoSuchFieldError nosuchfielderror1) {
                 ;
             }

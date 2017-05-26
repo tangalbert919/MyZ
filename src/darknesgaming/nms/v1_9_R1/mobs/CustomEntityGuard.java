@@ -13,24 +13,7 @@ import darknesgaming.nms.v1_9_R1.mobs.pathfinders.CustomPathfinderGoalRandomStro
 import jordan.sicherman.utilities.configuration.ConfigEntries;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
-import net.minecraft.server.v1_9_R1.AttributeModifier;
-import net.minecraft.server.v1_9_R1.Block;
-import net.minecraft.server.v1_9_R1.BlockPosition;
-import net.minecraft.server.v1_9_R1.Blocks;
-import net.minecraft.server.v1_9_R1.DifficultyDamageScaler;
-import net.minecraft.server.v1_9_R1.EntityCreature;
-import net.minecraft.server.v1_9_R1.EntityHuman;
-import net.minecraft.server.v1_9_R1.EntityLiving;
-import net.minecraft.server.v1_9_R1.EntitySkeleton;
-import net.minecraft.server.v1_9_R1.GenericAttributes;
-import net.minecraft.server.v1_9_R1.GroupDataEntity;
-import net.minecraft.server.v1_9_R1.IBlockProperties;
-import net.minecraft.server.v1_9_R1.Item;
-import net.minecraft.server.v1_9_R1.ItemStack;
-import net.minecraft.server.v1_9_R1.Items;
-import net.minecraft.server.v1_9_R1.PathfinderGoalFloat;
-import net.minecraft.server.v1_9_R1.PathfinderGoalMoveTowardsRestriction;
-import net.minecraft.server.v1_9_R1.World;
+import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -117,11 +100,11 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
         this.a(difficultydamagescaler);
         this.b(difficultydamagescaler);
         this.j(this.random.nextFloat() < 0.55F * difficultydamagescaler.c());
-        if (this.getEquipment(4) == null) {
-            Calendar calendar = this.world.Y();
+        if (this.getEquipment(EnumItemSlot.HEAD) == null) {
+            Calendar calendar = this.world.ac();
 
             if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31 && this.random.nextFloat() < 0.25F) {
-                this.setEquipment(4, new ItemStack(this.random.nextFloat() < 0.1F ? Blocks.LIT_PUMPKIN : Blocks.PUMPKIN));
+                this.setEquipment(EnumItemSlot.HEAD, new ItemStack(this.random.nextFloat() < 0.1F ? Blocks.LIT_PUMPKIN : Blocks.PUMPKIN));
                 this.dropChanceHand[4] = 0.0F;
             }
         }
@@ -132,21 +115,21 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
     protected void a(DifficultyDamageScaler difficultydamagescaler) {
         switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$v1_9_R1$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
         case 1:
-            this.setEquipment(0, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_MELEE_ITEM.getValue()))));
+            this.setEquipment(EnumItemSlot.MAINHAND, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_MELEE_ITEM.getValue()))));
             break;
 
         case 2:
-            this.setEquipment(0, new ItemStack(Items.BOW));
+            this.setEquipment(EnumItemSlot.MAINHAND, new ItemStack(Items.BOW));
         }
 
-        this.setEquipment(1, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_BOOTS_ITEM.getValue()))));
-        this.setEquipment(2, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_LEGGINGS_ITEM.getValue()))));
-        this.setEquipment(3, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_CHESTPLATE_ITEM.getValue()))));
-        this.setEquipment(4, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_HELMET_ITEM.getValue()))));
+        this.setEquipment(EnumItemSlot.FEET, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_BOOTS_ITEM.getValue()))));
+        this.setEquipment(EnumItemSlot.LEGS, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_LEGGINGS_ITEM.getValue()))));
+        this.setEquipment(EnumItemSlot.CHEST, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_CHESTPLATE_ITEM.getValue()))));
+        this.setEquipment(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_HELMET_ITEM.getValue()))));
     }
 
-    protected String z() {
-        return "mob.villager.idle";
+    protected EntityVillager z() {
+        return spawnIn(world.b());
     }
 
     protected String bn() {

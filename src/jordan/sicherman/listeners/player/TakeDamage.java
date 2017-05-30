@@ -44,14 +44,14 @@ public class TakeDamage implements Listener {
             if (e.getDamager() instanceof Player) {
                 ItemStack hand;
 
-                if (e.getCause() == DamageCause.ENTITY_ATTACK && e.getDamager() instanceof Player && ((Player) e.getDamager()).getItemInHand() != null) {
-                    hand = ((Player) e.getDamager()).getItemInHand();
+                if (e.getCause() == DamageCause.ENTITY_ATTACK && e.getDamager() instanceof Player && ((Player) e.getDamager()).getItemOnCursor() != null) {
+                    hand = ((Player) e.getDamager()).getItemOnCursor();
                     if (EquipmentState.getState(hand) == EquipmentState.BOW_SHARPENED) {
                         e.setDamage(e.getDamage() + (double) ((Integer) ConfigEntries.BOW_SHARPENED_COMBAT_MOD.getValue()).intValue());
                     }
                 }
 
-                hand = ((Player) e.getDamager()).getItemInHand();
+                hand = ((Player) e.getDamager()).getItemOnCursor();
                 double effectiveness = EquipmentState.getEffectiveness(hand);
 
                 e.setDamage(e.getDamage() * effectiveness);

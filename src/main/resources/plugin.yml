@@ -1,8 +1,8 @@
 authors: [Jordan Sicherman, Albert Tang]
 main: jordan.sicherman.MyZ
-version: 4.1.21257-ALPHA
-name: MyZ
-description: The best post-apocalyptic plugin in existance.
+version: 5.0.0
+name: MyZ Reborn
+description: The best post-apocalyptic plugin in existance, reborn.
 depend: [LibsDisguises, CrackShot]
 
 commands:

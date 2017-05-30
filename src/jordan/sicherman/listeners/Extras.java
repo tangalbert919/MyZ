@@ -266,8 +266,8 @@ public class Extras implements Listener {
     private void onBlock(PlayerInteractEvent e) {
         if (Utilities.inWorld(e.getPlayer())) {
             if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (e.getAction() == Action.RIGHT_CLICK_AIR && e.getPlayer().getItemInHand() != null) {
-                    switch (Extras.SyntheticClass_1.$SwitchMap$org$bukkit$Material[e.getPlayer().getItemInHand().getType().ordinal()]) {
+                if (e.getAction() == Action.RIGHT_CLICK_AIR && e.getPlayer().getItemOnCursor() != null) {
+                    switch (Extras.SyntheticClass_1.$SwitchMap$org$bukkit$Material[e.getPlayer().getItemOnCursor().getType().ordinal()]) {
                     case 1:
                     case 2:
                     case 3:
@@ -281,10 +281,10 @@ public class Extras implements Listener {
                     default:
                         return;
                     }
-                } else if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getPlayer().getItemInHand() != null) {
+                } else if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getPlayer().getItemOnCursor() != null) {
                     Material type = e.getClickedBlock().getType();
 
-                    if ((type == Material.WATER || type == Material.CAULDRON || type == Material.CAULDRON_ITEM || type == Material.STATIONARY_WATER) && e.getPlayer().getItemInHand().getType() == Material.GLASS_BOTTLE) {
+                    if ((type == Material.WATER || type == Material.CAULDRON || type == Material.CAULDRON_ITEM || type == Material.STATIONARY_WATER) && e.getPlayer().getItemOnCursor().getType() == Material.GLASS_BOTTLE) {
                         e.setCancelled(true);
                         switch (Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[e.getClickedBlock().getBiome().ordinal()]) {
                         case 1:
@@ -304,14 +304,14 @@ public class Extras implements Listener {
                         case 15:
                         case 16:
                         case 17:
-                            e.getPlayer().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.COLD_WATER, 1));
+                            e.getPlayer().setItemOnCursor(ItemUtilities.getInstance().getTagItem(ItemTag.COLD_WATER, 1));
                             break;
 
                         case 18:
                         case 19:
                         case 20:
                         case 21:
-                            e.getPlayer().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.SALTY_WATER, 1));
+                            e.getPlayer().setItemOnCursor(ItemUtilities.getInstance().getTagItem(ItemTag.SALTY_WATER, 1));
                             break;
 
                         case 22:
@@ -328,9 +328,9 @@ public class Extras implements Listener {
                         case 33:
                         case 34:
                             if (e.getPlayer().getWorld().getTime() < 13000L) {
-                                e.getPlayer().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.WARM_WATER, 1));
+                                e.getPlayer().setItemOnCursor(ItemUtilities.getInstance().getTagItem(ItemTag.WARM_WATER, 1));
                             } else {
-                                e.getPlayer().setItemInHand(new ItemStack(Material.POTION, 1));
+                                e.getPlayer().setItemOnCursor(new ItemStack(Material.POTION, 1));
                             }
                             break;
 
@@ -342,11 +342,11 @@ public class Extras implements Listener {
                         case 40:
                         case 41:
                         case 42:
-                            e.getPlayer().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.MURKY_WATER, 1));
+                            e.getPlayer().setItemOnCursor(ItemUtilities.getInstance().getTagItem(ItemTag.MURKY_WATER, 1));
                             break;
 
                         default:
-                            e.getPlayer().setItemInHand(new ItemStack(Material.POTION, 1));
+                            e.getPlayer().setItemOnCursor(new ItemStack(Material.POTION, 1));
                         }
                     }
                 }
@@ -388,13 +388,13 @@ public class Extras implements Listener {
                 if (((Boolean) ConfigEntries.USE_THIRST.getValue()).booleanValue()) {
                     MyZ.instance.getServer().getScheduler().runTaskLater(MyZ.instance, new Runnable() {
                         public void run() {
-                            ItemStack i = playerFor.getItemInHand();
+                            ItemStack i = playerFor.getItemOnCursor();
 
                             if (i != null) {
                                 if (i.getAmount() > 1) {
                                     i.setAmount(i.getAmount() - 1);
                                 } else {
-                                    playerFor.setItemInHand((ItemStack) null);
+                                    playerFor.setItemOnCursor(null);
                                 }
                             }
 
@@ -431,7 +431,7 @@ public class Extras implements Listener {
     private boolean wasHeadshot(Entity entity, Projectile arrow) {
         if (arrow instanceof Arrow && arrow.getShooter() instanceof Player) {
             Player player = (Player) arrow.getShooter();
-            ItemStack bow = player.getItemInHand();
+            ItemStack bow = player.getItemOnCursor();
 
             if (bow != null && EquipmentState.getState(bow).getPosition(bow) >= 5) {
                 if (!this.isHumanoid(entity.getType())) {
@@ -489,7 +489,7 @@ public class Extras implements Listener {
             }
 
             try {
-                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.ICE_PLAINS_SPIKES.ordinal()] = 6;
+                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.MUTATED_ICE_FLATS.ordinal()] = 6;
             } catch (NoSuchFieldError nosuchfielderror5) {
                 ;
             }
@@ -501,19 +501,19 @@ public class Extras implements Listener {
             }
 
             try {
-                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.SUNFLOWER_PLAINS.ordinal()] = 8;
+                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.MUTATED_BIRCH_FOREST_HILLS.ordinal()] = 8;
             } catch (NoSuchFieldError nosuchfielderror7) {
                 ;
             }
 
             try {
-                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.ICE_PLAINS.ordinal()] = 9;
+                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.ICE_FLATS.ordinal()] = 9;
             } catch (NoSuchFieldError nosuchfielderror8) {
                 ;
             }
 
             try {
-                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.SWAMPLAND_MOUNTAINS.ordinal()] = 10;
+                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.MUTATED_SWAMPLAND.ordinal()] = 10;
             } catch (NoSuchFieldError nosuchfielderror9) {
                 ;
             }
@@ -525,13 +525,13 @@ public class Extras implements Listener {
             }
 
             try {
-                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.MEGA_TAIGA_HILLS.ordinal()] = 12;
+                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.MUTATED_TAIGA.ordinal()] = 12;
             } catch (NoSuchFieldError nosuchfielderror11) {
                 ;
             }
 
             try {
-                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.MEGA_SPRUCE_TAIGA_HILLS.ordinal()] = 13;
+                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.MUTATED_REDWOOD_TAIGA_HILLS.ordinal()] = 13;
             } catch (NoSuchFieldError nosuchfielderror12) {
                 ;
             }
@@ -549,7 +549,7 @@ public class Extras implements Listener {
             }
 
             try {
-                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.MEGA_SPRUCE_TAIGA_HILLS.ordinal()] = 16;
+                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.MUTATED_REDWOOD_TAIGA.ordinal()] = 16;
             } catch (NoSuchFieldError nosuchfielderror15) {
                 ;
             }
@@ -621,13 +621,13 @@ public class Extras implements Listener {
             }
 
             try {
-                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.MESA_PLATEAU_FOREST.ordinal()] = 28;
+                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.MUTATED_MESA_ROCK.ordinal()] = 28;
             } catch (NoSuchFieldError nosuchfielderror27) {
                 ;
             }
 
             try {
-                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.MESA_BRYCE.ordinal()] = 29;
+                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.MESA_ROCK.ordinal()] = 29;
             } catch (NoSuchFieldError nosuchfielderror28) {
                 ;
             }
@@ -651,7 +651,7 @@ public class Extras implements Listener {
             }
 
             try {
-                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.SAVANNA_MOUNTAINS.ordinal()] = 33;
+                Extras.SyntheticClass_1.$SwitchMap$org$bukkit$block$Biome[Biome.SAVANNA_ROCK.ordinal()] = 33;
             } catch (NoSuchFieldError nosuchfielderror32) {
                 ;
             }

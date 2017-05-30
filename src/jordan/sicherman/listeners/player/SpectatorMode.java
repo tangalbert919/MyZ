@@ -111,12 +111,12 @@ public class SpectatorMode implements Listener {
         Player player = e.getPlayer();
 
         if (Utilities.inWorld(player)) {
-            if (ManagerManager.isManager(player, ManagerManager.ManagerType.ENGINEER) && ItemUtilities.getInstance().hasTag(player.getItemInHand(), ItemTag.WAND)) {
+            if (ManagerManager.isManager(player, ManagerManager.ManagerType.ENGINEER) && ItemUtilities.getInstance().hasTag(player.getItemOnCursor(), ItemTag.WAND)) {
                 switch (SpectatorMode.SyntheticClass_1.$SwitchMap$org$bukkit$event$block$Action[e.getAction().ordinal()]) {
                 case 1:
                 case 2:
                     e.setCancelled(true);
-                    CompatibilityManager.interactAnvil(player, (Block) null, new EngineerRecipe[0]);
+                    CompatibilityManager.interactAnvil(player, null);
                     break;
 
                 case 3:
@@ -136,9 +136,9 @@ public class SpectatorMode implements Listener {
                             engineerrecipe = (EngineerRecipe) list.get(0);
                         }
 
-                        player.sendMessage(LocaleMessage.VIEWING_RECIPE.filter(new Object[] { Integer.valueOf(i)}).toString((CommandSender) player));
+                        player.sendMessage(LocaleMessage.VIEWING_RECIPE.filter(new Object[] { Integer.valueOf(i)}).toString(player));
                         player.setMetadata(ManagerManager.ManagerType.ENGINEER.getID(), new FixedMetadataValue(MyZ.instance, Integer.valueOf(i)));
-                        CompatibilityManager.interactAnvil(player, (Block) null, new EngineerRecipe[] { engineerrecipe});
+                        CompatibilityManager.interactAnvil(player, null);
                     }
                 }
             } else if (ManagerManager.isManager(player, ManagerManager.ManagerType.SPAWN) && ItemUtilities.getInstance().hasTag(player.getItemInHand(), ItemTag.WAND)) {
@@ -192,7 +192,7 @@ public class SpectatorMode implements Listener {
                     DataWrapper.set(ConfigEntries.SPAWN_POINTS, arraylist, true);
                     player.sendMessage(LocaleMessage.ADDED_SPAWN.toString((CommandSender) player));
                 }
-            } else if (ManagerManager.isManager(e.getPlayer(), ManagerManager.ManagerType.CHESTS) && ItemUtilities.getInstance().hasTag(e.getPlayer().getItemInHand(), ItemTag.WAND)) {
+            } else if (ManagerManager.isManager(e.getPlayer(), ManagerManager.ManagerType.CHESTS) && ItemUtilities.getInstance().hasTag(e.getPlayer().getItemOnCursor(), ItemTag.WAND)) {
                 if (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.LEFT_CLICK_BLOCK) {
                     if (e.getAction() == Action.LEFT_CLICK_AIR) {
                         e.setCancelled(true);

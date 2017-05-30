@@ -45,7 +45,7 @@ public class Grappler implements Listener {
     public void fishEvent(PlayerFishEvent e) {
         Player player = e.getPlayer();
 
-        if (ItemUtilities.getInstance().hasTag(player.getItemInHand(), ItemTag.GRAPPLE)) {
+        if (ItemUtilities.getInstance().hasTag(player.getItemOnCursor(), ItemTag.GRAPPLE)) {
             if (e.getState() == State.IN_GROUND) {
                 Location hooked = e.getHook().getLocation();
                 Iterator iterator = e.getHook().getNearbyEntities(1.5D, 1.0D, 1.5D).iterator();
@@ -75,25 +75,17 @@ public class Grappler implements Listener {
 
     public void grapple(Player grappler, Entity pulled, Location to) {
         if (grappler.equals(pulled)) {
-            if (grappler.getLocation().distance(to) >= 3.0D && EquipmentState.getState(grappler.getItemInHand()) != EquipmentState.GRAPPLE_WEAK) {
-                this.pullEntityToLocation(grappler, to, EquipmentState.getState(grappler.getItemInHand()) == EquipmentState.LIGHTWEIGHT);
+            if (grappler.getLocation().distance(to) >= 3.0D && EquipmentState.getState(grappler.getItemOnCursor()) != EquipmentState.GRAPPLE_WEAK) {
+                this.pullEntityToLocation(grappler, to, EquipmentState.getState(grappler.getItemOnCursor()) == EquipmentState.LIGHTWEIGHT);
             } else {
                 this.pullEntitySlightly(grappler, to);
             }
-        } else if (EquipmentState.getState(grappler.getItemInHand()) == EquipmentState.GRAPPLE_WEAK) {
+        } else if (EquipmentState.getState(grappler.getItemOnCursor()) == EquipmentState.GRAPPLE_WEAK) {
             this.pullEntitySlightly(pulled, to);
         } else {
             this.pullEntityToLocation(pulled, to, false);
         }
-        if (NMS.Version.v1_7_R4 != null)
-            to.getWorld().playSound(to, Sound.MAGMACUBE_JUMP, 10.0F, 1.0F);
-        else if (NMS.Version.v1_8_R1 != null)
-        	to.getWorld().playSound(to, Sound.MAGMACUBE_JUMP, 10.0F, 1.0F);
-        else if (NMS.Version.v1_8_R2 != null)
-        	to.getWorld().playSound(to, Sound.MAGMACUBE_JUMP, 10.0F, 1.0F);
-        else if (NMS.Version.v1_8_R3 != null)
-        	to.getWorld().playSound(to, Sound.MAGMACUBE_JUMP, 10.0F, 1.0F);
-        else if (NMS.Version.v1_9_R1 != null)
+        if (NMS.Version.v1_9_R1 != null)
         	to.getWorld().playSound(to, Sound.ENTITY_MAGMACUBE_JUMP, 10.0F, 1.0F);
         else if (NMS.Version.v1_9_R2 != null)
         	to.getWorld().playSound(to, Sound.ENTITY_MAGMACUBE_JUMP, 10.0F, 1.0F);

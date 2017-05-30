@@ -6,8 +6,8 @@ import java.util.Random;
 import jordan.sicherman.MyZ;
 import jordan.sicherman.items.EngineerRecipe;
 import jordan.sicherman.locales.LocaleMessage;
-import jordan.sicherman.nms.v1_8_R1.NMSUtilities;
-import jordan.sicherman.nms.v1_8_R1.mobs.CustomEntityType;
+import tangalbert919.nms.v1_9_R1.NMSUtilities;
+import tangalbert919.nms.v1_9_R1.mobs.CustomEntityType;
 import jordan.sicherman.utilities.configuration.DeathCause;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -84,7 +84,7 @@ public class CompatibilityManager {
             return NMSUtilities.murderMessage(message, murdered, murderer, audience);
 
         case 2:
-            return jordan.sicherman.nms.v1_7_R4.NMSUtilities.murderMessage(message, murdered, murderer, audience);
+            return tangalbert919.nms.v1_9_R1.NMSUtilities.murderMessage(message, murdered, murderer, audience);
 
         default:
             return true;
@@ -105,7 +105,7 @@ public class CompatibilityManager {
                 return NMSUtilities.deathMessage(message, died, displayOnVariable, audience);
 
             case 2:
-                return jordan.sicherman.nms.v1_7_R4.NMSUtilities.deathMessage(message, died, displayOnVariable, audience);
+                return tangalbert919.nms.v1_9_R1.NMSUtilities.deathMessage(message, died, displayOnVariable, audience);
 
             default:
                 return true;
@@ -120,7 +120,7 @@ public class CompatibilityManager {
             break;
 
         case 2:
-            jordan.sicherman.nms.v1_7_R4.NMSUtilities.openAnvil(player, isAnvil, recipe);
+            tangalbert919.nms.v1_9_R1.NMSUtilities.openAnvil(player, isAnvil, recipe);
         }
 
     }
@@ -131,7 +131,7 @@ public class CompatibilityManager {
             return NMSUtilities.sendInventoryUpdate(player, slot);
 
         case 2:
-            return jordan.sicherman.nms.v1_7_R4.NMSUtilities.sendInventoryUpdate(player, slot);
+            return tangalbert919.nms.v1_9_R1.NMSUtilities.sendInventoryUpdate(player, slot);
 
         default:
             return false;
@@ -145,7 +145,7 @@ public class CompatibilityManager {
             break;
 
         case 2:
-            jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityType.registerEntities();
+            tangalbert919.nms.v1_9_R1.mobs.CustomEntityType.registerEntities();
         }
 
     }
@@ -157,7 +157,7 @@ public class CompatibilityManager {
             break;
 
         case 2:
-            jordan.sicherman.nms.v1_7_R4.mobs.CustomEntityType.unregisterEntities();
+            tangalbert919.nms.v1_9_R1.mobs.CustomEntityType.unregisterEntities();
         }
 
     }
@@ -169,7 +169,7 @@ public class CompatibilityManager {
             break;
 
         case 2:
-            jordan.sicherman.nms.v1_7_R4.NMSUtilities.spawnEntity(inLoc, type);
+            tangalbert919.nms.v1_9_R1.NMSUtilities.spawnEntity(inLoc, type);
         }
 
     }
@@ -196,7 +196,7 @@ public class CompatibilityManager {
             break;
 
         case 2:
-            jordan.sicherman.nms.v1_7_R4.NMSUtilities.attractEntity(entity, inLoc, duration);
+            tangalbert919.nms.v1_9_R1.NMSUtilities.attractEntity(entity, inLoc, duration);
         }
 
     }
@@ -220,22 +220,22 @@ public class CompatibilityManager {
 
         static {
             try {
-                SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_8_R1.ordinal()] = 1;
+                SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_9_R1.ordinal()] = 1;
             } catch (NoSuchFieldError nosuchfielderror) {
                 ;
             }
             try {
-                SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_8_R2.ordinal()] = 2;
+                SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_9_R2.ordinal()] = 2;
             } catch (NoSuchFieldError nosuchfielderror1) {
                 ;
             }
             try {
-                SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_8_R3.ordinal()] = 3;
+                SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_10_R1.ordinal()] = 3;
             } catch (NoSuchFieldError nosuchfielderror2) {
                 ;
             }
             try {
-                SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_7_R4.ordinal()] = 4;
+                SyntheticClass_1.$SwitchMap$jordan$sicherman$nms$utilities$NMS$Version[NMS.Version.v1_11_R1.ordinal()] = 4;
             } catch (NoSuchFieldError nosuchfielderror3) {
 
             }

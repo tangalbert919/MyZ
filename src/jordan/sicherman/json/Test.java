@@ -49,7 +49,7 @@ public class Test {
             }
         }
 
-        Obj obj = "A beany object".new Obj("A beany object", 42.0D, true);
+        Obj obj = new Obj("A beany object", 42.0D, true);
 
         try {
             JSONObject jsonobject = XML.toJSONObject("<![CDATA[This is a collection of test patterns and examples for org.json.]]>  Ignore the stuff past the end.  ");

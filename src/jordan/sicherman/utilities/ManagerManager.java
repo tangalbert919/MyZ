@@ -30,7 +30,7 @@ public class ManagerManager {
             }
 
             if (of != ManagerManager.ManagerType.SPAWN_KIT) {
-                player.getInventory().setItemInHand(ItemUtilities.getInstance().getTagItem(ItemTag.WAND, 1));
+                player.getInventory().setItemInMainHand(ItemUtilities.getInstance().getTagItem(ItemTag.WAND, 1));
             }
         } else {
             player.removeMetadata(of.getID(), MyZ.instance);

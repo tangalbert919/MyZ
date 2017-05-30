@@ -30,7 +30,7 @@ public enum Locale {
     private String code;
     private static Field field;
 
-    private Locale(String name, String code) {
+    Locale(String name, String code) {
         this.name = name;
         this.code = code;
     }

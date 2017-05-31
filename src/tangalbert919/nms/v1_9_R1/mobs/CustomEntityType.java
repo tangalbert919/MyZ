@@ -3,6 +3,7 @@ package tangalbert919.nms.v1_9_R1.mobs;
 import jordan.sicherman.nms.utilities.NMS;
 import jordan.sicherman.utilities.configuration.ConfigEntries;
 import net.minecraft.server.v1_9_R1.*;
+import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
@@ -163,20 +164,20 @@ public enum CustomEntityType {
             a(entity.getNMSClass(), entity.getName(), entity.getID());
         }
 
-        BiomeBase[] abiomebase;
+        /*BiomeBase[] abiomebase;
 
         try {
-            abiomebase = (BiomeBase[]) ((BiomeBase[]) NMS.getPrivateStatic(BiomeBase.class, "biomes"));
+            abiomebase = (BiomeBase[]) (NMS.getPrivateStatic(BiomeBase.class, "biomes"));
         } catch (Exception exception2) {
             return;
         }
 
         BiomeBase[] abiomebase1 = abiomebase;
 
-        i = abiomebase.length;
+        i = abiomebase.length;*/
 
-        for (int j = 0; j < i; ++j) {
-            BiomeBase biomeBase = abiomebase1[j];
+        for (int j = 0; j < 168; ++j) {
+            BiomeBase biomeBase = BiomeBase.a(j);
 
             if (biomeBase == null) {
                 break;

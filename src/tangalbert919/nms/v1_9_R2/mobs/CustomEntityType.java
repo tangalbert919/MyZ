@@ -163,7 +163,7 @@ public enum CustomEntityType {
             a(entity.getNMSClass(), entity.getName(), entity.getID());
         }
 
-        BiomeBase[] abiomebase;
+        /*BiomeBase[] abiomebase;
 
         try {
             abiomebase = (BiomeBase[]) (NMS.getPrivateStatic(BiomeBase.class, "biomes"));
@@ -173,10 +173,10 @@ public enum CustomEntityType {
 
         BiomeBase[] abiomebase1 = abiomebase;
 
-        i = abiomebase.length;
+        i = abiomebase.length;*/
 
         for (int j = 0; j < i; ++j) {
-            BiomeBase biomeBase = abiomebase1[j];
+            BiomeBase biomeBase = BiomeBase.a(j);
 
             if (biomeBase == null) {
                 break;

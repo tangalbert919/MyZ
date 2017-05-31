@@ -141,7 +141,7 @@ public class SpectatorMode implements Listener {
                         CompatibilityManager.interactAnvil(player, null);
                     }
                 }
-            } else if (ManagerManager.isManager(player, ManagerManager.ManagerType.SPAWN) && ItemUtilities.getInstance().hasTag(player.getItemInHand(), ItemTag.WAND)) {
+            } else if (ManagerManager.isManager(player, ManagerManager.ManagerType.SPAWN) && ItemUtilities.getInstance().hasTag(player.getItemOnCursor(), ItemTag.WAND)) {
                 switch (SpectatorMode.SyntheticClass_1.$SwitchMap$org$bukkit$event$block$Action[e.getAction().ordinal()]) {
                 case 1:
                 case 2:

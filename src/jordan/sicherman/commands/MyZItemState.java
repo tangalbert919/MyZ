@@ -33,7 +33,7 @@ public class MyZItemState extends SimpleCommandExecutor {
                 }
             }
 
-            ItemStack hand = player.getItemInHand();
+            ItemStack hand = player.getItemOnCursor();
 
             if (hand != null && hand.getType() != Material.AIR) {
                 EquipmentState state = EquipmentState.fromString(args[2]);

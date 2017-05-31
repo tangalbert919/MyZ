@@ -1,0 +1,50 @@
+authors: [Jordan Sicherman, Albert Tang]
+main: jordan.sicherman.MyZ
+version: 5.0.0
+name: MyZ Reborn
+description: The best post-apocalyptic plugin in existance, reborn.
+depend: [LibsDisguises, CrackShot]
+
+commands:
+  MyZ:
+    description: MyZ command interface.
+
+permissions:
+  MyZ.*:
+    description: All MyZ commands.
+    default: op
+    children:
+      MyZ.manager.*: true
+  MyZ.manager.*:
+    description: All MyZ management commands.
+    default: false
+    children:
+      MyZ.manager.spawns: true
+      MyZ.manager.config: true
+      MyZ.manager.engineer: true
+      MyZ.manager.chests: true
+      MyZ.manager.spawn_kit: true
+  MyZ.manager.spawns:
+    description: Manage spawnpoints.
+    default: false
+  MyZ.manager.config:
+    description: Manage the config.
+    default: false
+  MyZ.manager.engineer:
+    description: Manage engineering recipes.
+    default: false
+  MyZ.manager.chests:
+    description: Manage chests.
+    default: false
+  MyZ.manager.spawn_kit:
+    description: Manage MyZ spawn kits.
+    default: false
+  MyZ.rank.0:
+    description: The default MyZ rank.
+    default: not-op
+  MyZ.rank.100:
+    description: The maximum MyZ rank.
+    default: op
+  MyZ.play:
+    description: Play MyZ.
+    default: true

@@ -245,6 +245,7 @@ public enum CustomEntityType {
             this.nms = nms;
             this.custom = custom;
             this.enabled = spawn_chance > 0;
+            // TODO: Fix stack overflow error here.
             this.meta = new CustomBiomeMeta(custom, custom, spawn_chance, range_min, range_max);
         }
 

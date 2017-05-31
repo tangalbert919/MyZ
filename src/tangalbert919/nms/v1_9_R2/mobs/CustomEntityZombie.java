@@ -87,7 +87,7 @@ public class CustomEntityZombie extends EntityZombie implements SmartEntity {
     }
 
     protected void a(DifficultyDamageScaler difficultydamagescaler) {
-        switch (CustomEntityZombie.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R1$mobs$CustomEntityZombie$ZombieType[this.type.ordinal()]) {
+        switch (CustomEntityZombie.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R2$mobs$CustomEntityZombie$ZombieType[this.type.ordinal()]) {
         case 1:
             this.setEquipment(EnumItemSlot.FEET, new ItemStack(Items.CHAINMAIL_BOOTS));
             this.setEquipment(EnumItemSlot.LEGS, new ItemStack(Items.CHAINMAIL_LEGGINGS));
@@ -145,29 +145,29 @@ public class CustomEntityZombie extends EntityZombie implements SmartEntity {
 
     static class SyntheticClass_1 {
 
-        static final int[] $SwitchMap$tangalbert919$nms$v1_9_R1$mobs$CustomEntityZombie$ZombieType = new int[CustomEntityZombie.ZombieType.values().length];
+        static final int[] $SwitchMap$tangalbert919$nms$v1_9_R2$mobs$CustomEntityZombie$ZombieType = new int[CustomEntityZombie.ZombieType.values().length];
 
         static {
             try {
-                CustomEntityZombie.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R1$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.CHAIN.ordinal()] = 1;
+                CustomEntityZombie.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R2$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.CHAIN.ordinal()] = 1;
             } catch (NoSuchFieldError nosuchfielderror) {
                 ;
             }
 
             try {
-                CustomEntityZombie.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R1$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.GOLD.ordinal()] = 2;
+                CustomEntityZombie.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R2$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.GOLD.ordinal()] = 2;
             } catch (NoSuchFieldError nosuchfielderror1) {
                 ;
             }
 
             try {
-                CustomEntityZombie.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R1$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.IRON.ordinal()] = 3;
+                CustomEntityZombie.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R2$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.IRON.ordinal()] = 3;
             } catch (NoSuchFieldError nosuchfielderror2) {
                 ;
             }
 
             try {
-                CustomEntityZombie.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R1$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.LEATHER.ordinal()] = 4;
+                CustomEntityZombie.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R2$mobs$CustomEntityZombie$ZombieType[CustomEntityZombie.ZombieType.LEATHER.ordinal()] = 4;
             } catch (NoSuchFieldError nosuchfielderror3) {
                 ;
             }

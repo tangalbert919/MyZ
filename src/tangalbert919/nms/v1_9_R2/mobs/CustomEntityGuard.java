@@ -108,7 +108,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
     }
 
     protected void a(DifficultyDamageScaler difficultydamagescaler) {
-        switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R1$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
+        switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R2$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
         case 1:
             this.setEquipment(EnumItemSlot.MAINHAND, CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(Material.getMaterial((String) ConfigEntries.GUARD_MELEE_ITEM.getValue()))));
             break;
@@ -156,7 +156,7 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
             this.goalSelector.a(this.giantAttack);
             this.goalSelector.a(this.pigmanAttack);
             this.goalSelector.a(this.rangedAttack);
-            switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R1$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
+            switch (CustomEntityGuard.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R2$mobs$CustomEntityGuard$GuardType[this.type.ordinal()]) {
             case 1:
                 this.goalSelector.a(4, this.humanAttack);
                 this.goalSelector.a(4, this.zombieAttack);
@@ -181,17 +181,17 @@ public class CustomEntityGuard extends EntitySkeleton implements SmartEntity {
 
     static class SyntheticClass_1 {
 
-        static final int[] $SwitchMap$tangalbert919$nms$v1_9_R1$mobs$CustomEntityGuard$GuardType = new int[CustomEntityGuard.GuardType.values().length];
+        static final int[] $SwitchMap$tangalbert919$nms$v1_9_R2$mobs$CustomEntityGuard$GuardType = new int[CustomEntityGuard.GuardType.values().length];
 
         static {
             try {
-                CustomEntityGuard.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R1$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.MELEE.ordinal()] = 1;
+                CustomEntityGuard.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R2$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.MELEE.ordinal()] = 1;
             } catch (NoSuchFieldError nosuchfielderror) {
                 ;
             }
 
             try {
-                CustomEntityGuard.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R1$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.RANGED.ordinal()] = 2;
+                CustomEntityGuard.SyntheticClass_1.$SwitchMap$tangalbert919$nms$v1_9_R2$mobs$CustomEntityGuard$GuardType[CustomEntityGuard.GuardType.RANGED.ordinal()] = 2;
             } catch (NoSuchFieldError nosuchfielderror1) {
                 ;
             }

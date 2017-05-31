@@ -153,7 +153,7 @@ public class MyZ extends JavaPlugin {
     }
 
     public static void log(String message) {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[MyZ 4] " + ChatColor.RESET + message);
+        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[MyZ 5] " + ChatColor.RESET + message);
     }
 
     private static boolean registerPseudoEnchantment() {
@@ -192,7 +192,7 @@ public class MyZ extends JavaPlugin {
 
     private static enum Tip {
 
-        A(0, "&eOctober 8th is &4World Zombie Day&e!"), B(1, "&4MyZ&e is a spinoff on &4MineZ&e (which is a spinoff on &4DayZ&e!)"), C(2, "&eThis server is running &4MyZ 4.0&e. Download it for your server at http://dev.bukkit.org/bukkit-plugins/MyZ"), D(3, "&eThere is a law in Haiti that makes it &4illegal&e to turn someone into a zombie."), E(4, "&eMyZ is highly configurable, with &6" + ConfigEntries.values().length + "&e configuration options spanning &6" + Configuration.CFiles.values().length + "&e files!"), F(5, "&eThe abbreviation &4RLF&e stands for &4reanimated life form&e - another way of saying &4zombie&e!"), G(6, "&eIn a fight between a &4zombie&e and a &4vampire&e, the &4vampire would most likely win."), H(7, "&eScientists claim that a zombie apocalypse &oisn\'t actually an impossibility&r&e."), I(8, "&eThe top 5 safest countries during an apocalypse:\n&65) Kazakhstan\n&64) Russia\n&63) U.S.\n&62) Canada\n&61) Australia"), J(9, "&4Haiti&e is the source of most modern zombie stories."), K(10, "&4Shaun of the Dead&e is a 2004 &orom zom com&r&e (also a &ozomedy&r&e!)"), L(11, "&eThe very first zombie movie ever made was the 1932 film &oWhite Zombie"), M(12, "&eFor $4, you can join real-world zombie survivalist organization &4ZCORE&e - &oZombie Coalition Offensive Response Elite&r&e."), N(13, "&eMyZ has &6" + LocaleMessage.values().length + "&e localizable messages that automatically adapt to one of &6" + Locale.values().length + " &elanguages!");
+        A(0, "&eOctober 8th is &4World Zombie Day&e!"), B(1, "&4MyZ&e is a spinoff on &4MineZ&e (which is a spinoff on &4DayZ&e!)"), C(2, "&eThis server is running &4MyZ 5.0&e. Download it for your server at http://www.github.com/tangalbert919/MyZ"), D(3, "&eThere is a law in Haiti that makes it &4illegal&e to turn someone into a zombie."), E(4, "&eMyZ is highly configurable, with &6" + ConfigEntries.values().length + "&e configuration options spanning &6" + Configuration.CFiles.values().length + "&e files!"), F(5, "&eThe abbreviation &4RLF&e stands for &4reanimated life form&e - another way of saying &4zombie&e!"), G(6, "&eIn a fight between a &4zombie&e and a &4vampire&e, the &4vampire would most likely win."), H(7, "&eScientists claim that a zombie apocalypse &oisn\'t actually an impossibility&r&e."), I(8, "&eThe top 5 safest countries during an apocalypse:\n&65) Kazakhstan\n&64) Russia\n&63) U.S.\n&62) Canada\n&61) Australia"), J(9, "&4Haiti&e is the source of most modern zombie stories."), K(10, "&4Shaun of the Dead&e is a 2004 &orom zom com&r&e (also a &ozomedy&r&e!)"), L(11, "&eThe very first zombie movie ever made was the 1932 film &oWhite Zombie"), M(12, "&eFor $4, you can join real-world zombie survivalist organization &4ZCORE&e - &oZombie Coalition Offensive Response Elite&r&e."), N(13, "&eMyZ has &6" + LocaleMessage.values().length + "&e localizable messages that automatically adapt to one of &6" + Locale.values().length + " &elanguages!");
 
         private final int id;
         private final String message;

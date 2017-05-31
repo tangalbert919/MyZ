@@ -56,24 +56,27 @@ public enum CustomEntityType {
 
             a(guardExcluded.getCustomClass(), guardExcluded.getName(), guardExcluded.getID());
         }
-
-        BiomeBase[] abiomebase;
+        /**
+         * The workaround from tangalbert919.nms.v1_9_R1.CustomEntityType.java will apply here
+         * too.
+         */
+        /*BiomeBase[] abiomebase;
 
         try {
-            abiomebase = (BiomeBase[]) ((BiomeBase[]) NMS.getPrivateStatic(BiomeBase.class, "biomes"));
+            abiomebase = (BiomeBase[]) (NMS.getPrivateStatic(BiomeBase.class, "biomes"));
         } catch (Exception exception) {
             return;
-        }
+        }*/
 
         List list = (List) ConfigEntries.ZOMBIE_EXCLUDES.getValue();
         List list1 = (List) ConfigEntries.PIGMAN_EXCLUDES.getValue();
         List list2 = (List) ConfigEntries.GUARD_EXCLUDES.getValue();
         List generalExcluded = (List) ConfigEntries.GENERAL_EXCLUDES.getValue();
-        BiomeBase[] abiomebase1 = abiomebase;
-        int i = abiomebase.length;
+        /*BiomeBase[] abiomebase1 = abiomebase;
+        int i = abiomebase.length;*/
 
-        for (int j = 0; j < i; ++j) {
-            BiomeBase biomeBase = abiomebase1[j];
+        for (int j = 0; j < 168; ++j) {
+            BiomeBase biomeBase = BiomeBase.a(j);
 
             if (biomeBase == null) {
                 break;
@@ -163,7 +166,7 @@ public enum CustomEntityType {
         BiomeBase[] abiomebase;
 
         try {
-            abiomebase = (BiomeBase[]) ((BiomeBase[]) NMS.getPrivateStatic(BiomeBase.class, "biomes"));
+            abiomebase = (BiomeBase[]) (NMS.getPrivateStatic(BiomeBase.class, "biomes"));
         } catch (Exception exception2) {
             return;
         }
@@ -238,17 +241,17 @@ public enum CustomEntityType {
 
         private final Class nms;
         private final Class custom;
-        private final CustomBiomeMeta meta;
+        private final BiomeBase.BiomeMeta meta;
         private final boolean enabled;
 
         public CustomBiomeMeta(Class nms, Class custom, int spawn_chance, int range_min, int range_max) {
             this.nms = nms;
             this.custom = custom;
             this.enabled = spawn_chance > 0;
-            this.meta = new CustomBiomeMeta(custom, custom, spawn_chance, range_min, range_max);
+            this.meta = new BiomeBase.BiomeMeta(custom, spawn_chance, range_min, range_max);
         }
 
-        public CustomBiomeMeta toBiomeMeta() {
+        public BiomeBase.BiomeMeta toBiomeMeta() {
             return this.meta;
         }
     }
